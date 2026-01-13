@@ -55,7 +55,7 @@ const createParticleElement = (x, y, color = DEFAULT_GLOW_COLOR) => {
     height: 4px;
     border-radius: 50%;
     background: rgba(${color}, 1);
-    box-shadow: 0 0 6px rgba(${color}, 0.6);
+    box-shadow: 0 0 10px rgba(${color}, 0.9), 0 0 15px rgba(${color}, 0.5);
     pointer-events: none;
     z-index: 100;
     left: ${x}px;
@@ -339,11 +339,11 @@ const GlobalSpotlight = ({
       border-radius: 50%;
       pointer-events: none;
       background: radial-gradient(circle,
-        rgba(${glowColor}, 0.15) 0%,
-        rgba(${glowColor}, 0.08) 15%,
-        rgba(${glowColor}, 0.04) 25%,
-        rgba(${glowColor}, 0.02) 40%,
-        rgba(${glowColor}, 0.01) 65%,
+        rgba(${glowColor}, 0.35) 0%,
+        rgba(${glowColor}, 0.25) 15%,
+        rgba(${glowColor}, 0.15) 25%,
+        rgba(${glowColor}, 0.08) 40%,
+        rgba(${glowColor}, 0.03) 65%,
         transparent 70%
       );
       z-index: 200;
@@ -410,9 +410,9 @@ const GlobalSpotlight = ({
 
       const targetOpacity =
         minDistance <= proximity
-          ? 0.8
+          ? 1
           : minDistance <= fadeDistance
-            ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 0.8
+            ? ((fadeDistance - minDistance) / (fadeDistance - proximity)) * 1
             : 0;
 
       gsap.to(spotlightRef.current, {
