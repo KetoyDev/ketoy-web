@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" style="background: #000000;">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finex - Modern Finance</title>
+<title>Ketoy - DSL to JSON to Compose UI</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,23 +28,31 @@ body { -ms-overflow-style: none; scrollbar-width: none; }
 .delay-500 { animation-delay: 500ms; }
 </style>
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-primary selection:text-black text-white bg-[#000000]">
+<body class="antialiased overflow-x-hidden selection:bg-primary selection:text-black text-white" style="background: #000000;">
 
-<!-- Background (component) added by Aura -->
-<div class="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="80" style="mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)">
-  <div class="aura-background-component top-0 w-full -z-10 absolute h-full">
-    <div data-us-project="FixNvEwvWwbu3QX9qC3F" class="absolute w-full h-full left-0 top-0 -z-10"></div>
-    <script type="text/javascript">
-      !function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();
-    </script>
-  </div>
-</div>
-
-<div id="root"></div>
+<div id="root" style="position: relative; z-index: 10;"></div>
 <script type="module" src="/src/main.jsx"></script>
 
 <script>
   lucide.createIcons();
+  
+  // Fade out hero background when scrolling past hero section
+  let lastScrollTop = 0;
+  const heroBackground = document.getElementById('hero-background');
+  
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    
+    // Fade out the blue background after scrolling past 70% of viewport height
+    if (scrollTop > windowHeight * 0.7) {
+      const opacity = Math.max(0, 1 - ((scrollTop - windowHeight * 0.7) / (windowHeight * 0.3)));
+      heroBackground.style.opacity = opacity;
+    } else {
+      heroBackground.style.opacity = 1;
+    }
+  });
+  
   document.addEventListener('DOMContentLoaded', () => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {

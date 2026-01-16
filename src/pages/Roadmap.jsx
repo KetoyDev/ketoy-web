@@ -3,7 +3,7 @@ import React from 'react';
 export default function Roadmap() {
   return (
     <>
-      <section className="section page-section">
+      <section id="roadmap" className="section page-section" style={{ background: '#000', position: 'relative' }}>
         <div className="container">
           <div className="page-header">
             <h1>Roadmap</h1>
