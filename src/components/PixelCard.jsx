@@ -137,11 +137,20 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
   const finalNoFocus = noFocus ?? variantCfg.noFocus;
 
   const initPixels = () => {
-    if (!containerRef.current || !canvasRef.current) return;
+    if (!containerRef.current || !canvasRef.current) {
+      console.log('PixelCard: containerRef or canvasRef not available');
+      return;
+    }
 
     const rect = containerRef.current.getBoundingClientRect();
     const width = Math.floor(rect.width);
     const height = Math.floor(rect.height);
+    
+    if (width === 0 || height === 0) {
+      console.log('PixelCard: Invalid dimensions', { width, height });
+      return;
+    }
+    
     const ctx = canvasRef.current.getContext('2d');
 
     canvasRef.current.width = width;
@@ -150,6 +159,8 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     canvasRef.current.style.height = `${height}px`;
 
     const colorsArray = finalColors.split(',');
+    console.log('PixelCard: Initializing with colors', colorsArray);
+    
     const pxs = [];
     for (let x = 0; x < width; x += parseInt(finalGap, 10)) {
       for (let y = 0; y < height; y += parseInt(finalGap, 10)) {
@@ -164,6 +175,7 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
       }
     }
     pixelsRef.current = pxs;
+    console.log('PixelCard: Initialized', pxs.length, 'pixels');
   };
 
   const doAnimate = fnName => {
@@ -198,8 +210,14 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     animationRef.current = requestAnimationFrame(() => doAnimate(name));
   };
 
-  const onMouseEnter = () => handleAnimation('appear');
-  const onMouseLeave = () => handleAnimation('disappear');
+  const onMouseEnter = () => {
+    console.log('PixelCard: Mouse enter - triggering appear animation');
+    handleAnimation('appear');
+  };
+  const onMouseLeave = () => {
+    console.log('PixelCard: Mouse leave - triggering disappear animation');
+    handleAnimation('disappear');
+  };
   const onFocus = e => {
     if (e.currentTarget.contains(e.relatedTarget)) return;
     handleAnimation('appear');
