@@ -1,34 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import PixelSnow from '../components/PixelSnow';
-import FallbackAnimation from '../components/FallbackAnimation';
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.log('PixelSnow component error:', error, errorInfo);
-    if (this.props.onError) {
-      this.props.onError();
-    }
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback || null;
-    }
-    return this.props.children;
-  }
-}
 
 export default function Home() {
-  const [useFallback, setUseFallback] = useState(false);
   useEffect(() => {
     // Initialize Lucide icons
     if (window.lucide) {
@@ -52,31 +24,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Animated Background */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
-        {!useFallback ? (
-          <ErrorBoundary 
-            fallback={<FallbackAnimation />}
-            onError={() => setUseFallback(true)}
-          >
-            <PixelSnow
-              color="#00f0ff"
-              flakeSize={0.025}
-              minFlakeSize={2.0}
-              pixelResolution={120}
-              speed={0.6}
-              density={0.4}
-              direction={135}
-              brightness={2.5}
-              gamma={0.35}
-              depthFade={6}
-              variant="round"
-              style={{ width: '100%', height: '100%' }}
-            />
-          </ErrorBoundary>
-        ) : (
-          <FallbackAnimation />
-        )}
+      {/* Animated Background - Unicorn Studio */}
+      <div className="aura-background-component fixed top-0 w-full h-screen -z-10" data-alpha-mask="80" style={{ maskImage: 'linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)', WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 0%, black 80%, transparent)', pointerEvents: 'none' }}>
+        <div className="aura-background-component top-0 w-full -z-10 absolute h-full">
+          <div data-us-project="FixNvEwvWwbu3QX9qC3F" className="absolute w-full h-full left-0 top-0 -z-10"></div>
+        </div>
       </div>
 
       {/* Hero Content */}
