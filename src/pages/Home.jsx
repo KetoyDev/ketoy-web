@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import GradientBlinds from '../components/GradientBlinds';
+import Galaxy from '../components/Galaxy';
 
 export default function Home() {
   useEffect(() => {
@@ -25,21 +25,21 @@ export default function Home() {
 
   return (
     <>
-      {/* Animated Background - GradientBlinds */}
+      {/* Animated Background - Galaxy */}
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
-        <GradientBlinds
-          gradientColors={['#0ea5e9', '#3b82f6', '#8b5cf6']}
-          angle={0}
-          noise={0.3}
-          blindCount={12}
-          blindMinWidth={50}
-          spotlightRadius={0.5}
-          spotlightSoftness={1}
-          spotlightOpacity={1}
-          mouseDampening={0.15}
-          distortAmount={0}
-          shineDirection="left"
-          mixBlendMode="lighten"
+        <Galaxy
+          mouseRepulsion
+          mouseInteraction
+          density={1}
+          glowIntensity={0.3}
+          saturation={0}
+          hueShift={140}
+          twinkleIntensity={0.3}
+          rotationSpeed={0.1}
+          repulsionStrength={1}
+          autoCenterRepulsion={0}
+          starSpeed={1.5}
+          speed={2}
         />
       </div>
 
