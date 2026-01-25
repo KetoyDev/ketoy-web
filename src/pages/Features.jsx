@@ -40,7 +40,7 @@ export default function Features() {
                 <div className="feature-tags">
                   <span className="feature-tag">Instant</span>
                   <span className="feature-tag">No APK</span>
-                  <span className="feature-tag">Live</span>
+                  
                 </div>
               </div>
             </ParticleCard>
@@ -63,7 +63,6 @@ export default function Features() {
                 <div className="feature-tags">
                   <span className="feature-tag">K-DSL</span>
                   <span className="feature-tag">IDE</span>
-                  <span className="feature-tag">Safe</span>
                 </div>
               </div>
             </ParticleCard>
@@ -83,6 +82,7 @@ export default function Features() {
                 </div>
                 <h3>50+ Components</h3>
                 <p>Complete UI library with KColumn, KRow, KBox, KCard, KButton, KImage, KTextField and more.</p>
+          
                 <div className="feature-tags">
                   <span className="feature-tag">Layouts</span>
                   <span className="feature-tag">Inputs</span>
@@ -131,7 +131,7 @@ export default function Features() {
                 <p>Write type-safe K-DSL code, convert to JSON with .toJson(), then render as native Compose UI. Deploy instantly.</p>
                 <div className="feature-tags">
                   <span className="feature-tag">DSL→JSON</span>
-                  <span className="feature-tag">JSON→UI</span>
+                  
                 </div>
               </div>
             </ParticleCard>
