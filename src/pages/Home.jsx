@@ -25,8 +25,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Animated Background - Galaxy */}
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100vh', zIndex: 0, pointerEvents: 'none' }}>
+      {/* Hero Content */}
+      <section id="home" style={{ minHeight: '100vh', paddingBottom: '20vh', background: 'transparent', position: 'relative', zIndex: 10 }}>
+      
+      {/* Animated Background - Galaxy (contained within home section) */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}>
         <Galaxy
           mouseRepulsion
           mouseInteraction
@@ -43,8 +46,6 @@ export default function Home() {
         />
       </div>
 
-      {/* Hero Content */}
-      <section id="home" style={{ minHeight: '100vh', paddingBottom: '20vh', background: 'transparent', position: 'relative', zIndex: 10 }}>
       <main className="flex flex-col pt-40 pr-6 pl-6 relative gap-x-3 gap-y-x-3 items-center justify-center">
         {/* Version Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8 hover:bg-white/10 transition-colors cursor-pointer group scroll-item scroll-fade-up" style={{ animationPlayState: 'running' }}>

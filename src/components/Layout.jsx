@@ -128,7 +128,7 @@ export default function Layout({ children }) {
             <div className="footer-links-grid">
               <div className="footer-links-col">
                 <h4>Relevance</h4>
-                <a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }}>Pricing</a>
+                <a href="mailto:support@ketoy.dev?subject=Pricing%20Inquiry">Contact us for Pricing</a>
                 <a href="#playground" onClick={(e) => { e.preventDefault(); scrollToSection('playground'); }}>Playground</a>
                 <a href="#use-cases" onClick={(e) => { e.preventDefault(); scrollToSection('use-cases'); }}>Console</a>
               </div>
@@ -157,7 +157,7 @@ export default function Layout({ children }) {
           </div>
 
           <div className="footer-bottom">
-            <span className="footer-copyright">© 2025 Ketoy Studios</span>
+            <span className="footer-copyright">© 2025 Ketoy Studios-support@ketoy.dev</span>
             <div className="footer-social-icons">
               <a href="https://discord.gg/ketoy" target="_blank" rel="noreferrer" className="footer-social-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
