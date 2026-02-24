@@ -1,4 +1,4 @@
-# 🚀 Ketoy - Server Driven Jetpack Compose UI
+# Ketoy - Server Driven Jetpack Compose UI
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org)
 [![Compose](https://img.shields.io/badge/Jetpack%20Compose-1.5+-green.svg)](https://developer.android.com/jetpack/compose)
@@ -8,28 +8,28 @@
 > **The Revolutionary Server-Driven UI Library for Android**  
 > Create dynamic, real-time UIs with zero app updates. From JSON to beautiful Compose interfaces in milliseconds.
 
-## 🌟 What is Ketoy?
+## What is Ketoy?
 
 Ketoy is a groundbreaking **Server-Driven UI library** that transforms how you build Android applications. Send JSON from your server, get beautiful Jetpack Compose UI instantly. Update your app's interface without publishing new versions to the Play Store.
 
-### ⚡ Key Benefits
+### Key Benefits
 
-- **🔄 Zero App Updates**: Change your UI from the server, no Play Store deployment needed
-- **🎯 A/B Testing Made Easy**: Test different UI variations instantly
-- **🌍 Dynamic Localization**: Serve different UIs based on user location/preferences  
-- **🚀 Instant Feature Rollouts**: Launch new features to specific user segments
-- **💰 Reduced Development Costs**: One codebase, infinite UI possibilities
-- **📱 Cross-Platform Ready**: Same JSON schema works across platforms
+- **Zero App Updates**: Change your UI from the server, no Play Store deployment needed
+- **A/B Testing Made Easy**: Test different UI variations instantly
+- **Dynamic Localization**: Serve different UIs based on user location/preferences  
+- **Instant Feature Rollouts**: Launch new features to specific user segments
+- **Reduced Development Costs**: One codebase, infinite UI possibilities
+- **Cross-Platform Ready**: Same JSON schema works across platforms
 
 ---
 
-## 🎪 Quick Start Demo
+## Quick Start Demo
 
 ```kotlin
-// 1️⃣ K-DSL Code (Type-Safe, Auto-Complete)
+// Step 1: K-DSL Code (Type-Safe, Auto-Complete)
 val dynamicUI = KColumn {
     KText(
-        text = "Welcome to Ketoy! 🎉",
+        text = "Welcome to Ketoy!",
         fontSize = 24,
         fontWeight = KFontWeights.Bold,
         color = KColors.Blue
@@ -40,21 +40,21 @@ val dynamicUI = KColumn {
     }
 }
 
-// 2️⃣ Auto-Generated JSON (Send from Server)
+// Step 2: Auto-Generated JSON (Send from Server)
 val json = dynamicUI.toJson()
 
-// 3️⃣ Instant UI Rendering (Client Side)
-JSONStringToUI(json) // ✨ Beautiful Compose UI appears!
+// Step 3: Instant UI Rendering (Client Side)
+JSONStringToUI(json) // Beautiful Compose UI appears!
 ```
 
 ---
 
-## 📚 Complete API Documentation
+## Complete API Documentation
 
-### 1️⃣ Core Components
+### Core Components
 
 <details>
-<summary><b>🏗️ Layout Components</b></summary>
+<summary><b>Layout Components</b></summary>
 
 #### KColumn
 Creates a vertical layout container.
@@ -167,7 +167,7 @@ KLazyRow(
 </details>
 
 <details>
-<summary><b>📝 Text & Input Components</b></summary>
+<summary><b>Text & Input Components</b></summary>
 
 #### KText
 Displays text with customizable styling.
@@ -243,7 +243,7 @@ KTextField(
 </details>
 
 <details>
-<summary><b>🎛️ Interactive Components</b></summary>
+<summary><b>Interactive Components</b></summary>
 
 #### KButton
 Creates a clickable button.
@@ -281,8 +281,7 @@ KButton(
     border = kBorder(2, KColors.White)
 ) {
     KRow {
-        KText("🚀")
-        KSpacer(width = 8)
+            KSpacer(width = 8)
         KText("Launch", fontWeight = KFontWeights.Bold)
     }
 }
@@ -327,7 +326,7 @@ KCard(
 </details>
 
 <details>
-<summary><b>🖼️ Media Components</b></summary>
+<summary><b>Media Components</b></summary>
 
 #### KImage
 Displays images from various sources.
@@ -393,10 +392,10 @@ KSpacer(modifier = kModifier(weight = 1.0f))  // Flexible space
 
 </details>
 
-### 2️⃣ Style System
+### Style System
 
 <details>
-<summary><b>🎨 Color System</b></summary>
+<summary><b>Color System</b></summary>
 
 #### KColors Object
 Provides predefined colors and color manipulation functions.
@@ -448,7 +447,7 @@ KBox(
 </details>
 
 <details>
-<summary><b>🌈 Gradient System</b></summary>
+<summary><b>Gradient System</b></summary>
 
 #### KGradients Object
 Creates various types of gradients for backgrounds.
@@ -522,7 +521,7 @@ KBox(
 </details>
 
 <details>
-<summary><b>🔤 Typography System</b></summary>
+<summary><b>Typography System</b></summary>
 
 #### KFontWeights Object
 ```kotlin
@@ -568,7 +567,7 @@ KText(
 </details>
 
 <details>
-<summary><b>🔶 Shape System</b></summary>
+<summary><b>Shape System</b></summary>
 
 #### KShapes Object
 Provides shape creation functions and constants.
@@ -625,10 +624,10 @@ KTextField(shape = KShapes.Rounded12)
 
 </details>
 
-### 3️⃣ Layout System
+### Layout System
 
 <details>
-<summary><b>📐 Modifier System</b></summary>
+<summary><b>Modifier System</b></summary>
 
 #### KModifier
 The core styling system for all components.
@@ -698,7 +697,7 @@ kModifier(
 </details>
 
 <details>
-<summary><b>📏 Spacing System</b></summary>
+<summary><b>Spacing System</b></summary>
 
 #### KPadding
 Internal spacing within components.
@@ -756,7 +755,7 @@ KCard(
 </details>
 
 <details>
-<summary><b>📍 Alignment System</b></summary>
+<summary><b>Alignment System</b></summary>
 
 #### KArrangements Object
 Controls spacing and positioning within layout containers.
@@ -828,10 +827,10 @@ KBox(
 
 </details>
 
-### 4️⃣ Advanced Features
+### Advanced Features
 
 <details>
-<summary><b>🔧 Helper Functions</b></summary>
+<summary><b>Helper Functions</b></summary>
 
 #### Border Creation
 ```kotlin
@@ -888,7 +887,7 @@ val jsonString = uiComponent.toJson()
 </details>
 
 <details>
-<summary><b>🔄 Control Flow</b></summary>
+<summary><b>Control Flow</b></summary>
 
 #### Conditional Rendering
 ```kotlin
@@ -939,7 +938,7 @@ KColumn {
 </details>
 
 <details>
-<summary><b>🎛️ Component Registry System</b></summary>
+<summary><b>Component Registry System</b></summary>
 
 #### Custom Component Registration
 ```kotlin
@@ -989,7 +988,7 @@ KComponent(
 </details>
 
 <details>
-<summary><b>🎯 Action System</b></summary>
+<summary><b>Action System</b></summary>
 
 #### Action Registry
 ```kotlin
@@ -1014,7 +1013,7 @@ val textChangeAction = ActionRegistry.registerTextChange { newText ->
 </details>
 
 <details>
-<summary><b>🗃️ Variable System</b></summary>
+<summary><b>Variable System</b></summary>
 
 #### Variable Registry
 ```kotlin
@@ -1051,10 +1050,10 @@ KText(fontSize = "fontSize".intRef() ?: 14)
 
 </details>
 
-### 5️⃣ Complete Examples
+### Complete Examples
 
 <details>
-<summary><b>🏗️ Layout Examples</b></summary>
+<summary><b>Layout Examples</b></summary>
 
 #### Profile Card Example
 ```kotlin
@@ -1138,7 +1137,7 @@ KCard(
 </details>
 
 <details>
-<summary><b>🎨 Advanced Styling</b></summary>
+<summary><b>Advanced Styling</b></summary>
 
 #### Gradient Card with Custom Shapes
 ```kotlin
@@ -1212,7 +1211,7 @@ KCard(
 </details>
 
 <details>
-<summary><b>📱 Complex Layouts</b></summary>
+<summary><b>Complex Layouts</b></summary>
 
 #### News Article Layout
 ```kotlin
@@ -1321,14 +1320,7 @@ KCard(
                 }
                 
                 // Reading Time
-                KRow(
-                    verticalAlignment = KAlignments.CenterVertically
-                ) {
-                    KText(
-                        text = "📖",
-                        fontSize = 14
-                    )
-                    KSpacer(width = 4)
+                KRow {
                     KText(
                         text = "5 min read",
                         fontSize = 12,
@@ -1343,10 +1335,10 @@ KCard(
 
 </details>
 
-### 6️⃣ Integration Guide
+### Integration Guide
 
 <details>
-<summary><b>🚀 Getting Started</b></summary>
+<summary><b>Getting Started</b></summary>
 
 #### 1. Basic Setup
 ```kotlin
@@ -1399,7 +1391,7 @@ JSONStringToUI(serverJson)
 </details>
 
 <details>
-<summary><b>🔧 Advanced Integration</b></summary>
+<summary><b>Advanced Integration</b></summary>
 
 #### Custom Component Integration
 ```kotlin
@@ -1441,32 +1433,32 @@ KText(
 
 ---
 
-## 🏆 Why Choose Ketoy?
+## Why Choose Ketoy?
 
-- **🚀 Production Ready**: Used by apps with millions of users
-- **📚 Comprehensive**: 50+ components, complete styling system
-- **🔄 Real-time Updates**: Change UI without app updates
-- **🎯 Type Safe**: Full Kotlin DSL with IDE support
-- **🌐 Cross-Platform**: JSON schema works everywhere
-- **📖 Well Documented**: Complete API docs with examples
-- **🔧 Extensible**: Custom components and plugins
-- **⚡ High Performance**: Optimized for large-scale apps
+- **Production Ready**: Used by apps with millions of users
+- **Comprehensive**: 50+ components, complete styling system
+- **Real-time Updates**: Change UI without app updates
+- **Type Safe**: Full Kotlin DSL with IDE support
+- **Cross-Platform**: JSON schema works everywhere
+- **Well Documented**: Complete API docs with examples
+- **Extensible**: Custom components and plugins
+- **High Performance**: Optimized for large-scale apps
 
-## 📞 Support & Community
+## Support & Community
 
-- 📖 **Documentation**: [Full API Docs](https://ketoy.dev/docs)
-- 💬 **Discord**: [Join our community](https://discord.gg/ketoy)
-- 🐛 **Issues**: [Report bugs](https://github.com/developerchunk/Ketoy/issues)
-- 💡 **Discussions**: [Feature requests](https://github.com/developerchunk/Ketoy/discussions)
-- 📧 **Contact**: ketoy@developerstring.com
+- **Documentation**: [Full API Docs](https://ketoy.dev/docs)
+- **Discord**: [Join our community](https://discord.gg/ketoy)
+- **Issues**: [Report bugs](https://github.com/developerchunk/Ketoy/issues)
+- **Discussions**: [Feature requests](https://github.com/developerchunk/Ketoy/discussions)
+- **Contact**: ketoy@developerstring.com
 
 ---
 
 <div align="center">
 
-**Made with ❤️ by [DeveloperString](https://github.com/developerchunk)**
+**Made with care by [DeveloperString](https://github.com/developerchunk)**
 
-⭐ **Star us on GitHub** if you find Ketoy helpful!
+**Star us on GitHub** if you find Ketoy helpful!
 
 </div>
         colors = ButtonDefaults.buttonColors(
@@ -1480,25 +1472,25 @@ KText(
 
 ---
 
-## 🎯 Why Choose Ketoy?
+## Why Choose Ketoy?
 
-### Traditional Development Problems ❌
+### Traditional Development Problems
 - **Slow Release Cycles**: Wait weeks for Play Store approval
 - **Limited A/B Testing**: Hard to test UI variations
 - **Platform Fragmentation**: Different code for Android/iOS
 - **Rigid Interfaces**: Can't adapt to user behavior
 - **Costly Updates**: Every UI change needs app update
 
-### Ketoy Solutions ✅
-- **⚡ Instant Updates**: Change UI in real-time from server
-- **🧪 Advanced A/B Testing**: Test unlimited UI variations
-- **🔄 Universal Schema**: One JSON works everywhere
-- **🎛️ Dynamic Adaptation**: Personalize UI per user
-- **💸 Cost Effective**: Update once, change forever
+### Ketoy Solutions
+- **Instant Updates**: Change UI in real-time from server
+- **Advanced A/B Testing**: Test unlimited UI variations
+- **Universal Schema**: One JSON works everywhere
+- **Dynamic Adaptation**: Personalize UI per user
+- **Cost Effective**: Update once, change forever
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```mermaid
 graph LR
@@ -1511,7 +1503,7 @@ graph LR
 
 ### Three Powerful Approaches:
 
-#### 1. 🎨 **K-DSL Approach** (Recommended for Development)
+#### 1. K-DSL Approach (Recommended for Development)
 ```kotlin
 // Type-safe, auto-complete, error-free
 val loginScreen = KColumn {
@@ -1527,7 +1519,7 @@ val loginScreen = KColumn {
 }
 ```
 
-#### 2. 🌐 **Direct JSON Approach** (Server/CMS Integration)
+#### 2. Direct JSON Approach (Server/CMS Integration)
 ```json
 {
   "type": "Column",
@@ -1540,7 +1532,7 @@ val loginScreen = KColumn {
 }
 ```
 
-#### 3. 🔄 **Hybrid Approach** (Best of Both Worlds)
+#### 3. Hybrid Approach (Best of Both Worlds)
 ```kotlin
 // Design with K-DSL, deploy as JSON
 val ui = KColumn { /* design */ }
@@ -1549,28 +1541,28 @@ serverApi.updateUI(ui.toJson()) // Push to production instantly
 
 ---
 
-## 📚 Complete Component Library
+## Complete Component Library
 
-### 🎯 Layout Components
+### Layout Components
 - **KColumn**: Vertical arrangements with full customization
 - **KRow**: Horizontal layouts with spacing control  
 - **KBox**: Overlay and stacking container
 - **KSpacer**: Dynamic spacing and dividers
 
-### 🎨 UI Components
+### UI Components
 - **KCard**: Material Design 3 cards with CardDefaults API
 - **KText**: Rich text with full typography support
 - **KButton**: Material Design 3 buttons with custom colors
 - **KImage**: Network and local image rendering with Coil AsyncImage
 - **KIcon**: Vector icons with tinting
 
-### 🎛️ Interactive Components
+### Interactive Components
 - **KTextField**: Input fields with validation
 - **KCheckbox**: Selection controls
 - **KRadioButton**: Single choice selections
 - **KSwitch**: Toggle controls
 
-### ✨ Advanced Features
+### Advanced Features
 - **KIf**: Conditional rendering
 - **KForEach**: Dynamic list generation  
 - **KRepeat**: Loop-based components
@@ -1578,11 +1570,11 @@ serverApi.updateUI(ui.toJson()) // Push to production instantly
 
 ---
 
-## 🎨 **KetoyDSL - Complete API Reference**
+## KetoyDSL - Complete API Reference
 
-### 📐 **Layout Components**
+### Layout Components
 
-#### **KColumn** - Vertical Layout
+#### KColumn - Vertical Layout
 ```kotlin
 KColumn(
     modifier: KModifier? = null,
@@ -1607,7 +1599,7 @@ KColumn(
 }
 ```
 
-#### **KRow** - Horizontal Layout
+#### KRow - Horizontal Layout
 ```kotlin
 KRow(
     modifier: KModifier? = null,
@@ -1627,7 +1619,7 @@ KRow(
 }
 ```
 
-#### **KBox** - Overlay Container
+#### KBox - Overlay Container
 ```kotlin
 KBox(
     modifier: KModifier? = null,
@@ -1645,7 +1637,7 @@ KBox(
 }
 ```
 
-#### **KSpacer** - Spacing & Layout Control
+#### KSpacer - Spacing & Layout Control
 ```kotlin
 KSpacer(
     modifier: KModifier? = null,
@@ -1660,7 +1652,7 @@ KSpacer(width = 100, height = 50)          // Fixed size spacer
 KSpacer(modifier = kModifier(fillMaxWidth = true, height = 1, background = KColors.Gray)) // Divider
 ```
 
-#### **KImage** - Image Display with Multiple Sources ✨
+#### KImage - Image Display with Multiple Sources
 ```kotlin
 KImage(
     source: KImageSource,                       // Image source (required)
@@ -1670,9 +1662,9 @@ KImage(
 )
 
 // Image Source Types
-kImageRes("ic_launcher")                        // ✅ Resource from drawable/mipmap
-kImageUrl("https://example.com/image.jpg")      // ✅ Network URL with Coil AsyncImage
-kImageBase64("iVBORw0KGgoAAAANSUhEUgAA...")      // 🚧 Base64 encoded image (placeholder)
+kImageRes("ic_launcher")                        // Resource from drawable/mipmap
+kImageUrl("https://example.com/image.jpg")      // Network URL with Coil AsyncImage
+kImageBase64("iVBORw0KGgoAAAANSUhEUgAA...")      // Base64 encoded image (placeholder)
 
 // Scale Type Constants (KScaleType object)
 KScaleType.FitCenter     // Fit image inside bounds (default)
@@ -1708,9 +1700,9 @@ KImage(
 )
 ```
 
-### 🎨 **UI Components**
+### UI Components
 
-#### **KCard** - Material Design 3 Card Container
+#### KCard - Material Design 3 Card Container
 ```kotlin
 KCard(
     modifier: KModifier? = null,
@@ -1762,7 +1754,7 @@ KCard(
 }
 ```
 
-#### **KText** - Rich Text Display
+#### KText - Rich Text Display
 ```kotlin
 KText(
     text: String,
@@ -1779,7 +1771,7 @@ KText(
 
 // Examples
 KText(
-    text = "Welcome to Ketoy! 🚀",
+    text = "Welcome to Ketoy!",
     fontSize = 24,
     fontWeight = KFontWeights.Bold,
     color = KColors.Purple,
@@ -1788,7 +1780,7 @@ KText(
 )
 ```
 
-#### **KButton** - Interactive Button
+#### KButton - Interactive Button
 ```kotlin
 KButton(
     modifier: KModifier? = null,
@@ -1816,14 +1808,14 @@ KButton(
 }
 ```
 
-### 🎛️ **Modifier System - kModifier()**
+### Modifier System - kModifier()
 
 The modifier system provides comprehensive styling and layout control:
 
-#### **Size & Layout Properties** ✨
+#### Size & Layout Properties
 ```kotlin
 kModifier(
-    // Fill options with fraction support 🔥
+    // Fill options with fraction support
     fillMaxSize: Float? = null,             // 1.0f = full size, 0.8f = 80%, true = 100%
     fillMaxWidth: Float? = null,            // 1.0f = full width, 0.5f = 50%, true = 100%
     fillMaxHeight: Float? = null,           // 1.0f = full height, 0.3f = 30%, true = 100%
@@ -1841,7 +1833,7 @@ kModifier(fillMaxHeight = 0.5f)            // Fill 50% of available height
 kModifier(fillMaxSize = true)              // Backward compatible: true = 1.0f
 ```
 
-#### **Spacing Properties**
+#### Spacing Properties
 ```kotlin
 kModifier(
     // Padding (inner spacing)
@@ -1880,7 +1872,7 @@ kModifier(
 )
 ```
 
-#### **Appearance Properties**
+#### Appearance Properties
 ```kotlin
 kModifier(
     // Background
@@ -1919,7 +1911,7 @@ kModifier(
 )
 ```
 
-#### **Transform Properties**
+#### Transform Properties
 ```kotlin
 kModifier(
     // Rotation
@@ -1944,9 +1936,9 @@ kModifier(
 )
 ```
 
-### 🎨 **Shape System**
+### Shape System
 
-#### **Dynamic Shape Functions** (Recommended)
+#### Dynamic Shape Functions (Recommended)
 ```kotlin
 // Dynamic functions - any value you want!
 kRounded(radius: Int)                       // Custom radius: kRounded(8), kRounded(24), etc.
@@ -1973,7 +1965,7 @@ shape = kCircle()                           // Perfect circle
 shape = kRectangle()                        // Sharp corners
 ```
 
-#### **Shape Constants** (Convenience)
+#### Shape Constants (Convenience)
 ```kotlin
 // Pre-defined common shapes
 KShapes.Rectangle                           // "rectangle"
@@ -1993,9 +1985,9 @@ shape = KShapes.Rounded12                   // Quick rounded shape
 shape = KShapes.Circle                      // Quick circle
 ```
 
-### 🌈 **Color System**
+### Color System
 
-#### **Built-in Color Constants**
+#### Built-in Color Constants
 ```kotlin
 // Primary colors
 KColors.Blue        // "#FF2196F3"
@@ -2017,7 +2009,7 @@ containerColor = KColors.Green
 background = KColors.White
 ```
 
-#### **Custom Colors**
+#### Custom Colors
 ```kotlin
 // Hex format with alpha: #AARRGGBB
 color = "#FF2196F3"                         // Blue (fully opaque)
@@ -2030,9 +2022,9 @@ color = "#F00"                              // Red (#FFFF0000)
 color = "#0F0"                              // Green (#FF00FF00)
 ```
 
-### 📐 **Arrangement & Alignment Constants**
+### Arrangement & Alignment Constants
 
-#### **Arrangements** (for KColumn & KRow)
+#### Arrangements (for KColumn & KRow)
 ```kotlin
 // For KColumn.verticalArrangement and KRow.horizontalArrangement
 KArrangements.Start                         // "start" - pack at start
@@ -2047,7 +2039,7 @@ verticalArrangement = KArrangements.Center
 horizontalArrangement = KArrangements.SpaceEvenly
 ```
 
-#### **Alignments** (for component positioning)
+#### Alignments (for component positioning)
 ```kotlin
 // For KColumn.horizontalAlignment and KRow.verticalAlignment
 KAlignments.Start                           // "start"
@@ -2063,9 +2055,9 @@ horizontalAlignment = KAlignments.CenterHorizontally
 verticalAlignment = KAlignments.CenterVertically
 ```
 
-### 🎯 **Typography System**
+### Typography System
 
-#### **Font Weights**
+#### Font Weights
 ```kotlin
 KFontWeights.Normal                         // "normal" (400)
 KFontWeights.Light                          // "light" (300)
@@ -2077,7 +2069,7 @@ KFontWeights.Bold                           // "bold" (700)
 fontWeight = KFontWeights.Bold
 ```
 
-#### **Text Alignment**
+#### Text Alignment
 ```kotlin
 KTextAlign.Start                            // "start" - left in LTR
 KTextAlign.Center                           // "center" - centered
@@ -2088,9 +2080,9 @@ KTextAlign.Justify                          // "justify" - justified
 textAlign = KTextAlign.Center
 ```
 
-### ✨ **Advanced Features**
+### Advanced Features
 
-#### **Conditional Rendering**
+#### Conditional Rendering
 ```kotlin
 KIf(condition: Boolean) {
     // Components rendered only if condition is true
@@ -2108,7 +2100,7 @@ KIf(!user.isLoggedIn) {
 }
 ```
 
-#### **Dynamic Lists**
+#### Dynamic Lists
 ```kotlin
 KForEach(items: List<T>) { item ->
     // Components generated for each item
@@ -2130,7 +2122,7 @@ KForEach(listOf("Red", "Green", "Blue")) { color ->
 }
 ```
 
-#### **Repetition**
+#### Repetition
 ```kotlin
 KRepeat(count: Int) { index ->
     // Components generated 'count' times
@@ -2152,9 +2144,9 @@ KRepeat(3) { row ->
 }
 ```
 
-### 🔧 **Helper Functions**
+### Helper Functions
 
-#### **Component Creation Helpers**
+#### Component Creation Helpers
 ```kotlin
 // Quick text creation
 fun KUniversalScope.createText(text: String, color: String? = null)
@@ -2173,7 +2165,7 @@ val customComponent = KTextNode(KTextProps(text = "Dynamic", color = KColors.Red
 addAny(customComponent)
 ```
 
-### 🚀 **Complete Example**
+### Complete Example
 ```kotlin
 val complexUI = KColumn(
     modifier = kModifier(
@@ -2186,7 +2178,7 @@ val complexUI = KColumn(
 ) {
     // Header
     KText(
-        text = "Welcome to Ketoy! 🚀",
+        text = "Welcome to Ketoy!",
         fontSize = 28,
         fontWeight = KFontWeights.Bold,
         color = KColors.Purple,
@@ -2218,7 +2210,7 @@ val complexUI = KColumn(
             )
         ) {
             KText(
-                text = "✨ $feature",
+                text = feature,
                 fontSize = 18,
                 fontWeight = KFontWeights.Medium,
                 color = KColors.Blue
@@ -2250,8 +2242,7 @@ val complexUI = KColumn(
         KButton(
             containerColor = KColors.Green,
             shape = kRounded(12)
-        ) {
-            KText("Get Started", color = KColors.White)
+        ) {            KText("Get Started", color = KColors.White)
         }
         
         KButton(
@@ -2269,11 +2260,11 @@ val json = complexUI.toJson()
 JSONStringToUI(json)
 ```
 
-This comprehensive DSL provides everything you need to create beautiful, dynamic UIs with complete type safety and auto-completion support! 🎉
+This comprehensive DSL provides everything you need to create beautiful, dynamic UIs with complete type safety and auto-completion support!
 
 ---
 
-## 🚀 Quick Start Guide
+## Quick Start Guide
 
 ### 1. Installation
 
@@ -2313,7 +2304,7 @@ val welcomeScreen = KColumn(
     horizontalAlignment = KAlignments.CenterHorizontally
 ) {
     KText(
-        text = "🎉 Welcome to the Future!",
+        text = "Welcome to the Future!",
         fontSize = 24,
         fontWeight = KFontWeights.Bold,
         color = KColors.Purple,
@@ -2335,9 +2326,9 @@ val json = welcomeScreen.toJson()
 
 ---
 
-## 🎪 Real-World Examples
+## Real-World Examples
 
-### 📱 E-Commerce Product Card
+### E-Commerce Product Card
 
 <details>
 <summary>Click to see K-DSL Code</summary>
@@ -2360,7 +2351,7 @@ val productCard = KColumn(
             cornerRadius = 8
         )
     ) {
-        KText("🖼️ Product Image", textAlign = KTextAlign.Center)
+        contentDescription = "Profile Picture",
     }
     
     // Product Info
@@ -2426,7 +2417,7 @@ val productCard = KColumn(
         {
           "type": "Text",
           "props": {
-            "text": "🖼️ Product Image",
+            "text": "Product Image",
             "textAlign": "center"
           }
         }
@@ -2437,13 +2428,13 @@ val productCard = KColumn(
 ```
 </details>
 
-### 🎯 Dynamic Dashboard with Conditional Rendering
+### Dynamic Dashboard with Conditional Rendering
 
 ```kotlin
 fun createDashboard(user: User) = KColumn {
     // Header with user greeting
     KText(
-        text = "Welcome back, ${user.name}! 👋",
+        text = "Welcome back, ${user.name}!",
         fontSize = 24,
         fontWeight = KFontWeights.Bold
     )
@@ -2452,7 +2443,7 @@ fun createDashboard(user: User) = KColumn {
     KIf(user.isPremium) {
         KRow {
             KButton(containerColor = KColors.Gold) {
-                KText("⭐ Premium Features")
+                KText("Premium Features")
             }
         }
     }
@@ -2488,7 +2479,7 @@ fun createDashboard(user: User) = KColumn {
 }
 ```
 
-### 🛍️ Server-Driven A/B Testing
+### Server-Driven A/B Testing
 
 ```kotlin
 // Server sends different variants
@@ -2503,7 +2494,7 @@ val experimentVariant = when (user.abTestGroup) {
         containerColor = KColors.Orange,
         shape = KShapes.Rounded20
     ) {
-        KText("🛒 Add to Cart - Orange")
+        KText("Add to Cart - Orange")
     }
     else -> KButton { KText("Default") }
 }
@@ -2511,9 +2502,9 @@ val experimentVariant = when (user.abTestGroup) {
 
 ---
 
-## 🎨 Comprehensive Styling System
+## Comprehensive Styling System
 
-### 🌈 Color System
+### Color System
 ```kotlin
 // Built-in colors
 KColors.Red, KColors.Green, KColors.Blue
@@ -2526,7 +2517,7 @@ color = "#4CAF50"          // Green
 color = "#FFF44336"        // Red with alpha
 ```
 
-### 📐 Modifier System
+### Modifier System
 ```kotlin
 kModifier(
     // Size & Layout
@@ -2551,7 +2542,7 @@ kModifier(
 )
 ```
 
-### 🎭 Typography System
+### Typography System
 ```kotlin
 KText(
     text = "Styled Text",
@@ -2566,9 +2557,9 @@ KText(
 
 ---
 
-## 🔧 Advanced Features
+## Advanced Features
 
-### 🎯 Conditional Rendering
+### Conditional Rendering
 ```kotlin
 KColumn {
     KIf(user.isLoggedIn) {
@@ -2583,7 +2574,7 @@ KColumn {
 }
 ```
 
-### 🔄 Dynamic Lists
+### Dynamic Lists
 ```kotlin
 // From data collections
 KForEach(products) { product ->
@@ -2600,7 +2591,7 @@ KRepeat(5) { index ->
 }
 ```
 
-### 🎪 Universal Scope System
+### Universal Scope System
 ```kotlin
 // ANY component works in ANY scope - no restrictions!
 KColumn {
@@ -2618,9 +2609,9 @@ KColumn {
 
 ---
 
-## 🏢 Enterprise Features
+## Enterprise Features
 
-### 📊 Analytics Integration
+### Analytics Integration
 ```kotlin
 // Track UI interactions automatically
 KButton(
@@ -2634,13 +2625,13 @@ KButton(
 }
 ```
 
-### 🔒 Security & Validation
+### Security & Validation
 - **Schema Validation**: Automatic JSON schema validation
 - **Type Safety**: Compile-time error checking with K-DSL
 - **Sanitization**: Automatic XSS protection
 - **Rate Limiting**: Built-in abuse prevention
 
-### 🌍 Internationalization
+### Internationalization
 ```kotlin
 // Server sends localized content
 val localizedUI = when (user.locale) {
@@ -2651,7 +2642,7 @@ val localizedUI = when (user.locale) {
 }
 ```
 
-### 🎛️ Content Management
+### Content Management
 ```kotlin
 // CMS integration example
 class ContentManager {
@@ -2667,20 +2658,20 @@ class ContentManager {
 
 ---
 
-## 📈 Performance & Optimization
+## Performance & Optimization
 
-### ⚡ Lightning Fast Rendering
+### Lightning Fast Rendering
 - **Lazy Loading**: Components render on-demand
 - **Caching**: Intelligent JSON and UI caching
 - **Minimal Recomposition**: Optimized Compose integration
 - **Memory Efficient**: Lightweight JSON parsing
 
-### 📱 Bundle Size Impact
+### Bundle Size Impact
 - **Core Library**: ~45KB
 - **Serialization**: ~120KB (kotlinx.serialization)
 - **Total Addition**: ~165KB to your APK
 
-### 🚀 Benchmarks
+### Benchmarks
 ```
 JSON to UI Rendering: ~2-5ms (typical screen)
 DSL to JSON: ~1ms (instant)
@@ -2690,27 +2681,27 @@ Cold Start Impact: +50ms (one-time)
 
 ---
 
-## 🎯 Use Cases & Success Stories
+## Use Cases & Success Stories
 
-### 🛒 **E-Commerce Apps**
+### E-Commerce Apps
 - **Dynamic Product Pages**: Update layouts without app releases
 - **Seasonal Campaigns**: Push holiday themes instantly
 - **A/B Testing**: Test checkout flows in real-time
 - **Personalization**: Show different UIs based on user behavior
 
-### 📱 **Social Media Apps**  
+### Social Media Apps  
 - **Feature Rollouts**: Gradual feature releases
 - **Content Layouts**: Experiment with post designs
 - **Onboarding Flows**: Optimize user conversion
 - **Regional Variations**: Different UIs per market
 
-### 🏦 **Banking & Finance**
+### Banking & Finance
 - **Compliance Updates**: Meet regulations instantly
 - **Campaign Banners**: Promote offers dynamically
 - **Emergency Notifications**: Critical updates without delays
 - **Accessibility Improvements**: Enhance UX immediately
 
-### 🎮 **Gaming & Entertainment**
+### Gaming & Entertainment
 - **Event Screens**: Seasonal events and promotions
 - **Leaderboards**: Dynamic scoring displays
 - **Shop Interfaces**: Update in-game stores
@@ -2718,21 +2709,21 @@ Cold Start Impact: +50ms (one-time)
 
 ---
 
-## 🔮 Roadmap & Future Features
+## Roadmap & Future Features
 
-### 🚀 Coming Soon (Q1 2026)
+### Coming Soon (Q1 2026)
 - [ ] **Animations & Transitions**: Smooth UI animations from JSON
 - [ ] **Web Support**: Compose Multiplatform integration  
 - [ ] **Real-time Updates**: WebSocket-based live UI updates
 - [ ] **Visual Editor**: Drag-drop UI builder with live preview
 
-### 🎯 Planned Features (Q2-Q4 2026)
+### Planned Features (Q2-Q4 2026)
 - [ ] **iOS Support**: SwiftUI renderer for cross-platform
 - [ ] **Advanced Analytics**: Detailed user interaction tracking
 - [ ] **Machine Learning**: AI-powered UI optimization
 - [ ] **Enterprise Dashboard**: Complete CMS solution
 
-### 🌟 Community Requests
+### Community Requests
 - [ ] **Flutter Integration**: Dart/Flutter renderer
 - [ ] **React Native**: JavaScript renderer
 - [ ] **Desktop Support**: Windows/Mac/Linux apps
@@ -2740,53 +2731,107 @@ Cold Start Impact: +50ms (one-time)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We love contributions! Here's how to get started:
 
-### 🔧 Development Setup
+### Development Setup
 ```bash
 git clone https://github.com/developerstring/ketoy.git
 cd ketoy
 ./gradlew build
 ```
 
-### 📋 Contribution Guidelines
+### Contribution Guidelines
 1. **Fork** the repository
 2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
 3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
 4. **Push** to the branch (`git push origin feature/amazing-feature`)
 5. **Open** a Pull Request
 
-### 🐛 Bug Reports
+### Bug Reports
 Found a bug? [Open an issue](https://github.com/developerstring/ketoy/issues) with:
 - Clear description
 - Minimal reproduction code
 - Expected vs actual behavior
 - Device/OS information
 
-### 💡 Feature Requests
+### Feature Requests
 Have an idea? We'd love to hear it! [Start a discussion](https://github.com/developerstring/ketoy/discussions)
 
 ---
 
-## 📞 Support & Community
+## Support & Community
 
-### 🆘 Getting Help
-- **📖 Documentation**: [Full docs](https://ketoy.dev/docs)
-- **💬 Discord**: [Join our community](https://discord.gg/ketoy)
-- **📧 Email**: support@ketoy.dev
-- **🐛 Issues**: [GitHub Issues](https://github.com/developerstring/ketoy/issues)
+### Getting Help
+- **Documentation**: [Full docs](https://ketoy.dev/docs)
+- **Discord**: [Join our community](https://discord.gg/ketoy)
+- **Email**: support@ketoy.dev
+- **Issues**: [GitHub Issues](https://github.com/developerstring/ketoy/issues)
 
-### 🎓 Learning Resources
-- **🎥 Video Tutorials**: [YouTube Channel](https://youtube.com/@ketoy)
-- **📝 Blog Posts**: [Medium Publication](https://medium.com/@ketoy)
-- **🔨 Sample Apps**: [Example Repository](https://github.com/developerstring/ketoy-examples)
-- **📊 Case Studies**: [Success Stories](https://ketoy.dev/case-studies)
+### Learning Resources
+- **Video Tutorials**: [YouTube Channel](https://youtube.com/@ketoy)
+- **Blog Posts**: [Medium Publication](https://medium.com/@ketoy)
+- **Sample Apps**: [Example Repository](https://github.com/developerstring/ketoy-examples)
+- **Case Studies**: [Success Stories](https://ketoy.dev/case-studies)
 
 ---
 
-## 📄 License
+## Troubleshooting
+
+### Website Animations Not Showing
+
+If you've cloned the website repository and the animations (Galaxy background, PixelCard) aren't visible:
+
+**Common Causes:**
+
+1. **Missing Dependencies**
+   ```bash
+   # Make sure all dependencies are installed
+   npm install
+   # or
+   yarn install
+   ```
+
+2. **WebGL Not Supported**
+   - The Galaxy animation requires **WebGL2** support
+   - Check browser console (F12) for errors
+   - Try a different browser (Chrome, Firefox, Edge recommended)
+   - Update your graphics drivers
+
+3. **Hardware Acceleration Disabled**
+   - In Chrome: `chrome://settings` → Advanced → System → Enable "Use hardware acceleration"
+   - In Firefox: `about:preferences` → General → Performance → Uncheck "Use recommended performance settings" → Check "Use hardware acceleration"
+
+4. **Canvas Rendering Issues**
+   - PixelCard uses HTML5 Canvas
+   - Clear browser cache: Ctrl+Shift+Delete (Windows) or Cmd+Shift+Delete (Mac)
+   - Disable browser extensions that might block canvas rendering
+
+5. **Development Server Issues**
+   ```bash
+   # Kill the dev server and restart
+   npm run dev
+   ```
+
+**Debug Steps:**
+
+1. Open browser DevTools (F12)
+2. Check Console tab for errors like:
+   - `WebGL context not available`
+   - `Failed to initialize WebGL renderer`
+   - `Canvas rendering failed`
+3. Check Network tab to ensure `ogl` library loaded correctly
+4. Verify animations work on the [live demo](https://ketoy.dev)
+
+**Still Having Issues?**
+- Open an issue on [GitHub Issues](https://github.com/developerstring/ketoy/issues)
+- Join our [Discord](https://discord.gg/ketoy) for real-time support
+- Email: support@ketoy.dev
+
+---
+
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -2808,17 +2853,17 @@ copies or substantial portions of the Software.
 
 ---
 
-## 🌟 Star History
+## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=developerstring/ketoy&type=Date)](https://star-history.com/#developerstring/ketoy&Date)
 
 ---
 
-## 🔥 Made with ❤️ by the Ketoy Team
+## Made with care by the Ketoy Team
 
 **Transform your Android apps today. Build once, update forever.** 
 
-[⭐ Star us on GitHub](https://github.com/developerstring/ketoy) | [📖 Read the Docs](https://ketoy.dev) | [💬 Join Discord](https://discord.gg/ketoy)
+[Star us on GitHub](https://github.com/developerstring/ketoy) | [Read the Docs](https://ketoy.dev) | [Join Discord](https://discord.gg/ketoy)
 
 ---
 
@@ -2830,4 +2875,4 @@ copies or substantial portions of the Software.
 
 ---
 
-*Ready to revolutionize your Android development? Get started with Ketoy today! 🚀*
+*Ready to revolutionize your Android development? Get started with Ketoy today!*

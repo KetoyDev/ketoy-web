@@ -198,11 +198,23 @@ export default function Galaxy({
   useEffect(() => {
     if (!ctnDom.current) return;
     const ctn = ctnDom.current;
-    const renderer = new Renderer({
-      alpha: transparent,
-      premultipliedAlpha: false
-    });
-    const gl = renderer.gl;
+    
+    let renderer, gl;
+    try {
+      renderer = new Renderer({
+        alpha: transparent,
+        premultipliedAlpha: false
+      });
+      gl = renderer.gl;
+      
+      if (!gl) {
+        console.error('Galaxy: WebGL context not available');
+        return;
+      }
+    } catch (error) {
+      console.error('Galaxy: Failed to initialize WebGL renderer', error);
+      return;
+    }
 
     if (transparent) {
       gl.enable(gl.BLEND);
@@ -281,7 +293,13 @@ export default function Galaxy({
       renderer.render({ scene: mesh });
     }
     animateId = requestAnimationFrame(update);
-    ctn.appendChild(gl.canvas);
+    
+    try {
+      ctn.appendChild(gl.canvas);
+    } catch (error) {
+      console.error('Galaxy: Failed to append canvas', error);
+      return;
+    }
 
     function handleMouseMove(e) {
       const rect = ctn.getBoundingClientRect();
@@ -301,14 +319,24 @@ export default function Galaxy({
     }
 
     return () => {
-      cancelAnimationFrame(animateId);
+      if (animateId) {
+        cancelAnimationFrame(animateId);
+      }
       window.removeEventListener('resize', resize);
       if (mouseInteraction) {
         ctn.removeEventListener('mousemove', handleMouseMove);
         ctn.removeEventListener('mouseleave', handleMouseLeave);
       }
-      ctn.removeChild(gl.canvas);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      if (gl && gl.canvas && ctn.contains(gl.canvas)) {
+        ctn.removeChild(gl.canvas);
+      }
+      if (gl) {
+        try {
+          gl.getExtension('WEBGL_lose_context')?.loseContext();
+        } catch (e) {
+          console.error('Galaxy: Error cleaning up WebGL context', e);
+        }
+      }
     };
   }, [
     focal,
