@@ -5,16 +5,13 @@ import App from './App.jsx';
 import './styles.css';
 
 const root = document.getElementById('root');
-console.log('Root element:', root);
 
 if (root) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <BrowserRouter>
+      <BrowserRouter basename="/ketoy-web">
         <App />
       </BrowserRouter>
     </React.StrictMode>
   );
-} else {
-  console.error('Root element not found!');
 }
