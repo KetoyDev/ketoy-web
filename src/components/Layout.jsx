@@ -1,10 +1,18 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Layout({ children }) {
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (isHome) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.location.href = `/#${sectionId}`;
     }
   };
 
@@ -25,20 +33,17 @@ export default function Layout({ children }) {
             <a href="#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }}>
               Features
             </a>
-            <a href="#playground" onClick={(e) => { e.preventDefault(); scrollToSection('playground'); }}>
+            <Link to="/playground" className={location.pathname === '/playground' ? 'nav-active' : ''}>
               Playground
-            </a>
-            <a href="#use-cases" onClick={(e) => { e.preventDefault(); scrollToSection('use-cases'); }}>
-              Use Cases
-            </a>
-            <a href="#roadmap" onClick={(e) => { e.preventDefault(); scrollToSection('roadmap'); }}>
-              Roadmap
-            </a>
+            </Link>
+            <Link to="/pricing" className={location.pathname === '/pricing' ? 'nav-active' : ''}>
+              Pricing
+            </Link>
           </nav>
 
           <div className="header-right">
             <a 
-              href="https://github.com/developerstring/ketoy" 
+              href="https://github.com/ketoyDev/Ketoy-web" 
               target="_blank" 
               rel="noreferrer"
               className="header-icon-link github-link"
@@ -48,13 +53,7 @@ export default function Layout({ children }) {
               </svg>
               <span className="github-stars">689</span>
             </a>
-            <button className="header-icon-btn" title="Theme">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M2 12h20"/>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-              </svg>
-            </button>
+
             <a 
               href="https://discord.gg/ketoy" 
               target="_blank" 
@@ -128,7 +127,7 @@ export default function Layout({ children }) {
             <div className="footer-links-grid">
               <div className="footer-links-col">
                 <h4>Relevance</h4>
-                <a href="mailto:support@ketoy.dev?subject=Pricing%20Inquiry">Contact us for Pricing</a>
+                <Link to="/pricing">Pricing</Link>
                 <a href="#playground" onClick={(e) => { e.preventDefault(); scrollToSection('playground'); }}>Playground</a>
                 <a href="#use-cases" onClick={(e) => { e.preventDefault(); scrollToSection('use-cases'); }}>Console</a>
               </div>

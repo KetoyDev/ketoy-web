@@ -237,7 +237,9 @@ export default function Galaxy({
         );
       }
     }
-    window.addEventListener('resize', resize, false);
+    let resizeTimer;
+    const debouncedResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 100); };
+    window.addEventListener('resize', debouncedResize, false);
     resize();
 
     const geometry = new Triangle(gl);
@@ -272,8 +274,22 @@ export default function Galaxy({
 
     const mesh = new Mesh(gl, { geometry, program });
     let animateId;
+    let isVisible = true;
+
+    // Pause the rAF loop when the Galaxy is scrolled off-screen
+    const visObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animateId) {
+          animateId = requestAnimationFrame(update);
+        }
+      },
+      { threshold: 0 }
+    );
+    visObserver.observe(ctn);
 
     function update(t) {
+      if (!isVisible) { animateId = null; return; }
       animateId = requestAnimationFrame(update);
       if (!disableAnimation) {
         program.uniforms.uTime.value = t * 0.001;
@@ -319,10 +335,12 @@ export default function Galaxy({
     }
 
     return () => {
+      visObserver.disconnect();
       if (animateId) {
         cancelAnimationFrame(animateId);
       }
-      window.removeEventListener('resize', resize);
+      clearTimeout(resizeTimer);
+      window.removeEventListener('resize', debouncedResize);
       if (mouseInteraction) {
         ctn.removeEventListener('mousemove', handleMouseMove);
         ctn.removeEventListener('mouseleave', handleMouseLeave);

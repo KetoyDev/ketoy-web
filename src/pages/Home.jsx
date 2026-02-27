@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Galaxy from '../components/Galaxy';
 
 export default function Home() {
   useEffect(() => {
-    // Initialize Lucide icons
     if (window.lucide) {
       window.lucide.createIcons();
     }
 
-    // Scroll animation observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -25,84 +23,97 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Content */}
-      <section id="home" style={{ minHeight: '100vh', paddingBottom: '20vh', background: 'transparent', position: 'relative', zIndex: 10 }}>
-      
-      {/* Animated Background - Galaxy (contained within home section) */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}>
-        <Galaxy
-          mouseRepulsion
-          mouseInteraction
-          density={1}
-          glowIntensity={0.3}
-          saturation={0}
-          hueShift={140}
-          twinkleIntensity={0.3}
-          rotationSpeed={0.1}
-          repulsionStrength={1}
-          autoCenterRepulsion={0}
-          starSpeed={1.5}
-          speed={2}
-        />
-      </div>
-
-      <main className="flex flex-col pt-40 pr-6 pl-6 relative gap-x-3 gap-y-x-3 items-center justify-center">
-        {/* Version Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8 hover:bg-white/10 transition-colors cursor-pointer group scroll-item scroll-fade-up" style={{ animationPlayState: 'running' }}>
-          <span className="bg-blue-500/20 text-blue-400 rounded px-1.5 py-0.5 text-[10px] font-medium tracking-wide font-sans">NEW</span>
-          <span className="text-xs text-gray-300 font-medium group-hover:text-white transition-colors pr-1 font-sans">Version 3.0 is live</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right w-3 h-3 text-gray-500 group-hover:text-white transition-colors">
-            <path d="M5 12h14"></path>
-            <path d="m12 5 7 7-7 7"></path>
-          </svg>
+      <section id="home" className="ketoy-hero">
+        {/* Galaxy stars background — original props from repo */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}>
+          <Galaxy
+            mouseRepulsion={false}
+            mouseInteraction={false}
+            density={0.7}
+            glowIntensity={0.2}
+            saturation={0}
+            hueShift={140}
+            twinkleIntensity={0.2}
+            rotationSpeed={0.05}
+            repulsionStrength={0}
+            autoCenterRepulsion={0}
+            starSpeed={1}
+            speed={1.2}
+          />
         </div>
 
-        {/* Headline */}
-        <h1 className="text-center text-5xl md:text-7xl leading-[1.1] max-w-4xl mx-auto font-oswald font-light tracking-tight scroll-item scroll-blur-in delay-100 text-white" style={{ animationPlayState: 'running' }}>
-          Build once.
-          <span className="text-blue-400 font-oswald font-light tracking-tight"> Update forever.</span>
-        </h1>
-
-        {/* Subheadline */}
-        <p className="text-center text-xl text-gray-200 mt-8 max-w-2xl mx-auto leading-relaxed font-light font-sans scroll-item scroll-fade-up delay-200" style={{ animationPlayState: 'running' }}>
-          A powerful server-driven UI engine for Android. Turn JSON into native Jetpack Compose interfaces without app updates.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-10 scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
-          <button className="group inline-flex overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(59,130,246,0.5)] focus:outline-none sm:w-auto text-sm font-medium text-white w-full h-[54px] rounded-full pt-4 pr-8 pb-4 pl-8 relative items-center justify-center" style={{ position: 'relative' }}>
-            <style>{`
-              @keyframes beam-spin { to { transform: rotate(360deg); } }
-              @keyframes lines-slide { 0% { background-position: 0 0; } 100% { background-position: 24px 0; } }
-            `}</style>
-            <div className="absolute inset-0 -z-20 rounded-full overflow-hidden p-[1px]">
-              <div className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0_300deg,#3b82f6_360deg)]" style={{ animation: 'beam-spin 3s linear infinite' }}></div>
-              <div className="absolute inset-[1px] rounded-full bg-[#050505]"></div>
-            </div>
-            <div className="overflow-hidden bg-[#0A0A0A] rounded-full absolute top-[2px] right-[2px] bottom-[2px] left-[2px]">
-              <div className="bg-gradient-to-b from-blue-900/20 to-transparent absolute top-0 right-0 bottom-0 left-0"></div>
-              <div className="opacity-[0.07] mix-blend-plus-lighter absolute top-0 right-0 bottom-0 left-0" style={{ backgroundImage: 'repeating-linear-gradient(90deg, #fff, #fff 1px, transparent 1px, transparent 8px)', backgroundSize: '24px 100%', animation: 'lines-slide 1.5s linear infinite' }}></div>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2/3 h-1/2 bg-blue-500/20 blur-2xl rounded-full pointer-events-none transition-colors duration-500 group-hover:bg-blue-500/40"></div>
-            </div>
-            <span className="transition-colors group-hover:text-white uppercase font-semibold text-white tracking-tight z-10 relative font-sans">Start free</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right relative z-10 ml-2 transition-transform duration-300 group-hover:translate-x-1">
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
+        <div className="hero-content">
+          {/* Version pill */}
+          <a
+            href="https://github.com/developerstring/ketoy"
+            target="_blank"
+            rel="noreferrer"
+            className="hero-pill scroll-item scroll-fade-up"
+            style={{ animationPlayState: 'running' }}
+          >
+            <span className="hero-pill-badge">LIVE</span>
+            <span className="hero-pill-text">Ketoy v3.0 is available now</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
             </svg>
-          </button>
-          <button className="sm:w-auto hover:bg-blue-500/10 hover:border-blue-400 hover:shadow-[0_0_35px_rgba(59,130,246,0.6),inset_0_0_20px_rgba(59,130,246,0.4)] hover:scale-[1.02] transition-all duration-300 flex group text-base font-medium text-white bg-black/60 w-full border-blue-500 border rounded-full pt-3.5 pr-8 pb-3.5 pl-8 shadow-[0_0_20px_rgba(59,130,246,0.5),inset_0_0_10px_rgba(59,130,246,0.2)] gap-x-2 gap-y-2 items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-circle w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors">
-              <path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"></path>
-              <circle cx="12" cy="12" r="10"></circle>
-            </svg>
-            Watch Demo
-          </button>
+          </a>
+
+          {/* Main headline */}
+          <h1 className="hero-headline scroll-item scroll-blur-in delay-100" style={{ animationPlayState: 'running' }}>
+            Update Android apps<br />
+            <span className="hero-headline-accent">in seconds, not weeks</span>
+          </h1>
+
+          {/* Subheadline */}
+          <p className="hero-subheadline scroll-item scroll-fade-up delay-200" style={{ animationPlayState: 'running' }}>
+            The open source, server-driven UI engine for Jetpack Compose. Write K‑DSL, convert to JSON, render native UI. No Play Store approvals needed.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="hero-buttons scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
+            <a
+              href="https://github.com/developerstring/ketoy"
+              target="_blank"
+              rel="noreferrer"
+              className="hero-btn-primary"
+            >
+              Get Started
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/developerstring/ketoy"
+              target="_blank"
+              rel="noreferrer"
+              className="hero-btn-secondary"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+
+          {/* Stats row */}
+          <div className="hero-stats scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
+            <div className="hero-stat">
+              <span className="hero-stat-value">50+</span>
+              <span className="hero-stat-label">Components</span>
+            </div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat">
+              <span className="hero-stat-value">0ms</span>
+              <span className="hero-stat-label">Update Delay</span>
+            </div>
+            <div className="hero-stat-divider" />
+            <div className="hero-stat">
+              <span className="hero-stat-value">100%</span>
+              <span className="hero-stat-label">Native Compose</span>
+            </div>
+          </div>
         </div>
-
-      </main>
       </section>
-
-      {/* Footer removed - will be in Layout component */}
     </>
   );
 }

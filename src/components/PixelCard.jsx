@@ -138,7 +138,6 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
 
   const initPixels = () => {
     if (!containerRef.current || !canvasRef.current) {
-      console.log('PixelCard: containerRef or canvasRef not available');
       return;
     }
 
@@ -147,7 +146,6 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     const height = Math.floor(rect.height);
     
     if (width === 0 || height === 0) {
-      console.log('PixelCard: Invalid dimensions', { width, height });
       return;
     }
     
@@ -159,7 +157,6 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
     canvasRef.current.style.height = `${height}px`;
 
     const colorsArray = finalColors.split(',');
-    console.log('PixelCard: Initializing with colors', colorsArray);
     
     const pxs = [];
     for (let x = 0; x < width; x += parseInt(finalGap, 10)) {
@@ -175,7 +172,6 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
       }
     }
     pixelsRef.current = pxs;
-    console.log('PixelCard: Initialized', pxs.length, 'pixels');
   };
 
   const doAnimate = fnName => {
@@ -211,11 +207,9 @@ export default function PixelCard({ variant = 'default', gap, speed, colors, noF
   };
 
   const onMouseEnter = () => {
-    console.log('PixelCard: Mouse enter - triggering appear animation');
     handleAnimation('appear');
   };
   const onMouseLeave = () => {
-    console.log('PixelCard: Mouse leave - triggering disappear animation');
     handleAnimation('disappear');
   };
   const onFocus = e => {

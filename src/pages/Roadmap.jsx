@@ -1,16 +1,21 @@
 import React from 'react';
-import PixelCard from '../components/PixelCard';
+import SpotlightCard from '../components/SpotlightCard';
+import AnimatedContent from '../components/AnimatedContent';
 
 export default function Roadmap() {
   return (
     <>
       <section id="roadmap" className="section page-section" style={{ background: '#000', position: 'relative' }}>
         <div className="container">
+          <AnimatedContent distance={40} duration={0.6} delay={0}>
           <div className="page-header">
-            <h1>Roadmap</h1>
-            <p className="section-lead">Ketoy is production‑ready today and evolving for multi‑platform futures.</p>
+            <p className="section-eyebrow">Roadmap</p>
+            <h1>What's next for Ketoy</h1>
+            <p className="section-lead">Ketoy is production-ready today and evolving for multi-platform futures.</p>
           </div>
+          </AnimatedContent>
           <div className="grid grid-3">
+            <AnimatedContent distance={50} duration={0.7} delay={0}>
             <div className="card">
               <div className="roadmap-badge roadmap-badge-now">Now</div>
               <h3>Current Features</h3>
@@ -21,6 +26,8 @@ export default function Roadmap() {
                 <li>Lazy lists &amp; advanced styling</li>
               </ul>
             </div>
+            </AnimatedContent>
+            <AnimatedContent distance={50} duration={0.7} delay={0.1}>
             <div className="card">
               <div className="roadmap-badge roadmap-badge-next">Q1 2026</div>
               <h3>Coming Soon</h3>
@@ -31,6 +38,8 @@ export default function Roadmap() {
                 <li>Compose Multiplatform experiments</li>
               </ul>
             </div>
+            </AnimatedContent>
+            <AnimatedContent distance={50} duration={0.7} delay={0.2}>
             <div className="card">
               <div className="roadmap-badge roadmap-badge-future">Later</div>
               <h3>Future Plans</h3>
@@ -41,12 +50,15 @@ export default function Roadmap() {
                 <li>AI‑assisted layout optimization</li>
               </ul>
             </div>
+            </AnimatedContent>
           </div>
 
+          <AnimatedContent distance={40} duration={0.6} delay={0}>
           <div className="testimonials-section" style={{ marginTop: '4rem' }}>
             <h2 className="testimonials-title">Community Testimonials</h2>
             <div className="testimonials-grid">
-              <PixelCard variant="blue" className="testimonial-pixel-card">
+              <AnimatedContent distance={50} duration={0.7} delay={0}>
+              <SpotlightCard spotlightColor="rgba(59, 130, 246, 0.2)" className="testimonial-pixel-card">
                 <div className="testimonial-card-content">
                   <div className="testimonial-quote">
                     <svg className="quote-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,8 +76,10 @@ export default function Roadmap() {
                     </div>
                   </div>
                 </div>
-              </PixelCard>
-              <PixelCard variant="pink" className="testimonial-pixel-card">
+              </SpotlightCard>
+              </AnimatedContent>
+              <AnimatedContent distance={50} duration={0.7} delay={0.15}>
+              <SpotlightCard spotlightColor="rgba(168, 85, 247, 0.2)" className="testimonial-pixel-card">
                 <div className="testimonial-card-content">
                   <div className="testimonial-quote">
                     <svg className="quote-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -83,9 +97,11 @@ export default function Roadmap() {
                     </div>
                   </div>
                 </div>
-              </PixelCard>
+              </SpotlightCard>
+              </AnimatedContent>
             </div>
           </div>
+          </AnimatedContent>
         </div>
       </section>
     </>

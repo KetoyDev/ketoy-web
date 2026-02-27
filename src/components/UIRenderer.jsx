@@ -229,8 +229,13 @@ export default function UIRenderer({ jsonData }) {
 
   const parseFontWeight = (weight) => {
     if (!weight) return 'normal';
-    if (weight === 'bold') return 'bold';
-    return 'normal';
+    switch (weight) {
+      case 'bold': return '700';
+      case 'semiBold': return '600';
+      case 'medium': return '500';
+      case 'light': return '300';
+      default: return '400';
+    }
   };
 
   const parseScaleType = (scaleType) => {

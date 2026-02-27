@@ -436,12 +436,21 @@ const GlobalSpotlight = ({
       }
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
+    // Only attach document listeners when in viewport
+    let listenersAttached = false;
+    const attachListeners = () => { if (!listenersAttached) { document.addEventListener('mousemove', handleMouseMove); document.addEventListener('mouseleave', handleMouseLeave); listenersAttached = true; } };
+    const detachListeners = () => { if (listenersAttached) { document.removeEventListener('mousemove', handleMouseMove); document.removeEventListener('mouseleave', handleMouseLeave); listenersAttached = false; handleMouseLeave(); } };
+
+    const sectionEl = gridRef.current.closest('.bento-section') || gridRef.current;
+    const sectionObserver = new IntersectionObserver(
+      ([entry]) => { entry.isIntersecting ? attachListeners() : detachListeners(); },
+      { rootMargin: '100px' }
+    );
+    sectionObserver.observe(sectionEl);
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
+      sectionObserver.disconnect();
+      detachListeners();
       spotlightRef.current?.parentNode?.removeChild(spotlightRef.current);
     };
   }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor]);
@@ -460,11 +469,13 @@ const useMobileDetection = () => {
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    let resizeTimer;
+    const debouncedCheck = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(checkMobile, 150); };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener('resize', debouncedCheck);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => { clearTimeout(resizeTimer); window.removeEventListener('resize', debouncedCheck); };
   }, []);
 
   return isMobile;
