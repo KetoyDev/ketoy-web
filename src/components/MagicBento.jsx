@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback, useState, memo } from 'react';
 import { gsap } from 'gsap';
 import './MagicBento.css';
 
@@ -80,7 +80,7 @@ const updateCardGlowProperties = (card, mouseX, mouseY, glow, radius) => {
   card.style.setProperty('--glow-radius', `${radius}px`);
 };
 
-const ParticleCard = ({
+const ParticleCard = memo(({
   children,
   className = '',
   disableAnimations = false,
@@ -315,7 +315,8 @@ const ParticleCard = ({
       {children}
     </div>
   );
-};
+});
+ParticleCard.displayName = 'ParticleCard';
 
 const GlobalSpotlight = ({
   gridRef,

@@ -67,7 +67,7 @@ export default function GradlePlugin() {
         </AnimatedContent>
 
         {/* Command cards — horizontal 3-col grid */}
-        <div className="gradle-cards">
+        <div className="gradle-cards" style={{ marginTop: '2.5rem' }}>
           {commands.map((cmd, i) => (
             <AnimatedContent key={cmd.label} direction="up" distance={40} duration={0.6} delay={i * 0.1}>
               <div className="gradle-card card">

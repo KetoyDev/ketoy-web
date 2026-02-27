@@ -1,25 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import Galaxy from '../components/Galaxy';
 
 export default function Home() {
-  useEffect(() => {
-    if (window.lucide) {
-      window.lucide.createIcons();
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.animationPlayState = 'running';
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-    document.querySelectorAll('.scroll-item').forEach(el => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  // Memoize array props — new array references each render would re-create the WebGL context
+  const galaxyFocal = useMemo(() => [0.5, 0.5], []);
+  const galaxyRotation = useMemo(() => [1.0, 0.0], []);
 
   return (
     <>

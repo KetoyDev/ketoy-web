@@ -1,11 +1,11 @@
-import { useRef } from 'react';
+import { useRef, memo } from 'react';
 import './SpotlightCard.css';
 
 /**
  * SpotlightCard — from reactbits.dev
  * A card component where a radial spotlight follows the mouse cursor.
  */
-export default function SpotlightCard({
+function SpotlightCard({
   children,
   className = '',
   spotlightColor = 'rgba(59, 130, 246, 0.18)',
@@ -50,3 +50,5 @@ export default function SpotlightCard({
     </div>
   );
 }
+
+export default memo(SpotlightCard);
