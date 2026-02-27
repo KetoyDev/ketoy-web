@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "[![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org) [![Compose](https://img.shields.io/badge/Jetpack%20Compose-1.5+-green.svg)](https://developer.android.com/jetpack/compose) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Server Driven](https://img.shields.io/badge/Server%20Driven-UI-orange.svg)]()",
-  "homepage": "https://github.com/Parthkk90/ketoy-web#readme",
+  "homepage": "https://ketoydev.github.io/ketoy-web",
   "bugs": {
     "url": "https://github.com/Parthkk90/ketoy-web/issues"
   },
