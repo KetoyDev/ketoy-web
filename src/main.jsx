@@ -9,7 +9,7 @@ const root = document.getElementById('root');
 if (root) {
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
-      <BrowserRouter>
+      <BrowserRouter basename="/ketoy-web">
         <App />
       </BrowserRouter>
     </React.StrictMode>
