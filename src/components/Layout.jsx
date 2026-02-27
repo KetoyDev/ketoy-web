@@ -12,7 +12,7 @@ export default function Layout({ children }) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     } else {
-      window.location.href = `/#${sectionId}`;
+      window.location.href = `${import.meta.env.BASE_URL}#${sectionId}`;
     }
   };
 
@@ -23,7 +23,7 @@ export default function Layout({ children }) {
           <div className="header-left">
             <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="logo">
               <div className="logo-mark">
-                <img src="/ketoy-logo.svg" alt="Ketoy Logo" width="32" height="32" />
+                <img src={`${import.meta.env.BASE_URL}ketoy-logo.svg`} alt="Ketoy Logo" width="32" height="32" />
               </div>
               <span className="logo-text">Ketoy</span>
             </a>
@@ -118,7 +118,7 @@ export default function Layout({ children }) {
             <div className="footer-brand-col">
               <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }} className="footer-logo">
                 <div className="footer-logo-mark">
-                  <img src="/ketoy-logo.svg" alt="Ketoy Logo" width="32" height="32" />
+                  <img src={`${import.meta.env.BASE_URL}ketoy-logo.svg`} alt="Ketoy Logo" width="32" height="32" />
                 </div>
                 <span className="footer-logo-text">Ketoy</span>
               </a>

@@ -56,7 +56,7 @@ export default function PlaygroundPage() {
       <header className="pg-header">
         <div className="pg-header-left">
           <Link to="/" className="pg-logo">
-            <img src="/ketoy-logo.svg" alt="Ketoy" width="24" height="24" />
+            <img src={`${import.meta.env.BASE_URL}ketoy-logo.svg`} alt="Ketoy" width="24" height="24" />
             <span>Ketoy</span>
           </Link>
           <div className="pg-header-sep" />
