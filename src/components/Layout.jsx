@@ -43,7 +43,7 @@ export default function Layout({ children }) {
 
           <div className="header-right">
             <a 
-              href="https://github.com/ketoyDev/Ketoy-web" 
+              href="https://github.com/ketoyDev/Ketoy" 
               target="_blank" 
               rel="noreferrer"
               className="header-icon-link github-link"
