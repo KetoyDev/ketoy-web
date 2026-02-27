@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" class="dark" style="background: #000000;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- GitHub Pages SPA: restore path encoded by 404.html -->
+<script>
+  (function() {
+    var p = new URLSearchParams(window.location.search).get('p');
+    if (p) window.history.replaceState(null, '', decodeURIComponent(p));
+  })();
+</script>
+<title>Ketoy - DSL to JSON to Compose UI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+::-webkit-scrollbar { display: none; }
+body { -ms-overflow-style: none; scrollbar-width: none; }
+.invisible { visibility: hidden !important; }
+@keyframes fadeInUp { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes blurIn { 0% { opacity: 0; filter: blur(15px); transform: scale(0.95); } 100% { opacity: 1; filter: blur(0); transform: scale(1); } }
+.scroll-item { animation-duration: 0.8s; animation-fill-mode: both; animation-play-state: paused; animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.scroll-fade-up { animation-name: fadeInUp; }
+.scroll-blur-in { animation-name: blurIn; }
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+</style>
+  <script type="module" crossorigin src="/ketoy-web/assets/index-Be8odKoP.js"></script>
+  <link rel="stylesheet" crossorigin href="/ketoy-web/assets/index-Ba5kvJOH.css">
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-blue-500 selection:text-white text-white" style="background: #000000;">
+
+<div id="root" style="position: relative; z-index: 10;"></div>
+
+<script>
+  lucide.createIcons();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.scroll-item').forEach(el => observer.observe(el));
+  });
+</script>
+
+</body>
+</html>
