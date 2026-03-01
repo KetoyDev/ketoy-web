@@ -21,7 +21,7 @@ export default function Roadmap() {
               <h3>Current Features</h3>
               <ul>
                 <li>Server‑driven Compose UI for Android</li>
-                <li>K‑DSL with 50+ components</li>
+                <li>K‑DSL with 20+ components</li>
                 <li>Actions, variables, and custom components</li>
                 <li>Lazy lists &amp; advanced styling</li>
               </ul>

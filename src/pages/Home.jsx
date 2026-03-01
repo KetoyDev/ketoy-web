@@ -30,14 +30,14 @@ export default function Home() {
         <div className="hero-content">
           {/* Version pill */}
           <a
-            href="https://github.com/developerstring/ketoy"
+            href="https://github.com/KetoyDev/Ketoy"
             target="_blank"
             rel="noreferrer"
             className="hero-pill scroll-item scroll-fade-up"
             style={{ animationPlayState: 'running' }}
           >
             <span className="hero-pill-badge">LIVE</span>
-            <span className="hero-pill-text">Ketoy v3.0 is available now</span>
+            <span className="hero-pill-text">Ketoy v0.1 is available now</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
             </svg>
@@ -57,7 +57,7 @@ export default function Home() {
           {/* CTA Buttons */}
           <div className="hero-buttons scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
             <a
-              href="https://github.com/developerstring/ketoy"
+              href="https://docs.ketoy.dev"
               target="_blank"
               rel="noreferrer"
               className="hero-btn-primary"
@@ -68,7 +68,7 @@ export default function Home() {
               </svg>
             </a>
             <a
-              href="https://github.com/developerstring/ketoy"
+              href="https://github.com/KetoyDev/Ketoy"
               target="_blank"
               rel="noreferrer"
               className="hero-btn-secondary"
@@ -83,12 +83,12 @@ export default function Home() {
           {/* Stats row */}
           <div className="hero-stats scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
             <div className="hero-stat">
-              <span className="hero-stat-value">50+</span>
+              <span className="hero-stat-value">20+</span>
               <span className="hero-stat-label">Components</span>
             </div>
             <div className="hero-stat-divider" />
             <div className="hero-stat">
-              <span className="hero-stat-value">0ms</span>
+              <span className="hero-stat-value">{'<'} 1 min</span>
               <span className="hero-stat-label">Update Delay</span>
             </div>
             <div className="hero-stat-divider" />

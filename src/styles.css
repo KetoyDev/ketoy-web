@@ -816,13 +816,32 @@ a:hover {
 
 .feature-tag {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
   color: var(--text-tertiary);
   letter-spacing: 0.01em;
+}
+
+/* Colored variants matching each card's theme */
+.feature-tags--purple .feature-tag {
+  background: rgba(108, 99, 255, 0.12);
+  border-color: rgba(108, 99, 255, 0.35);
+  color: rgba(167, 139, 250, 0.95);
+}
+
+.feature-tags--green .feature-tag {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: rgba(52, 211, 153, 0.95);
+}
+
+.feature-tags--blue .feature-tag {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: rgba(96, 165, 250, 0.95);
 }
 
 /* =====================================================

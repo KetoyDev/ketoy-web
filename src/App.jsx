@@ -11,6 +11,9 @@ import Roadmap from './pages/Roadmap.jsx';
 // Heavy standalone pages — code-split so they don't block initial load
 const Pricing = lazy(() => import('./pages/Pricing.jsx'));
 const PlaygroundPage = lazy(() => import('./playground/PlaygroundPage.jsx'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService.jsx'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.jsx'));
+const Security = lazy(() => import('./pages/Security.jsx'));
 
 const PageLoader = () => (
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#000' }}>
@@ -37,6 +40,9 @@ export default function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/playground" element={<Suspense fallback={<PageLoader />}><PlaygroundPage /></Suspense>} />
       <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><Pricing /></Suspense>} />
+      <Route path="/terms" element={<Suspense fallback={<PageLoader />}><TermsOfService /></Suspense>} />
+      <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><PrivacyPolicy /></Suspense>} />
+      <Route path="/security" element={<Suspense fallback={<PageLoader />}><Security /></Suspense>} />
     </Routes>
   );
 }

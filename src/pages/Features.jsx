@@ -328,7 +328,7 @@ export default function Features() {
                 </div>
                 <h3>Zero-Release Updates</h3>
                 <p>Push UI changes instantly from your server. No app store approvals, no waiting. 100% of users get updates in real-time.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--purple">
                   <span className="feature-tag">Instant</span>
                   <span className="feature-tag">No APK</span>
                 </div>
@@ -354,7 +354,7 @@ export default function Features() {
                 </div>
                 <h3>Type-Safe K-DSL</h3>
                 <p>Write Compose UIs with full IDE support, autocomplete, and compile-time type safety.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--green">
                   <span className="feature-tag">K-DSL</span>
                   <span className="feature-tag">IDE</span>
                 </div>
@@ -379,9 +379,9 @@ export default function Features() {
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>
                   </svg>
                 </div>
-                <h3>50+ Components</h3>
+                <h3>20+ Components</h3>
                 <p>Complete UI library with KColumn, KRow, KBox, KCard, KButton, KImage, KTextField and more.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--blue">
                   <span className="feature-tag">Layouts</span>
                   <span className="feature-tag">Inputs</span>
                   <span className="feature-tag">Media</span>
@@ -408,7 +408,7 @@ export default function Features() {
                 </div>
                 <h3>A/B Testing</h3>
                 <p>Test UI variants in real-time with feature flags and user segmentation. No new builds required.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--blue">
                   <span className="feature-tag">Variants</span>
                   <span className="feature-tag">Segments</span>
                   <span className="feature-tag">Flags</span>
@@ -419,7 +419,7 @@ export default function Features() {
             </AnimatedContent>
 
             {/* Row 3: Narrow + Wide */}
-            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-narrow">
+            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-wide">
             <ParticleCard
               className="card magic-bento-card magic-bento-card--border-glow feature-card"
               particleCount={6}
@@ -436,7 +436,7 @@ export default function Features() {
                 </div>
                 <h3>Extensible</h3>
                 <p>Add custom widgets, actions, and native integrations. Extend Ketoy for your product.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--green">
                   <span className="feature-tag">Custom</span>
                   <span className="feature-tag">Plugins</span>
                   <span className="feature-tag">Native</span>
@@ -446,7 +446,7 @@ export default function Features() {
             </ParticleCard>
             </AnimatedContent>
 
-            <AnimatedContent distance={50} duration={0.7} delay={0.1} className="bento-wide">
+            <AnimatedContent distance={50} duration={0.7} delay={0.1} className="bento-narrow">
             <ParticleCard
               className="card magic-bento-card magic-bento-card--border-glow feature-card"
               particleCount={6}
@@ -463,7 +463,7 @@ export default function Features() {
                 </div>
                 <h3>Instant Rollback</h3>
                 <p>Made a mistake? Roll back to any previous UI version instantly. No app update required.</p>
-                <div className="feature-tags">
+                <div className="feature-tags feature-tags--green">
                   <span className="feature-tag">Versioning</span>
                   <span className="feature-tag">History</span>
                   <span className="feature-tag">Safe</span>

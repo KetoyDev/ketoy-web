@@ -64,12 +64,6 @@ export default function PlaygroundPage() {
         </div>
 
         <div className="pg-header-right">
-          <button className="pg-run-btn" onClick={runCode} title="Run (⌘S / Ctrl+S)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5,3 19,12 5,21" />
-            </svg>
-            Run
-          </button>
           <Link to="/" className="pg-home-btn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 18l-6-6 6-6"/>

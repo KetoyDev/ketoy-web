@@ -102,7 +102,7 @@ export default function GradlePlugin() {
               </div>
             </div>
             <a
-              href="https://github.com/developerstring/ketoy"
+              href="https://docs.ketoy.dev/#/docs/testing-locally"
               target="_blank"
               rel="noreferrer"
               className="gradle-banner-cta"
