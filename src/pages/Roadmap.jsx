@@ -65,14 +65,14 @@ export default function Roadmap() {
                       <path d="M9 9.5C9 9.5 8 10 8 11.5C8 13 9 14.5 9 14.5M9 9.5C9 9.5 10 10 10 11.5C10 13 9 14.5 9 14.5M9 9.5V8.5C9 6.567 10.567 5 12.5 5H14M15 9.5C15 9.5 14 10 14 11.5C14 13 15 14.5 15 14.5M15 9.5C15 9.5 16 10 16 11.5C16 13 15 14.5 15 14.5M15 9.5V8.5C15 6.567 16.567 5 18.5 5H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     <p className="testimonial-text">
-                      We can now A/B test any UI change instantly and push updates without waiting for app store approval. Ketoy is a game-changer.
+                      I’ve personally tried Ketoy and explored the preview, and I’m genuinely impressed. The setup is simple, the experience is smooth, and the overall workflow feels very developer-friendly. It saves time and removes unnecessary friction from the update process. Definitely a tool I’d recommend to other Android developers.
                     </p>
                   </div>
                   <div className="testimonial-author">
-                    <div className="author-avatar">SC</div>
+                    <div className="author-avatar">AS</div>
                     <div className="author-info">
-                      <div className="author-name">Sarah Chen</div>
-                      <div className="author-role">Lead Mobile Developer</div>
+                      <div className="author-name">Abhidnya Sonawane</div>
+                      <div className="author-role">Android Developer</div>
                     </div>
                   </div>
                 </div>
@@ -86,14 +86,14 @@ export default function Roadmap() {
                       <path d="M9 9.5C9 9.5 8 10 8 11.5C8 13 9 14.5 9 14.5M9 9.5C9 9.5 10 10 10 11.5C10 13 9 14.5 9 14.5M9 9.5V8.5C9 6.567 10.567 5 12.5 5H14M15 9.5C15 9.5 14 10 14 11.5C14 13 15 14.5 15 14.5M15 9.5C15 9.5 16 10 16 11.5C16 13 15 14.5 15 14.5M15 9.5V8.5C15 6.567 16.567 5 18.5 5H20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                     <p className="testimonial-text">
-                      The K-DSL is pure magic. We reduced our release cycle from weeks to minutes while keeping full control of our Compose codebase.
+                      This actually handles the biggest pain point of Android Devs who have to wait and go through the policies, approval times and procedures which just adds to the delay in launching an insightful feature. Today the best of Consumer centric apps are predominantly shifting towards Server Driven UI.
                     </p>
                   </div>
                   <div className="testimonial-author">
-                    <div className="author-avatar">AK</div>
+                    <div className="author-avatar">PG</div>
                     <div className="author-info">
-                      <div className="author-name">Alex Kumar</div>
-                      <div className="author-role">Senior Android Engineer</div>
+                      <div className="author-name">Prakhar Gandhi</div>
+                      <div className="author-role">Google Developer Expert - Jetpack Compose & KMP</div>
                     </div>
                   </div>
                 </div>
