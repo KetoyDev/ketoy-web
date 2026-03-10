@@ -1,8 +1,14 @@
 import React from 'react';
 import Layout from '../components/Layout';
+import useSEO from '../hooks/useSEO';
 import './LegalPage.css';
 
 export default function PrivacyPolicy() {
+  useSEO({
+    title: 'Privacy Policy — Ketoy',
+    description: 'Privacy policy for the Ketoy Server-Driven UI framework and cloud platform.',
+    path: '/privacy',
+  })
   return (
     <Layout>
       <div className="legal-page">

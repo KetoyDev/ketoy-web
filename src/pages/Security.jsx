@@ -1,8 +1,14 @@
 import React from 'react';
 import Layout from '../components/Layout';
+import useSEO from '../hooks/useSEO';
 import './LegalPage.css';
 
 export default function Security() {
+  useSEO({
+    title: 'Security — Ketoy',
+    description: 'Security practices, artifact verification, and vulnerability reporting for the Ketoy SDK and cloud platform.',
+    path: '/security',
+  })
   return (
     <Layout>
       <div className="legal-page">

@@ -48,8 +48,17 @@ export default function Layout({ children }) {
             <Link to="/playground" className={location.pathname === '/playground' ? 'nav-active' : ''}>
               Playground
             </Link>
+            <a href="https://docs.ketoy.dev" target="_blank" rel="noreferrer">
+              Docs
+            </a>
             <Link to="/pricing" className={location.pathname === '/pricing' ? 'nav-active' : ''}>
               Pricing
+            </Link>
+            <Link to="/team" className={location.pathname === '/team' ? 'nav-active' : ''}>
+              Team
+            </Link>
+            <Link to="/contact" className={location.pathname === '/contact' ? 'nav-active' : ''}>
+              Contact
             </Link>
           </nav>
 
@@ -143,7 +152,8 @@ export default function Layout({ children }) {
                 <h4>Relevance</h4>
                 <Link to="/pricing">Pricing</Link>
                 <a href="#playground" onClick={(e) => { e.preventDefault(); scrollToSection('playground'); }}>Playground</a>
-                <a href="#use-cases" onClick={(e) => { e.preventDefault(); scrollToSection('use-cases'); }}>Console</a>
+                <Link to="/team">Team</Link>
+                <Link to="/contact">Contact Us</Link>
               </div>
               
               <div className="footer-links-col">

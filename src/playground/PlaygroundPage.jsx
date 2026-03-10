@@ -4,9 +4,15 @@ import CodeEditor from './CodeEditor';
 import PhoneMock from './PhoneMock';
 import { parseDSL, dslToJSON } from './dslParser';
 import { SAMPLE_CARD } from './samples';
+import useSEO from '../hooks/useSEO';
 import './PlaygroundPage.css';
 
 export default function PlaygroundPage() {
+  useSEO({
+    title: 'Playground — Ketoy SDUI Editor',
+    description: 'Try the Ketoy Server-Driven UI playground. Write JSON or DSL and preview Jetpack Compose components live in the browser.',
+    path: '/playground',
+  })
   const [code, setCode] = useState(SAMPLE_CARD);
   const [parsedJSON, setParsedJSON] = useState(null);
   const [parseError, setParseError] = useState(null);

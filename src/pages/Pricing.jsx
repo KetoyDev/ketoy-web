@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AnimatedContent from '../components/AnimatedContent';
 import Layout from '../components/Layout';
+import useSEO from '../hooks/useSEO';
 
 const tiers = [
   {
@@ -111,6 +112,11 @@ const faqs = [
 ];
 
 export default function Pricing() {
+  useSEO({
+    title: 'Pricing — Ketoy Server-Driven UI',
+    description: 'Explore Ketoy pricing plans. Free tier for indie developers, Pro for teams, and Enterprise for large-scale Server-Driven UI deployments.',
+    path: '/pricing',
+  })
   const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
