@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Ketoy is a Server-Driven UI (SDUI) framework for Android Jetpack Compose. Update your app's UI instantly from the cloud without releasing a new build.">
-<meta name="keywords" content="Server Driven UI, SDUI Android, Remote Compose, Ketoy, Jetpack Compose Server Driven UI, Dynamic UI Android, JSON to Compose, Server Driven UI framework, Android SDUI SDK">
+<meta name="description" content="Ketoy is the leading Server-Driven UI (SDUI) framework for Android. Define Jetpack Compose screens as JSON on the cloud and update your Android app UI instantly — no new build, no Play Store wait.">
+<meta name="keywords" content="Server Driven UI Android, SDUI Android, Server Driven UI framework Android, Remote Compose Android, Jetpack Compose Server Driven UI, Dynamic UI Android, JSON to Compose, SDUI SDK Android, Server Driven UI Jetpack Compose, Android UI without app update, cloud driven UI Android, Ketoy, Ketoy SDUI">
 <meta name="author" content="Ketoy">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://ketoy.dev">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Ketoy — Server-Driven UI Framework for Android">
-<meta property="og:description" content="Update your Android app's UI instantly from the cloud. Ketoy is the open-source SDUI framework for Jetpack Compose.">
+<meta property="og:title" content="Ketoy - Server-Driven UI (SDUI) Framework for Android">
+<meta property="og:description" content="The leading Server-Driven UI framework for Android. Update Jetpack Compose screens from the cloud — no new build, no Play Store release. Open-source SDUI SDK.">
 <meta property="og:url" content="https://ketoy.dev">
 <meta property="og:site_name" content="Ketoy">
 <meta property="og:image" content="https://ketoy.dev/ketoy-logo.svg">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ketoy — Server-Driven UI Framework for Android">
-<meta name="twitter:description" content="Update your Android app's UI instantly from the cloud. Open-source SDUI framework for Jetpack Compose.">
+<meta name="twitter:title" content="Ketoy — Server-Driven UI (SDUI) for Android | Jetpack Compose">
+<meta name="twitter:description" content="Server-Driven UI for Android done right. Define Jetpack Compose screens as JSON, host them on the cloud, update instantly — no Play Store release needed. Open-source.">
 <meta name="twitter:image" content="https://ketoy.dev/ketoy-logo.svg">
 <!-- GitHub Pages SPA: restore path encoded by 404.html -->
 <script>
@@ -31,7 +31,7 @@
 </script>
 <link rel="icon" type="image/svg+xml" href="/ketoy-logo.svg" />
 <link rel="shortcut icon" href="/ketoy-logo.svg" />
-<title>Ketoy - Update Android Apps in seconds</title>
+<title>Ketoy — Server-Driven UI Framework for Android | SDUI Jetpack Compose</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,24 +53,68 @@ body { -ms-overflow-style: none; scrollbar-width: none; }
 .delay-500 { animation-delay: 500ms; }
 </style>
 
-<!-- Structured Data -->
+<!-- Structured Data: SoftwareApplication -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "Ketoy",
+  "alternateName": ["Ketoy SDUI", "Ketoy Server-Driven UI", "Ketoy Android SDUI Framework"],
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Android",
-  "description": "Server-Driven UI framework for Android Jetpack Compose. Build dynamic, cloud-managed screens with JSON.",
+  "description": "Server-Driven UI (SDUI) framework for Android Jetpack Compose. Define screens as JSON on the cloud and update your Android app UI instantly — no new build, no Play Store release required.",
+  "keywords": "Server Driven UI Android, SDUI Android, Jetpack Compose Server Driven UI, Remote Compose, Dynamic UI Android",
   "url": "https://ketoy.dev",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "sameAs": [
+    "https://github.com/KetoyDev/ketoy",
+    "https://docs.ketoy.dev"
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Aditya Shinde",
+    "url": "https://ketoy.dev/team"
+  },
   "publisher": {
     "@type": "Organization",
     "name": "Ketoy",
     "url": "https://ketoy.dev",
     "logo": "https://ketoy.dev/ketoy-logo.svg"
   }
+}
+</script>
+<!-- Structured Data: FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Server-Driven UI (SDUI) for Android?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Server-Driven UI (SDUI) is an architecture where the server controls what UI to render inside your Android app. Instead of hardcoding layouts, your app reads JSON from the cloud and renders the corresponding Jetpack Compose components. Ketoy is the leading open-source SDUI framework for Android."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does Ketoy implement Server-Driven UI on Android?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ketoy lets you define Jetpack Compose screens as JSON hosted on your server or cloud. The Ketoy SDK fetches and renders these JSON definitions as native Compose UI in real time — letting you update your Android app's interface without publishing a new APK to the Play Store."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Ketoy the best Server-Driven UI framework for Android?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ketoy is an open-source Server-Driven UI SDK purpose-built for Android Jetpack Compose. It supports dynamic layouts, cloud-managed screens, navigation, theming, and custom components — making it a complete SDUI solution for Android developers."
+      }
+    }
+  ]
 }
 </script>
 </head>

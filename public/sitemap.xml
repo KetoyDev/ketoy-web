@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ketoy.dev/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://ketoy.dev/playground</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://ketoy.dev/pricing</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://ketoy.dev/terms</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
-  <url><loc>https://ketoy.dev/privacy</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
-  <url><loc>https://ketoy.dev/security</loc><priority>0.5</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://ketoy.dev/team</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://ketoy.dev/contact</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/</loc><lastmod>2026-03-11</lastmod><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://ketoy.dev/playground</loc><lastmod>2026-03-11</lastmod><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/pricing</loc><lastmod>2026-03-11</lastmod><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/team</loc><lastmod>2026-03-11</lastmod><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/contact</loc><lastmod>2026-03-11</lastmod><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/security</loc><lastmod>2026-03-11</lastmod><priority>0.5</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://ketoy.dev/terms</loc><lastmod>2026-03-11</lastmod><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://ketoy.dev/privacy</loc><lastmod>2026-03-11</lastmod><priority>0.3</priority><changefreq>yearly</changefreq></url>
 </urlset>
