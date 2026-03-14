@@ -11,7 +11,7 @@ const tiers = [
     period: '/ month',
     description: 'Self-hosted. Perfect for open source projects, side-projects, and solo developers evaluating Ketoy.',
     cta: 'Get started',
-    ctaHref: 'https://github.com/developerstring/ketoy',
+    ctaHref: 'https://docs.ketoy.dev',
     ctaClass: 'pricing-cta-secondary',
     features: [
       'Self-hosted deployment',
@@ -32,11 +32,11 @@ const tiers = [
   {
     name: 'Pro',
     badge: 'Most popular',
-    price: '$29',
+    price: '$19',
     period: '/ month',
     description: 'Managed cloud. Everything you need to ship, iterate, and scale your SDUI-powered app.',
-    cta: 'Start free trial',
-    ctaHref: 'https://github.com/developerstring/ketoy',
+    cta: 'Contact Us',
+    ctaHref: 'https://ketoy.dev/contact',
     ctaClass: 'pricing-cta-primary',
     features: [
       'Ketoy cloud edge delivery',
@@ -58,8 +58,8 @@ const tiers = [
     price: 'Custom',
     period: '',
     description: 'Dedicated infrastructure, SLAs, and a hands-on onboarding team for large-scale production apps.',
-    cta: 'Contact sales',
-    ctaHref: 'mailto:support@ketoy.dev?subject=Enterprise%20Pricing',
+    cta: 'Contact Us',
+    ctaHref: 'https://ketoy.dev/contact',
     ctaClass: 'pricing-cta-secondary',
     features: [
       'Unlimited monthly active users',
