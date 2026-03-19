@@ -93,7 +93,7 @@ export default function Roadmap() {
                     <div className="author-avatar">PG</div>
                     <div className="author-info">
                       <div className="author-name">Prakhar Gandhi</div>
-                      <div className="author-role">Google Developer Expert - Jetpack Compose & KMP</div>
+                      <div className="author-role">Google Developer Educator - Jetpack Compose & KMP</div>
                     </div>
                   </div>
                 </div>
