@@ -80,6 +80,13 @@ export default function Home() {
             </a>
           </div>
 
+          <p className="hero-book-call scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
+            Book a call with Ketoy.dev Team:{' '}
+            <a href="https://calendar.app.google/U8oLuX3kXpps55vYA" target="_blank" rel="noreferrer">
+              https://calendar.app.google/U8oLuX3kXpps55vYA
+            </a>
+          </p>
+
           {/* Stats row */}
           <div className="hero-stats scroll-item scroll-fade-up delay-300" style={{ animationPlayState: 'running' }}>
             <div className="hero-stat">

@@ -18,6 +18,12 @@ export default function Contact() {
           <p className="contact-hero__desc">
             Have questions, feedback, or need support? We'd love to hear from you.
           </p>
+          <p className="contact-hero__book-call">
+            Book a call with Ketoy.dev Team:{' '}
+            <a href="https://calendar.app.google/U8oLuX3kXpps55vYA" target="_blank" rel="noreferrer">
+              https://calendar.app.google/U8oLuX3kXpps55vYA
+            </a>
+          </p>
         </div>
 
         <div className="contact-card">

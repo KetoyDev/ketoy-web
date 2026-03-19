@@ -1811,6 +1811,22 @@ a:hover {
   justify-content: center;
 }
 
+.hero-book-call {
+  margin: -2rem 0 2.5rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.hero-book-call a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hero-book-call a:hover {
+  color: var(--accent-hover);
+}
+
 .hero-btn-primary {
   display: inline-flex;
   align-items: center;
@@ -1919,6 +1935,11 @@ a:hover {
   .hero-buttons {
     flex-direction: column;
     width: 100%;
+  }
+
+  .hero-book-call {
+    margin: -1.5rem 0 2rem;
+    font-size: 0.9rem;
   }
 
   .hero-btn-primary,

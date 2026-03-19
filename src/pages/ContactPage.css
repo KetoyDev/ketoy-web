@@ -25,6 +25,22 @@
   margin: 0 auto;
 }
 
+.contact-hero__book-call {
+  margin: 0.9rem 0 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.contact-hero__book-call a {
+  color: #818cf8;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contact-hero__book-call a:hover {
+  color: #a5b4fc;
+}
+
 /* Main card */
 .contact-card {
   background: rgba(255, 255, 255, 0.03);
