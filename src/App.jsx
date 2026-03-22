@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Layout from './components/Layout.jsx';
 import Home from './pages/Home.jsx';
 import Features from './pages/Features.jsx';
@@ -44,15 +45,18 @@ function LandingPage() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/playground" element={<Suspense fallback={<PageLoader />}><PlaygroundPage /></Suspense>} />
-      <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><Pricing /></Suspense>} />
-      <Route path="/terms" element={<Suspense fallback={<PageLoader />}><TermsOfService /></Suspense>} />
-      <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><PrivacyPolicy /></Suspense>} />
-      <Route path="/security" element={<Suspense fallback={<PageLoader />}><Security /></Suspense>} />
-      <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
-      <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/playground" element={<Suspense fallback={<PageLoader />}><PlaygroundPage /></Suspense>} />
+        <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><Pricing /></Suspense>} />
+        <Route path="/terms" element={<Suspense fallback={<PageLoader />}><TermsOfService /></Suspense>} />
+        <Route path="/privacy" element={<Suspense fallback={<PageLoader />}><PrivacyPolicy /></Suspense>} />
+        <Route path="/security" element={<Suspense fallback={<PageLoader />}><Security /></Suspense>} />
+        <Route path="/team" element={<Suspense fallback={<PageLoader />}><Team /></Suspense>} />
+        <Route path="/contact" element={<Suspense fallback={<PageLoader />}><Contact /></Suspense>} />
+      </Routes>
+      <Analytics />
+    </>
   );
 }
