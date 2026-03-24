@@ -10,7 +10,7 @@ import './PlaygroundPage.css';
 export default function PlaygroundPage() {
   useSEO({
     title: 'Playground — Ketoy SDUI Editor',
-    description: 'Try the Ketoy Server-Driven UI playground. Write JSON or DSL and preview Jetpack Compose components live in the browser.',
+    description: 'Try the Ketoy Server-Driven UI playground. Write K-DSL and preview Jetpack Compose components live in the browser.',
     path: '/playground',
   })
   const [code, setCode] = useState(SAMPLE_CARD);
@@ -93,17 +93,16 @@ export default function PlaygroundPage() {
                 <polyline points="16 18 22 12 16 6"/>
                 <polyline points="8 6 2 12 8 18"/>
               </svg>
-              main.kdsl
+              main.kt
             </button>
             <button
               className={`pg-tab ${activeTab === 'json' ? 'active' : ''}`}
               onClick={() => setActiveTab('json')}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
               </svg>
-              output.json
+              wire preview
             </button>
             <div className="pg-tab-spacer" />
             <div className="pg-tab-info">
@@ -125,13 +124,31 @@ export default function PlaygroundPage() {
             </div>
           </div>
 
-          {/* Editor / JSON content */}
+          {/* Editor / Wire preview content */}
           <div className="pg-editor-area">
             {activeTab === 'editor' ? (
               <CodeEditor code={code} onChange={setCode} onRun={runCode} />
             ) : (
               <div className="pg-json-viewer">
-                <pre>{jsonOutput || (parseError ? `// Error: ${parseError}` : '// No output')}</pre>
+                {parseError ? (
+                  <pre>{`// Error: ${parseError}`}</pre>
+                ) : parsedJSON ? (
+                  <>
+                    <pre style={{ color: 'rgba(16,185,129,0.9)', marginBottom: '1rem' }}>{`// .ktw wire format — compiled from K-DSL
+// In production this is a binary blob (MessagePack + Gzip)
+// ~10× smaller than the equivalent JSON payload
+//
+// Estimated sizes for this screen:
+//   JSON:  ~${Math.round(JSON.stringify(parsedJSON).length / 1024 * 10) / 10} KB
+//   .ktw:  ~${Math.max(1, Math.round(JSON.stringify(parsedJSON).length / 10240 * 10) / 10)} KB  (key-aliased → MessagePack → Gzip)
+//
+// The SDK auto-detects wire vs JSON by magic bytes — no config needed.
+// Raw node tree (for playground inspection):`}</pre>
+                    <pre>{jsonOutput}</pre>
+                  </>
+                ) : (
+                  <pre>{'// No output'}</pre>
+                )}
               </div>
             )}
           </div>

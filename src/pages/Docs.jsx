@@ -7,7 +7,7 @@ export default function Docs() {
         <div className="container">
           <div className="page-header">
             <h1>Documentation</h1>
-            <p className="section-lead">Learn how to use K-DSL → JSON → Compose UI for server-driven interfaces</p>
+            <p className="section-lead">Learn how to use K-DSL → .ktw wire format → Compose UI for server-driven interfaces — 10× smaller than JSON SDUI</p>
           </div>
 
           {/* Quick start */}
@@ -32,22 +32,22 @@ dependencies {
             <div className="grid grid-3">
               <div className="card">
                 <h3>K‑DSL (recommended)</h3>
-                <p>Write type-safe UI code in K-DSL, convert to JSON with .toJson(), render as Compose UI.</p>
+                <p>Write type-safe UI code in K-DSL, compile to <strong>.ktw wire format</strong> (10× smaller than JSON), render as native Compose UI.</p>
               </div>
               <div className="card">
-                <h3>Direct JSON</h3>
-                <p>Generate and version JSON layouts from your backend, CMS, or AI - render as native Compose UI.</p>
+                <h3>Direct Wire / JSON</h3>
+                <p>Send pre-compiled <strong>.ktw payloads</strong> or raw JSON from your backend, CMS, or AI — the SDK auto-detects and renders as native Compose UI.</p>
               </div>
               <div className="card">
                 <h3>Hybrid</h3>
-                <p>Prototype with K‑DSL, export to JSON, deploy to server, and render as Compose UI instantly.</p>
+                <p>Prototype with K‑DSL, export to <strong>.ktw wire files</strong>, deploy to server, and render as Compose UI instantly — without a Play Store update.</p>
               </div>
             </div>
           </div>
 
           {/* Render example */}
           <div className="docs-section">
-            <h2>The Flow: DSL → JSON → Compose UI</h2>
+            <h2>The Flow: DSL → .ktw Wire → Compose UI</h2>
             <div className="card">
               <pre className="code-block">
                 <code>{`// Step 1: Write K-DSL code
@@ -63,18 +63,19 @@ val screen = KColumn {
   }
 }
 
-// Step 2: Convert to JSON
-val json = screen.toJson()
-// Send this JSON to your server
+// Step 2: Export to .ktw wire format (via ketoyExport task)
+// K-DSL → key aliasing → type IDs → MessagePack → Gzip → .ktw
+// Result: ~10× smaller than the equivalent JSON payload
+// Run: ./gradlew ketoyExport
 
-// Step 3: Receive JSON from server & render as Compose UI
+// Step 3: Receive .ktw bytes from server & render as Compose UI
 @Composable
 fun DynamicScreen() {
-    // Fetch JSON from your API
-    val serverJson = viewModel.fetchUILayout()
-    
-    // Render as native Jetpack Compose UI
-    JSONStringToUI(serverJson)
+    // Fetch .ktw wire bytes from your API (or use KetoyCloudScreen)
+    val wireBytes = viewModel.fetchUIWirePayload()
+
+    // SDK auto-detects wire vs JSON — just pass bytes or string
+    JSONStringToUI(wireBytes)
 }`}</code>
               </pre>
             </div>

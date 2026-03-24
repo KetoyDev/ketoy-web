@@ -10,8 +10,8 @@ export default function Playground() {
           <AnimatedContent distance={40} duration={0.6} delay={0}>
           <div className="page-header">
             <p className="section-eyebrow">Playground</p>
-            <h1>DSL &rarr; JSON &rarr; Compose UI</h1>
-            <p className="section-lead">Write type-safe K-DSL code, convert to portable JSON, and render as native Compose UI — all in real-time.</p>
+            <h1>DSL &rarr; .ktw Wire &rarr; Compose UI</h1>
+            <p className="section-lead">Write type-safe K-DSL code, compile to the <strong>.ktw wire format (10× smaller than JSON)</strong>, and render as native Compose UI — all in real-time.</p>
           </div>
           </AnimatedContent>
 
@@ -25,7 +25,7 @@ export default function Playground() {
             <svg className="playground-flow-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             <div className="playground-flow-step">
               <span className="playground-flow-num">2</span>
-              <span>Convert to JSON</span>
+              <span>Compile to .ktw</span>
             </div>
             <svg className="playground-flow-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             <div className="playground-flow-step">

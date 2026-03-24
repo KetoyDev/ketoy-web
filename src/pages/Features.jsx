@@ -152,14 +152,16 @@ function IllustrationConversion() {
       </line>
       <polygon points="106,76 114,80 106,84" fill="rgba(255,255,255,0.15)" />
 
-      {/* JSON block */}
+      {/* .ktw wire block */}
       <rect x="105" y="40" width="70" height="80" rx="8" fill="rgba(16,185,129,0.06)" stroke="rgba(16,185,129,0.2)" strokeWidth="1.5" />
-      <text x="140" y="35" textAnchor="middle" fill="rgba(16,185,129,0.5)" fontSize="10" fontWeight="600">JSON</text>
-      <text x="116" y="60" fill="rgba(16,185,129,0.3)" fontSize="8" fontFamily="monospace">{"{"}</text>
-      <rect x="120" y="66" width="44" height="4" rx="2" fill="rgba(16,185,129,0.15)" />
-      <rect x="120" y="76" width="36" height="4" rx="2" fill="rgba(16,185,129,0.12)" />
-      <rect x="120" y="86" width="48" height="4" rx="2" fill="rgba(16,185,129,0.1)" />
-      <text x="116" y="104" fill="rgba(16,185,129,0.3)" fontSize="8" fontFamily="monospace">{"}"}</text>
+      <text x="140" y="35" textAnchor="middle" fill="rgba(16,185,129,0.5)" fontSize="9" fontWeight="600">.ktw</text>
+      <text x="112" y="62" fill="rgba(16,185,129,0.35)" fontSize="7" fontFamily="monospace">wire</text>
+      <rect x="112" y="66" width="20" height="4" rx="2" fill="rgba(16,185,129,0.4)" />
+      <rect x="112" y="74" width="44" height="3" rx="1" fill="rgba(16,185,129,0.2)" />
+      <rect x="112" y="81" width="36" height="3" rx="1" fill="rgba(16,185,129,0.15)" />
+      <rect x="112" y="88" width="40" height="3" rx="1" fill="rgba(16,185,129,0.12)" />
+      <rect x="112" y="95" width="28" height="3" rx="1" fill="rgba(16,185,129,0.1)" />
+      <text x="140" y="112" textAnchor="middle" fill="rgba(16,185,129,0.45)" fontSize="7" fontWeight="600">10× smaller</text>
 
       {/* Arrow 2 */}
       <line x1="183" y1="80" x2="201" y2="80" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="3 3">
@@ -299,7 +301,7 @@ export default function Features() {
             <div className="page-header">
               <p className="section-eyebrow">Features</p>
               <h1>Everything you need to ship<br/>dynamic mobile UIs</h1>
-              <p className="section-lead">Write type-safe K-DSL, convert to JSON, render native Compose UI — update instantly without app store approvals.</p>
+              <p className="section-lead">Write type-safe K-DSL, compile to <strong>.ktw wire format — 10x smaller than JSON</strong>, render native Compose UI — update instantly without app store approvals.</p>
             </div>
           </AnimatedContent>
 
@@ -363,8 +365,37 @@ export default function Features() {
             </ParticleCard>
             </AnimatedContent>
 
+            {/* Row 1b: Wire Format — full width */}
+            <AnimatedContent distance={50} duration={0.7} delay={0.2} className="bento-narrow">
+            <ParticleCard
+              className="card magic-bento-card magic-bento-card--border-glow feature-card"
+              particleCount={6}
+              glowColor="16, 185, 129"
+              enableTilt={false}
+              enableMagnetism={false}
+              clickEffect={false}
+            >
+              <div className="feature-content">
+                <div className="feature-icon-wrapper feature-icon-green">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                  </svg>
+                </div>
+                <h3>10× Smaller Than JSON — Wire Format (.ktw)</h3>
+                <p>Ketoy compiles screens to a custom binary wire format instead of plain JSON. A 4-layer pipeline — key aliasing, type ID encoding, MessagePack, and Gzip — shrinks a 14 KB JSON screen to ~1 KB. Decoded on-device in under 2 ms. Zero configuration: the SDK auto-detects wire vs JSON by magic bytes.</p>
+                <div className="feature-tags feature-tags--green">
+                  <span className="feature-tag">~10× smaller</span>
+                  <span className="feature-tag">{'<'}2 ms decode</span>
+                  <span className="feature-tag">Auto-detect</span>
+                  <span className="feature-tag">.ktw</span>
+                </div>
+              </div>
+              <div className="feature-illustration"><IllustrationConversion /></div>
+            </ParticleCard>
+            </AnimatedContent>
+
             {/* Row 2: Narrow + Wide */}
-            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-narrow">
+            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-wide">
             <ParticleCard
               className="card magic-bento-card magic-bento-card--border-glow feature-card"
               particleCount={6}
@@ -419,7 +450,7 @@ export default function Features() {
             </AnimatedContent>
 
             {/* Row 3: Narrow + Wide */}
-            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-wide">
+            <AnimatedContent distance={50} duration={0.7} delay={0} className="bento-narrow">
             <ParticleCard
               className="card magic-bento-card magic-bento-card--border-glow feature-card"
               particleCount={6}
@@ -470,6 +501,33 @@ export default function Features() {
                 </div>
               </div>
               <div className="feature-illustration"><IllustrationRollback /></div>
+            </ParticleCard>
+            </AnimatedContent>
+
+            <AnimatedContent distance={50} duration={0.7} delay={0.1} className="bento-wide">
+            <ParticleCard
+              className="card magic-bento-card magic-bento-card--border-glow feature-card"
+              particleCount={6}
+              glowColor="168, 85, 247"
+              enableTilt={false}
+              enableMagnetism={false}
+              clickEffect={false}
+            >
+              <div className="feature-content">
+                <div className="feature-icon-wrapper" style={{ background: 'rgba(168,85,247,0.15)', color: 'rgb(168,85,247)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/>
+                  </svg>
+                </div>
+                <h3>Material 3 Theme System</h3>
+                <p>35+ Material 3 color tokens exposed via CompositionLocal. All rendered components automatically inherit your app's primary, secondary, surface, and error colors — zero explicit passing needed.</p>
+                <div className="feature-tags" style={{ '--tag-color': 'rgba(168,85,247,0.15)', '--tag-border': 'rgba(168,85,247,0.25)' }}>
+                  <span className="feature-tag">M3 Tokens</span>
+                  <span className="feature-tag">35+ Colors</span>
+                  <span className="feature-tag">Auto-inherit</span>
+                </div>
+              </div>
+              <div className="feature-illustration"><IllustrationTheming /></div>
             </ParticleCard>
             </AnimatedContent>
           </div>
