@@ -27,7 +27,7 @@ const PageLoader = () => (
 
 function LandingPage() {
   useSEO({
-    title: 'Ketoy — Server-Driven UI Framework for Android | Update Apps Instantly',
+    title: 'Ketoy is a Server-Driven UI Framework for Android | Update Apps Instantly',
     description: 'Ketoy is an open-source Server-Driven UI (SDUI) framework for Android Jetpack Compose. Update your app\'s UI instantly from the cloud without releasing a new build.',
     path: '/',
   })
