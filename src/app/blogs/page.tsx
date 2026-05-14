@@ -12,12 +12,12 @@ export const metadata: Metadata = {
   title: 'Field Notes · Ketoy',
   description:
     'Dispatches from the Ketoy engine room. Compiler internals, bytecode spec, runtime benchmarks, Compose semantics, and the occasional postmortem.',
-  alternates: { canonical: 'https://vm.ketoy.dev/blogs' },
+  alternates: { canonical: 'https://ketoy.dev/blogs' },
   openGraph: {
     title: 'Field Notes · Ketoy',
     description:
       'Deep technical writing on compilers, runtimes and Compose. Written weekly, edited lightly, dispatched from the island.',
-    url: 'https://vm.ketoy.dev/blogs',
+    url: 'https://ketoy.dev/blogs',
   },
 };
 

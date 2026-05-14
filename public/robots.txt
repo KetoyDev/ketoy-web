@@ -1,0 +1,79 @@
+# Robots.txt for Ketoy - Allow all search engines
+# Generated: 2026-05-14
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /.well-known/
+Disallow: /api/
+Disallow: /internal/
+
+# Specific rules for Googlebot
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Allow for search engines - SDUI, Android, Kotlin keywords
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou spider
+Allow: /
+
+User-agent: Exabot
+Allow: /
+
+# Sitemaps
+Sitemap: https://ketoy.dev/sitemap.xml
+
+# AI and LLM crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Performance parameters
+# Allow faster crawling for high-authority bots
+Request-rate: 1/10

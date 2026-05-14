@@ -5,7 +5,7 @@ import RichText from './RichText';
 import ShareBar from './ShareBar';
 import styles from '@/app/blogs/[slug]/post.module.css';
 
-const SITE = 'https://vm.ketoy.dev';
+const SITE = 'https://ketoy.dev';
 
 type Props = {
   post: Blog;

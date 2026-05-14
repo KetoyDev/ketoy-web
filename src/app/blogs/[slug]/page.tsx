@@ -29,7 +29,7 @@ export async function generateMetadata(
 
   const title = stripTags(post.title);
   const description = stripTags(post.dek ?? post.excerpt);
-  const url = `https://vm.ketoy.dev/blogs/${post.slug}`;
+  const url = `https://ketoy.dev/blogs/${post.slug}`;
 
   return {
     title,
@@ -44,7 +44,7 @@ export async function generateMetadata(
       authors: [post.author.name],
       tags: post.tags,
       images: post.heroImage
-        ? [{ url: `https://vm.ketoy.dev${post.heroImage.src}` }]
+        ? [{ url: `https://ketoy.dev${post.heroImage.src}` }]
         : undefined,
     },
     twitter: {
@@ -74,13 +74,13 @@ export default async function BlogDetailPage(
       '@type': 'Person',
       name: post.author.name,
     },
-    image: post.heroImage ? `https://vm.ketoy.dev${post.heroImage.src}` : undefined,
-    mainEntityOfPage: `https://vm.ketoy.dev/blogs/${post.slug}`,
+    image: post.heroImage ? `https://ketoy.dev${post.heroImage.src}` : undefined,
+    mainEntityOfPage: `https://ketoy.dev/blogs/${post.slug}`,
     keywords: post.tags.join(', '),
     publisher: {
       '@type': 'Organization',
       name: 'Ketoy',
-      url: 'https://vm.ketoy.dev',
+      url: 'https://ketoy.dev',
     },
   };
 
