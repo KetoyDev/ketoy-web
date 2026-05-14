@@ -80,7 +80,7 @@ export default function Nav() {
           <span className="dot pulse" />
           ALPHA
         </span>
-        <a href="/#waitlist" className="pill solid">Early Access →</a>
+        <a href="/#early-access" className="pill solid">Early Access →</a>
       </div>
 
       <div id="mobile-nav-panel" className={`mobile-nav-panel ${mobileOpen ? 'open' : ''}`}>
@@ -95,7 +95,7 @@ export default function Nav() {
             <span className="dot pulse" />
             ALPHA
           </span>
-          <a href="/#waitlist" className="pill solid" onClick={() => setMobileOpen(false)}>Early Access →</a>
+          <a href="/#early-access" className="pill solid" onClick={() => setMobileOpen(false)}>Early Access →</a>
         </div>
       </div>
     </nav>

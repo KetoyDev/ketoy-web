@@ -53,7 +53,7 @@ export default function Footer({ variant = 'landing' }: Props) {
         <div>
           <h5>Program</h5>
           <ul>
-            <li><a href="/#waitlist">Early Access</a></li>
+            <li><a href="/#early-access">Early Access</a></li>
             <li><a href="#">Alpha cohort</a></li>
             <li><a href="#">Changelog</a></li>
             <li><a href="#">Status</a></li>

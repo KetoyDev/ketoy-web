@@ -353,8 +353,8 @@ export default function ServerDrivenUIPage() {
         <section className={styles.cta}>
           <h2>Ready to Build True Server-Driven UI?</h2>
           <p>Join Ketoy and ship dynamic UIs without Play Store delays.</p>
-          <a href="/#waitlist" className={styles.ctaButton}>
-            Join the Waitlist
+          <a href="/#early-access" className={styles.ctaButton}>
+            Join Early Access
           </a>
         </section>
       </main>

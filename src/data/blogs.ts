@@ -368,7 +368,7 @@ export const blogs: Blog[] = [
         buttons: [
           { label: 'Read the docs →', href: '#' },
           { label: 'GitHub', href: 'https://github.com/KetoyDev', variant: 'ghost' },
-          { label: 'Join the early-partner program', href: '/#waitlist', variant: 'ghost' },
+          { label: 'Join the early-partner program', href: '/#early-access', variant: 'ghost' },
         ],
       },
       {

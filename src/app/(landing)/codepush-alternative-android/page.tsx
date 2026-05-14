@@ -267,8 +267,8 @@ export default function CodePushAlternativePage() {
         <section className={styles.cta}>
           <h2>Ready to Ship Android Updates Instantly?</h2>
           <p>Join thousands of Android developers using Ketoy to bypass Play Store delays.</p>
-          <a href="/#waitlist" className={styles.ctaButton}>
-            Join the Waitlist
+          <a href="/#early-access" className={styles.ctaButton}>
+            Join Early Access
           </a>
         </section>
       </main>

@@ -335,9 +335,9 @@ export default function InstantUpdatesPage() {
         {/* CTA */}
         <section className={styles.cta}>
           <h2>Ready to Ship Updates in 60 Seconds?</h2>
-          <p>Join the Ketoy waitlist and be among the first Android teams to go live with instant updates.</p>
-          <a href="/#waitlist" className={styles.ctaButton}>
-            Join the Waitlist
+          <p>Join the Ketoy Early Access and be among the first Android teams to go live with instant updates.</p>
+          <a href="/#early-access" className={styles.ctaButton}>
+            Join Early Access
           </a>
         </section>
       </main>

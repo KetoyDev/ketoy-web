@@ -79,8 +79,8 @@ export default function HomePage() {
             <span className="mono" style={{ color: 'var(--ember-2)' }}>.ktx</span> bundle. Push a new build to every device in 60 seconds. No Play Store round-trip. No DSL. No schema.
           </p>
           <div className={styles.heroCta}>
-            <a href="#waitlist" className={`${styles.btn} ${styles.primary}`}>
-              Join the waitlist <span className={styles.arrow}>→</span>
+            <a href="#early-access" className={`${styles.btn} ${styles.primary}`}>
+              Join Early Access <span className={styles.arrow}>→</span>
             </a>
             <a href="#how" className={styles.btn}>Read the spec</a>
           </div>
@@ -341,8 +341,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* WAITLIST */}
-      <section id="waitlist" className={styles.cta}>
+      {/* EARLY ACCESS */}
+      <section id="early-access" className={styles.cta}>
         <div className={styles.ctaInner}>
           <div className="eyebrow" data-reveal="cta-child" style={{ marginBottom: 24 }}>
             JOIN THE ALPHA · COHORT 01
