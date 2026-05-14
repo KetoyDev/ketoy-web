@@ -1,39 +1,24 @@
 {
-  "name": "ketoy-landing-react",
-  "version": "1.0.0",
+  "name": "ketoyvm",
+  "version": "0.1.0",
   "private": true,
-  "description": "[![Kotlin](https://img.shields.io/badge/Kotlin-1.9+-purple.svg)](https://kotlinlang.org) [![Compose](https://img.shields.io/badge/Jetpack%20Compose-1.5+-green.svg)](https://developer.android.com/jetpack/compose) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) [![Server Driven](https://img.shields.io/badge/Server%20Driven-UI-orange.svg)]()",
-  "homepage": "https://ketoydev.github.io/ketoy-web",
-  "bugs": {
-    "url": "https://github.com/Parthkk90/ketoy-web/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Parthkk90/ketoy-web.git"
-  },
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "main.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@react-three/fiber": "^8.18.0",
-    "@react-three/postprocessing": "^2.19.1",
     "@vercel/analytics": "^2.0.1",
-    "gsap": "^3.14.2",
-    "ogl": "^1.0.11",
-    "postprocessing": "^6.38.2",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "react-router-dom": "^7.10.1",
-    "three": "^0.169.0"
+    "next": "15.5.15",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react-swc": "^3.7.0",
-    "vite": "^6.0.0"
+    "@types/node": "22.10.7",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "typescript": "5.7.3"
   }
 }
