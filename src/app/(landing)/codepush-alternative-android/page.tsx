@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import styles from './landing.module.css'
+import styles from '../landing.module.css'
 
 export const metadata: Metadata = {
   title: 'CodePush Alternative for Native Android Apps | Ketoy',
