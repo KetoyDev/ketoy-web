@@ -21,10 +21,10 @@
   --topbar-bg: rgba(255,255,255,0.85);
   --subnav-bg: rgba(255,255,255,0.92);
 
-  --accent: #5B5BFF;
-  --accent-ink: #3a3acc;
-  --accent-soft: #ecebff;
-  --accent-soft-2: #f5f4ff;
+  --accent: #3DDC84;
+  --accent-ink: #1a7a42;
+  --accent-soft: #e5f9ee;
+  --accent-soft-2: #f0fbf5;
 
   --code-bg: #0f1115;
   --code-fg: #e7e7ea;
@@ -65,10 +65,10 @@
   --topbar-bg: rgba(12,14,18,0.85);
   --subnav-bg: rgba(12,14,18,0.92);
 
-  --accent: #8E8EFF;
-  --accent-ink: #b9b9ff;
-  --accent-soft: rgba(142,142,255,0.14);
-  --accent-soft-2: rgba(142,142,255,0.07);
+  --accent: #4AE389;
+  --accent-ink: #7AF5B5;
+  --accent-soft: rgba(61,220,132,0.14);
+  --accent-soft-2: rgba(61,220,132,0.07);
 }
 
 html {
@@ -412,7 +412,7 @@ p { margin: 0; color: var(--ink-2); }
   inset: -30% -10% auto auto;
   width: 720px;
   height: 720px;
-  background: radial-gradient(closest-side, rgba(91,91,255,.18), transparent 70%);
+  background: radial-gradient(closest-side, rgba(61,220,132,.18), transparent 70%);
   pointer-events: none;
 }
 .hero-grid {
@@ -427,13 +427,13 @@ p { margin: 0; color: var(--ink-2); }
   align-items: center;
   gap: 10px;
   padding: 5px 14px 5px 5px;
-  background: rgba(91,91,255,.12);
-  border: 1px solid rgba(91,91,255,.28);
+  background: rgba(61,220,132,.12);
+  border: 1px solid rgba(61,220,132,.28);
   border-radius: 999px;
   font-family: var(--font-ui);
   font-size: 13px;
   font-weight: 500;
-  color: #c8c8ff;
+  color: #a0f0c8;
   margin-bottom: 28px;
 }
 .hero-tag .pill {
@@ -455,10 +455,7 @@ p { margin: 0; color: var(--ink-2); }
 }
 .hero h1 strong {
   font-weight: 600;
-  background: linear-gradient(98deg, #8E8EFF 0%, #B68EFF 55%, #E2A3FF 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #3DDC84;
 }
 .hero p.lede {
   margin-top: 20px;
@@ -492,7 +489,7 @@ p { margin: 0; color: var(--ink-2); }
 /* hero code window  -  landscape ratio */
 .hero .code-window {
   border-color: #1d2027;
-  box-shadow: 0 40px 100px -30px rgba(91,91,255,0.25), 0 8px 30px -10px rgba(0,0,0,0.4);
+  box-shadow: 0 40px 100px -30px rgba(61,220,132,0.25), 0 8px 30px -10px rgba(0,0,0,0.4);
 }
 .hero .code-body {
   padding: 18px 22px 22px;
@@ -658,7 +655,7 @@ section.ink p { color: #b6b5b0; }
 }
 .card.dark h3 { color: #fff; }
 .card.dark p { color: #9da0a8; }
-.card.dark .icon { background: rgba(91,91,255,.18); color: #b9b9ff; }
+.card.dark .icon { background: rgba(61,220,132,.18); color: #7AF5B5; }
 
 .card .link {
   margin-top: auto;
@@ -721,10 +718,10 @@ section.ink p { color: #b6b5b0; }
 }
 .stack-row.accent {
   background: var(--accent-soft);
-  border-color: #d9d8ff;
+  border-color: #b8f0d4;
 }
 .stack-row.accent .name { color: var(--accent-ink); }
-.stack-row.accent .meta { border-color: #d9d8ff; color: var(--accent-ink); }
+.stack-row.accent .meta { border-color: #b8f0d4; color: var(--accent-ink); }
 
 /* ============== Stat strip ============== */
 .stats {
@@ -880,7 +877,7 @@ footer.site-footer {
   margin: 20px 0;
   align-items: start;
 }
-.callout-info { background: var(--accent-soft-2); border-color: #d9d8ff; }
+.callout-info { background: var(--accent-soft-2); border-color: #b8f0d4; }
 .callout-tip { background: #eef8f0; border-color: #cfe6cf; }
 .callout-warn { background: #fff7e8; border-color: #f0dab0; }
 .callout-ico {
@@ -1404,7 +1401,7 @@ footer.site-footer {
 
 /* Callouts */
 [data-theme="dark"] .callout { background: var(--surface); border-color: var(--border); }
-[data-theme="dark"] .callout-info { background: rgba(142,142,255,0.08); border-color: rgba(142,142,255,0.28); }
+[data-theme="dark"] .callout-info { background: rgba(61,220,132,0.08); border-color: rgba(61,220,132,0.28); }
 [data-theme="dark"] .callout-tip  { background: rgba(43,182,115,0.08);  border-color: rgba(43,182,115,0.28); }
 [data-theme="dark"] .callout-warn { background: rgba(212,167,60,0.08);  border-color: rgba(212,167,60,0.30); }
 [data-theme="dark"] .callout h4 { color: var(--ink); }
@@ -1475,11 +1472,11 @@ footer.site-footer {
 /* Stack rows */
 [data-theme="dark"] .stack-row { background: var(--surface-2); border-color: var(--border); }
 [data-theme="dark"] .stack-row.accent {
-  background: rgba(142,142,255,0.08);
-  border-color: rgba(142,142,255,0.25);
+  background: rgba(61,220,132,0.08);
+  border-color: rgba(61,220,132,0.25);
 }
 [data-theme="dark"] .stack-row.accent .name { color: var(--accent-ink); }
-[data-theme="dark"] .stack-row.accent .meta { color: var(--accent-ink); border-color: rgba(142,142,255,0.25); }
+[data-theme="dark"] .stack-row.accent .meta { color: var(--accent-ink); border-color: rgba(61,220,132,0.25); }
 
 /* Sections that intentionally invert: keep hero / section.ink visually
    matched in both themes (they're always dark). Hero stats divider
@@ -1503,4 +1500,4 @@ footer.site-footer {
 [data-theme="dark"] .footer-grid li a:hover { color: var(--ink); }
 
 /* Hero tag callout text */
-[data-theme="dark"] .hero-tag span { color: #c8c8ff; }
+[data-theme="dark"] .hero-tag span { color: #a0f0c8; }
