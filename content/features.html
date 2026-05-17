@@ -222,10 +222,16 @@
         <a href="docs.html">Docs</a>
       </nav>
       <div class="nav-right">
-        <div class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <span>Search docs</span>
-          <span class="kbd">/</span>
+        <div class="search-wrap" id="searchWrap">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="searchInput" type="text" placeholder="Search docs" autocomplete="off" />
+            <span class="kbd">/</span>
+          </div>
+          <div class="search-dropdown" id="searchDropdown">
+            <div class="search-results" id="searchResults"></div>
+            <p class="search-empty" id="searchEmpty">No results. Try a different term.</p>
+          </div>
         </div>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
           <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -256,7 +262,7 @@
       <span class="eyebrow">Reference · code-verified</span>
       <h1>Supported features</h1>
       <p class="lede">
-        Every entry on this page is grounded in the actual source — not the plan docs.
+        Every entry on this page is grounded in the actual source  -  not the plan docs.
         "Supported" means the path is wired end-to-end: the compiler emits, the
         <code style="font-family:var(--font-mono);font-size:0.92em">.ktx</code> wire format
         carries it, the runtime resolves it, and an adapter consumes it. Audited against
@@ -278,7 +284,7 @@
         <div class="card">
           <div class="num">27</div>
           <h3>Modifier operations</h3>
-          <p>Named-arg modifier folding — padding, fill, size, background, clickable.</p>
+          <p>Named-arg modifier folding  -  padding, fill, size, background, clickable.</p>
         </div>
         <div class="card">
           <div class="num">67</div>
@@ -297,7 +303,7 @@
         <div class="section-head" style="margin-bottom:32px">
           <span class="eyebrow">01 · Compose components</span>
           <h2 style="margin-top:8px">Fully catalogued (16)</h2>
-          <p>KSP reads <code style="font-family:var(--font-mono);font-size:0.92em">adapter-scan-roots.txt</code>, resolves each FQ name against the real Compose / Material3 / Foundation / Coil declarations on the build classpath, and emits typed adapters. Every parameter on every adapter is wired — never a curated subset.</p>
+          <p>KSP reads <code style="font-family:var(--font-mono);font-size:0.92em">adapter-scan-roots.txt</code>, resolves each FQ name against the real Compose / Material3 / Foundation / Coil declarations on the build classpath, and emits typed adapters. Every parameter on every adapter is wired  -  never a curated subset.</p>
         </div>
 
         <div class="comp-grid">
@@ -333,7 +339,7 @@
 
           <div class="comp-card">
             <div class="comp-card-head"><span class="comp-card-name">Surface</span><span class="chip-id">0x0008</span></div>
-            <div class="desc">Non-clickable overload — the clickable variant is excluded.</div>
+            <div class="desc">Non-clickable overload  -  the clickable variant is excluded.</div>
             <div class="params"><span class="chip">modifier</span><span class="chip">shape</span><span class="chip">color</span><span class="chip">contentColor</span><span class="chip">tonalElevation</span><span class="chip">shadowElevation</span><span class="chip">border</span></div>
           </div>
 
@@ -387,7 +393,7 @@
 
           <div class="comp-card">
             <div class="comp-card-head"><span class="comp-card-name">Icon</span><span class="chip-id">0x0019</span></div>
-            <div class="desc">ImageVector overload — picked via nullability-aware disambiguator over Painter / ImageBitmap variants. Resolved at runtime via a host-provided <code style="font-family:var(--font-mono);font-size:12px">KBCImageVectorResolver</code>.</div>
+            <div class="desc">ImageVector overload  -  picked via nullability-aware disambiguator over Painter / ImageBitmap variants. Resolved at runtime via a host-provided <code style="font-family:var(--font-mono);font-size:12px">KBCImageVectorResolver</code>.</div>
             <div class="params"><span class="chip">imageVector</span><span class="chip">contentDescription</span><span class="chip">modifier</span><span class="chip">tint</span></div>
           </div>
 
@@ -428,7 +434,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
           </span>
           <div>
-            <h4>App-specific composables — range 0x4000+</h4>
+            <h4>App-specific composables  -  range 0x4000+</h4>
             <p>
               The host registers custom adapters on <code>KBCAdapterRegistry</code> and supplies a
               matching FQ in its own scan-roots file. Additional adapter catalogs published by
@@ -443,7 +449,7 @@
       <div id="constructors" style="margin-bottom:64px">
         <div class="section-head" style="margin-bottom:24px">
           <span class="eyebrow">02 · Constructor parameters</span>
-          <h2 style="margin-top:8px">CONSTRUCT_JVM — registered adapters</h2>
+          <h2 style="margin-top:8px">CONSTRUCT_JVM  -  registered adapters</h2>
           <p>Complex Compose value types aren't encoded inline. The compiler emits a <code style="font-family:var(--font-mono);font-size:0.92em">CONSTRUCT_JVM</code> opcode that builds the object via a registered constructor adapter and stores it in a register; the consuming <code style="font-family:var(--font-mono);font-size:0.92em">COMPOSABLE_CALL</code> reads it as <code style="font-family:var(--font-mono);font-size:0.92em">KBCValue.Register(n)</code>.</p>
         </div>
 
@@ -466,7 +472,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>
           </span>
           <div>
-            <h4>TextStyle and friends — deferred</h4>
+            <h4>TextStyle and friends  -  deferred</h4>
             <p>
               IDs are reserved for <code>TEXT_STYLE</code>, <code>SPAN_STYLE</code>,
               <code>PARAGRAPH_STYLE</code>, <code>TEXT_FIELD_VALUE</code>,
@@ -491,7 +497,7 @@
         <div class="section-head" style="margin-bottom:24px">
           <span class="eyebrow">03 · Modifier chains</span>
           <h2 style="margin-top:8px">27 modifier operations</h2>
-          <p>The IR walker extracts modifier builder calls at emit time into a <code style="font-family:var(--font-mono);font-size:0.92em">KBCModifierDescriptor</code>, pools it into the bundle's modifier table, and references it via <code style="font-family:var(--font-mono);font-size:0.92em">KBCValue.ModifierRef(idx)</code>. Argument resolution is <strong>named-arg</strong> — so K2's partial-default lowering like <code style="font-family:var(--font-mono);font-size:0.92em">padding(top = 48.dp, start = 16.dp)</code> works correctly.</p>
+          <p>The IR walker extracts modifier builder calls at emit time into a <code style="font-family:var(--font-mono);font-size:0.92em">KBCModifierDescriptor</code>, pools it into the bundle's modifier table, and references it via <code style="font-family:var(--font-mono);font-size:0.92em">KBCValue.ModifierRef(idx)</code>. Argument resolution is <strong>named-arg</strong>  -  so K2's partial-default lowering like <code style="font-family:var(--font-mono);font-size:0.92em">padding(top = 48.dp, start = 16.dp)</code> works correctly.</p>
         </div>
 
         <h3 style="font-size:16px;color:var(--muted);font-family:var(--font-ui);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px">Padding &amp; sizing</h3>
@@ -538,7 +544,7 @@
         </p>
 
         <p style="margin-top:18px">
-          <strong>Shapes</strong> — <code style="font-family:var(--font-mono);font-size:0.92em">KBCShape</code> covers:
+          <strong>Shapes</strong>  -  <code style="font-family:var(--font-mono);font-size:0.92em">KBCShape</code> covers:
           <span class="chip" style="margin-left:6px">Rectangle</span>
           <span class="chip">Circle</span>
           <span class="chip">RoundedCorner(size)</span>
@@ -571,7 +577,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
           </span>
           <div>
-            <h4>Material icons — R8-safe, no <code>-keep</code> rules</h4>
+            <h4>Material icons  -  R8-safe, no <code>-keep</code> rules</h4>
             <p>
               Material icons flow through <code>KBCValue.StringLiteral</code> carrying the
               canonical FQ. The host registers a <code>MaterialIconsResolver</code> built via
@@ -585,7 +591,7 @@
               The compiler's <code>ComposeTokenRegistry</code> pattern-matches all 10
               Material icon style packages and 13 <code>Icons.&lt;get-Style&gt;</code>
               selectors. Missing-icon fallback is a 24×24 transparent
-              <code>PlaceholderImageVector</code> — surfaces gaps visibly rather than
+              <code>PlaceholderImageVector</code>  -  surfaces gaps visibly rather than
               crashing.
             </p>
           </div>
@@ -613,7 +619,7 @@
           <div class="card">
             <div class="num">2.3</div>
             <h3>Strings</h3>
-            <p style="font-size:14.5px">Variadic <code style="font-family:var(--font-mono);font-size:13px">STRING_CONCAT</code> — every <code style="font-family:var(--font-mono);font-size:13px">+</code>, interpolation, or multi-arg concat collapses to one opcode. Per-bundle deduplicated string pool.</p>
+            <p style="font-size:14.5px">Variadic <code style="font-family:var(--font-mono);font-size:13px">STRING_CONCAT</code>  -  every <code style="font-family:var(--font-mono);font-size:13px">+</code>, interpolation, or multi-arg concat collapses to one opcode. Per-bundle deduplicated string pool.</p>
             <div class="params" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">
               <span class="chip">STRING_CONCAT</span><span class="chip">STRING_LENGTH</span><span class="chip">STRING_SUBSTR</span><span class="chip">INT_TO_STRING</span>
             </div>
@@ -623,13 +629,13 @@
             <div class="num">2.4</div>
             <h3>Control flow</h3>
             <p style="font-size:14.5px"><code style="font-family:var(--font-mono);font-size:13px">if</code>, <code style="font-family:var(--font-mono);font-size:13px">when</code>, <code style="font-family:var(--font-mono);font-size:13px">while</code>, <code style="font-family:var(--font-mono);font-size:13px">do-while</code>, <code style="font-family:var(--font-mono);font-size:13px">break</code>, <code style="font-family:var(--font-mono);font-size:13px">continue</code>, <code style="font-family:var(--font-mono);font-size:13px">return</code>, <code style="font-family:var(--font-mono);font-size:13px">throw</code>, and <code style="font-family:var(--font-mono);font-size:13px">try/catch</code>.</p>
-            <p style="font-size:13.5px;color:var(--muted);margin-top:6px"><strong>Caveat:</strong> <code style="font-family:var(--font-mono);font-size:13px">catch</code> is currently catch-all — multi-catch collapses to the first handler. Rethrow inside a catch works correctly.</p>
+            <p style="font-size:13.5px;color:var(--muted);margin-top:6px"><strong>Caveat:</strong> <code style="font-family:var(--font-mono);font-size:13px">catch</code> is currently catch-all  -  multi-catch collapses to the first handler. Rethrow inside a catch works correctly.</p>
           </div>
 
           <div class="card">
             <div class="num">2.5</div>
             <h3>Lambdas &amp; closures</h3>
-            <p style="font-size:14.5px"><code style="font-family:var(--font-mono);font-size:13px">val onClick = { }</code>, <code style="font-family:var(--font-mono);font-size:13px">list.forEach { }</code>, lambda parameters to adapters. Closures with captured outer-scope locals are <strong>fully supported</strong> via <code style="font-family:var(--font-mono);font-size:13px">KBCValue.ClosureRef</code> — capture values snapshot eagerly at slot resolution time.</p>
+            <p style="font-size:14.5px"><code style="font-family:var(--font-mono);font-size:13px">val onClick = { }</code>, <code style="font-family:var(--font-mono);font-size:13px">list.forEach { }</code>, lambda parameters to adapters. Closures with captured outer-scope locals are <strong>fully supported</strong> via <code style="font-family:var(--font-mono);font-size:13px">KBCValue.ClosureRef</code>  -  capture values snapshot eagerly at slot resolution time.</p>
             <p style="font-size:13.5px;color:var(--muted);margin-top:6px">Audited against 6 capture patterns: single, multi, navigation-onClick, nested two-level, branch, non-capturing baseline.</p>
           </div>
 
@@ -671,7 +677,7 @@
       <div id="viewmodels" style="margin-bottom:64px">
         <div class="section-head" style="margin-bottom:24px">
           <span class="eyebrow">06 · ViewModel support</span>
-          <h2 style="margin-top:8px">Two layers — host-side and KBC-side</h2>
+          <h2 style="margin-top:8px">Two layers  -  host-side and KBC-side</h2>
           <p>Both layers are load-bearing in production. The host owns lifecycle and persistence; KBC owns business logic.</p>
         </div>
 
@@ -685,7 +691,7 @@
               <span class="chip">state: StateFlow</span><span class="chip">getState</span><span class="chip">setState</span><span class="chip">setStateAll</span><span class="chip">removeState</span><span class="chip">observeState</span><span class="chip">dispatch</span>
             </div>
             <p style="font-size:13.5px;color:var(--muted);margin-top:14px">
-              State map is <code style="font-family:var(--font-mono);font-size:13px">Map&lt;String, Any?&gt;</code>. Persistable types — primitives + arrays — mirror to <code style="font-family:var(--font-mono);font-size:13px">SavedStateHandle</code>. Restore priority: SavedState &gt; initialExtras &gt; empty.
+              State map is <code style="font-family:var(--font-mono);font-size:13px">Map&lt;String, Any?&gt;</code>. Persistable types  -  primitives + arrays  -  mirror to <code style="font-family:var(--font-mono);font-size:13px">SavedStateHandle</code>. Restore priority: SavedState &gt; initialExtras &gt; empty.
             </p>
           </div>
 
@@ -699,7 +705,7 @@
             </div>
             <p style="font-size:13.5px;color:var(--muted);margin-top:14px">
               <code style="font-family:var(--font-mono);font-size:13px">open fun init()</code> runs once after binding. Default no-op.
-              Constructor parameters resolve via the host's <code style="font-family:var(--font-mono);font-size:13px">KetoyCapabilityProvider</code> — capability IDs only, never Hilt graph access.
+              Constructor parameters resolve via the host's <code style="font-family:var(--font-mono);font-size:13px">KetoyCapabilityProvider</code>  -  capability IDs only, never Hilt graph access.
             </p>
           </div>
         </div>
@@ -727,16 +733,16 @@
               <li><span><code>MutableStateFlow</code> / <code>MutableSharedFlow</code> via <code>STATE_FLOW_CREATE</code> / <code>SHARED_FLOW_CREATE</code></span></li>
               <li><span><code>viewModelScope.launch { }</code> and <code>async { }</code></span></li>
               <li><span><code>suspend</code> functions, <code>withContext(Dispatchers.IO)</code>, <code>Flow.collect</code></span></li>
-              <li><span>Every Flow operator — <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>flatMapLatest</code>, <code>combine</code>, <code>take</code>, <code>distinctUntilChanged</code></span></li>
+              <li><span>Every Flow operator  -  <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>flatMapLatest</code>, <code>combine</code>, <code>take</code>, <code>distinctUntilChanged</code></span></li>
               <li><span>Calls to host capabilities through <code>@KetoyCapabilityStub</code> (Room DAO, Retrofit, DataStore)</span></li>
-              <li><span>Plain Kotlin — data classes, sealed classes, branches, loops</span></li>
+              <li><span>Plain Kotlin  -  data classes, sealed classes, branches, loops</span></li>
               <li><span>Cross-ViewModel calls within the same bundle (via capability path)</span></li>
             </ul>
           </div>
           <div class="dont-list">
             <h4>You can't</h4>
             <ul>
-              <li><span><strong>Inject host dependencies directly.</strong> Hilt is host-side only — KBC never sees the graph.</span></li>
+              <li><span><strong>Inject host dependencies directly.</strong> Hilt is host-side only  -  KBC never sees the graph.</span></li>
               <li><span><strong>Hold non-persistable state across process death.</strong> Values outside the allowlist drop at save time, reappear absent on restore.</span></li>
               <li><span><strong>Override <code>onCleared</code>.</strong> Lifecycle is owned by <code>KetoyVirtualViewModel</code>; <code>init()</code> is the only entry. Cleanup is implicit via <code>viewModelScope</code> cancellation.</span></li>
             </ul>
@@ -760,7 +766,7 @@
           <div class="spec-row"><span class="hex">Reject</span><span class="name">UnregisteredCapability</span><span class="note"><code style="font-family:var(--font-mono);font-size:13px">@KetoyCapabilityStub</code> referencing an ID not in the host's registry JSON</span></div>
           <div class="spec-row"><span class="hex">Reject</span><span class="name">UnregisteredComposable</span><span class="note"><code style="font-family:var(--font-mono);font-size:13px">@Composable</code> callee not in the catalog or <code style="font-family:var(--font-mono);font-size:13px">AdapterFqNameRegistry</code></span></div>
           <div class="spec-row"><span class="hex">Reject</span><span class="name">NonKbcConstructor</span><span class="note">Compose-domain constructor without a registered adapter</span></div>
-          <div class="spec-row"><span class="hex">Reject</span><span class="name">UnregisteredCall</span><span class="note">Anything else — includes up to 3 fuzzy-match suggestions</span></div>
+          <div class="spec-row"><span class="hex">Reject</span><span class="name">UnregisteredCall</span><span class="note">Anything else  -  includes up to 3 fuzzy-match suggestions</span></div>
         </div>
       </div>
 
@@ -769,7 +775,7 @@
         <div class="section-head" style="margin-bottom:32px">
           <span class="eyebrow">08 · Capabilities</span>
           <h2 style="margin-top:8px">67 built-in IDs across 8 ranges</h2>
-          <p>The bridge between KBC and the host platform. KBC code never sees Hilt, Retrofit, OkHttp, Room DAOs, DataStore, or the Android <code style="font-family:var(--font-mono);font-size:0.92em">Context</code> — every interaction routes through a Short-ID-keyed lambda registered on <code style="font-family:var(--font-mono);font-size:0.92em">CapabilityRegistry</code>.</p>
+          <p>The bridge between KBC and the host platform. KBC code never sees Hilt, Retrofit, OkHttp, Room DAOs, DataStore, or the Android <code style="font-family:var(--font-mono);font-size:0.92em">Context</code>  -  every interaction routes through a Short-ID-keyed lambda registered on <code style="font-family:var(--font-mono);font-size:0.92em">CapabilityRegistry</code>.</p>
         </div>
 
         <div class="feat-list">
@@ -835,7 +841,7 @@
               plugin rewrites the call to <code>INVOKE_CAPABILITY_SUSPEND</code>.
             </p>
             <p>
-              Retrofit, DataStore typed flows, Bluetooth, camera, WorkManager — same pattern,
+              Retrofit, DataStore typed flows, Bluetooth, camera, WorkManager  -  same pattern,
               same wrap-as-capability flow.
             </p>
           </div>
@@ -852,7 +858,7 @@
         <div class="cards-grid cols-2">
           <div class="card">
             <h3>.ktx bundle format</h3>
-            <p style="font-size:14.5px">Brotli-compressed, Ed25519-signed binary container. Format <strong>v2</strong> — additive, so pre-2.1 readers parse v2 files with one field defaulted. 10 ordered sections.</p>
+            <p style="font-size:14.5px">Brotli-compressed, Ed25519-signed binary container. Format <strong>v2</strong>  -  additive, so pre-2.1 readers parse v2 files with one field defaulted. 10 ordered sections.</p>
             <div class="params" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px">
               <span class="chip">STRING_POOL</span><span class="chip">ADAPTER_MANIFEST</span><span class="chip">CONSTRUCTOR_MANIFEST</span><span class="chip">CAPABILITY_MANIFEST</span><span class="chip">MODIFIER_TABLE</span><span class="chip">FUNCTION_TABLE</span><span class="chip">CODE</span><span class="chip">DEBUG_INFO</span><span class="chip">ENTRY_POINTS</span><span class="chip">BUNDLE_METADATA</span>
             </div>
@@ -873,13 +879,13 @@
 
           <div class="card">
             <h3>Tier-1 JIT</h3>
-            <p style="font-size:14.5px">DexMaker-backed JIT for whitelisted pure-logic functions — no capabilities, no coroutines, no Compose, no DIV/MOD on Int/Long. Activated on API 26+ when <code style="font-family:var(--font-mono);font-size:13px">enableJIT = true</code>. Translation failures fall back to the interpreter silently.</p>
+            <p style="font-size:14.5px">DexMaker-backed JIT for whitelisted pure-logic functions  -  no capabilities, no coroutines, no Compose, no DIV/MOD on Int/Long. Activated on API 26+ when <code style="font-family:var(--font-mono);font-size:13px">enableJIT = true</code>. Translation failures fall back to the interpreter silently.</p>
             <p style="font-size:13.5px;color:var(--muted);margin-top:6px">Speed gate: ≥1.5× over the interpreter.</p>
           </div>
 
           <div class="card">
             <h3>Dev overlay</h3>
-            <p style="font-size:14.5px">Auto-enabled on debug builds (<code style="font-family:var(--font-mono);font-size:13px">FLAG_DEBUGGABLE</code>). Shows COMPOSABLE_CALL / CONSTRUCT_JVM / capability dispatch logs with human-readable names. Every emit site is gated — zero overhead in release.</p>
+            <p style="font-size:14.5px">Auto-enabled on debug builds (<code style="font-family:var(--font-mono);font-size:13px">FLAG_DEBUGGABLE</code>). Shows COMPOSABLE_CALL / CONSTRUCT_JVM / capability dispatch logs with human-readable names. Every emit site is gated  -  zero overhead in release.</p>
           </div>
 
           <div class="card">
@@ -910,13 +916,13 @@
           </div>
         </div>
 
-        <p style="font-size:15px;color:var(--muted);margin-top:18px"><code style="font-family:var(--font-mono);font-size:0.92em">./gradlew ketoyBundle</code> produces a signed <code style="font-family:var(--font-mono);font-size:0.92em">.ktx</code> against the host-supplied private key. The runtime activation policy (<code style="font-family:var(--font-mono);font-size:0.92em">PackageInfo.longVersionCode</code> check, rollback, <code style="font-family:var(--font-mono);font-size:0.92em">onBundleAppVersionMismatch</code> callback) is plumbed through the format but not yet enforced at runtime — that's a Phase 11B/D item.</p>
+        <p style="font-size:15px;color:var(--muted);margin-top:18px"><code style="font-family:var(--font-mono);font-size:0.92em">./gradlew ketoyBundle</code> produces a signed <code style="font-family:var(--font-mono);font-size:0.92em">.ktx</code> against the host-supplied private key. The runtime activation policy (<code style="font-family:var(--font-mono);font-size:0.92em">PackageInfo.longVersionCode</code> check, rollback, <code style="font-family:var(--font-mono);font-size:0.92em">onBundleAppVersionMismatch</code> callback) is plumbed through the format but not yet enforced at runtime  -  that's a Phase 11B/D item.</p>
       </div>
 
       <div class="cta-banner">
         <div>
           <h2>Ready to ship?</h2>
-          <p>The local-asset path is fully supported today. Cloud delivery — push <code style="font-family:var(--font-mono);font-size:0.92em;color:#fff">.ktx</code> to a CDN, users get updates without a Play Store release — is in active development.</p>
+          <p>The local-asset path is fully supported today. Cloud delivery  -  push <code style="font-family:var(--font-mono);font-size:0.92em;color:#fff">.ktx</code> to a CDN, users get updates without a Play Store release  -  is in active development.</p>
         </div>
         <div class="right">
           <a class="btn btn-ghost" href="architecture.html">Read the architecture</a>
@@ -972,5 +978,6 @@
   </script>
 
   <script src="scripts/theme.js"></script>
+  <script src="scripts/search.js"></script>
 </body>
 </html>

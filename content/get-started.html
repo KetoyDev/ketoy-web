@@ -222,10 +222,16 @@
         <a href="docs.html">Docs</a>
       </nav>
       <div class="nav-right">
-        <div class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <span>Search docs</span>
-          <span class="kbd">/</span>
+        <div class="search-wrap" id="searchWrap">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="searchInput" type="text" placeholder="Search docs" autocomplete="off" />
+            <span class="kbd">/</span>
+          </div>
+          <div class="search-dropdown" id="searchDropdown">
+            <div class="search-results" id="searchResults"></div>
+            <p class="search-empty" id="searchEmpty">No results. Try a different term.</p>
+          </div>
         </div>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
           <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -273,15 +279,15 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
         </span>
         <div>
-          <h4>Alpha status — <code>0.3.3-alpha</code></h4>
+          <h4>Alpha status  -  <code>0.3.3-alpha</code></h4>
           <p>
             The local-asset path is fully supported: you author screens in your <code>:app</code>
             module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and
             the runtime executes it at startup.
           </p>
           <p>
-            <strong>Cloud delivery</strong> — pushing a <code>.ktx</code> to a CDN so users get
-            updates without going through the Play Store — is under active development and ships
+            <strong>Cloud delivery</strong>  -  pushing a <code>.ktx</code> to a CDN so users get
+            updates without going through the Play Store  -  is under active development and ships
             shortly. Track progress on the
             <a href="#">GitHub releases page</a>.
           </p>
@@ -331,8 +337,8 @@
           <h4>Kotlin version is pinned during alpha</h4>
           <p>
             The Compose compiler plugin and the Ketoy compiler plugin are both pinned to
-            <code>2.0.21</code> for the alpha. Broader Kotlin version support — letting you
-            pick up newer Kotlin releases without waiting on a matched Ketoy build — is on
+            <code>2.0.21</code> for the alpha. Broader Kotlin version support  -  letting you
+            pick up newer Kotlin releases without waiting on a matched Ketoy build  -  is on
             the roadmap for the next update.
           </p>
         </div>
@@ -347,7 +353,7 @@
           <p>
             Each step below has two parallel paths. Pick <strong>Hilt</strong> if your app
             already uses it (less wiring, recommended). Pick <strong>No&nbsp;Hilt</strong> to
-            drop KBC screens into a plain Compose app — no DI framework required.
+            drop KBC screens into a plain Compose app  -  no DI framework required.
           </p>
         </div>
       </div>
@@ -439,7 +445,7 @@
         </div>
 
         <h3>Configure the <code>ketoy { }</code> block</h3>
-        <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode — the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
+        <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode  -  the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
 
         <div class="code-window">
           <div class="code-chrome">
@@ -460,7 +466,7 @@
     <span class="tk-com">// both debug and release APKs for production parity.</span>
     bundleVariant.<span class="tk-fn">set</span>(<span class="tk-str">"release"</span>)
 
-    <span class="tk-com">// Capability registry — empty file is fine to start.</span>
+    <span class="tk-com">// Capability registry  -  empty file is fine to start.</span>
     capabilityRegistryFile.<span class="tk-fn">set</span>(<span class="tk-fn">file</span>(<span class="tk-str">"ketoy-capabilities.json"</span>))
 
     <span class="tk-com">// Optional: minimum host APK versionCode for this bundle.</span>
@@ -492,7 +498,7 @@
           </div>
         </div>
 
-        <h3>Optional — generate a signing key</h3>
+        <h3>Optional  -  generate a signing key</h3>
         <p>Bundle signing is optional during alpha bring-up; the plugin produces unsigned bundles gracefully when no key is configured. For signed builds, generate an Ed25519 keypair:</p>
 
         <div class="code-window">
@@ -503,12 +509,12 @@
           <div class="code-body">
 <pre><span class="tk-mut">$</span> mkdir -p app/keys app/src/main/assets/ketoy/keys
 
-<span class="tk-com"># Private key — 32 raw bytes, gitignored,</span>
+<span class="tk-com"># Private key  -  32 raw bytes, gitignored,</span>
 <span class="tk-com"># used by the Gradle plugin at build time.</span>
 <span class="tk-mut">$</span> openssl genpkey -algorithm Ed25519 -outform DER \
     | tail -c 32 &gt; app/keys/release-private.key
 
-<span class="tk-com"># Public key — 32 raw bytes, committed alongside the APK</span>
+<span class="tk-com"># Public key  -  32 raw bytes, committed alongside the APK</span>
 <span class="tk-com"># so the runtime can verify the signature at load time.</span>
 <span class="tk-mut">$</span> openssl pkey -in app/keys/release-private.key -inform DER \
     -pubout -outform DER \
@@ -528,7 +534,7 @@
           </div>
         </div>
 
-        <p>The <code>ketoy {}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop — making the runtime <em>verify</em> the signature against the embedded public key — see step 2.</p>
+        <p>The <code>ketoy {}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop  -  making the runtime <em>verify</em> the signature against the embedded public key  -  see step 2.</p>
 
         <div class="callout callout-tip">
           <span class="callout-ico" aria-hidden="true">
@@ -540,7 +546,7 @@
               <code>KetoyConfig.enableSignatureVerification</code> defaults to <code>false</code>
               so unsigned local-dev builds just work. For production, set it to <code>true</code>
               <em>and</em> pass <code>publicKey</code>. <code>KetoyConfig</code> validates this at
-              construction — enabling verification without a 32-byte Ed25519 key throws
+              construction  -  enabling verification without a 32-byte Ed25519 key throws
               <code>IllegalArgumentException</code> immediately, so misconfiguration fails fast
               at app startup, not buried inside the first bundle load.
             </p>
@@ -552,7 +558,7 @@
       <div class="step" id="wire">
         <span class="step-num">Step 02</span>
         <h2>Wire the runtime</h2>
-        <p class="intro">This is the only step where the two paths diverge meaningfully — Hilt does the wiring for you, the manual path is two short blocks.</p>
+        <p class="intro">This is the only step where the two paths diverge meaningfully  -  Hilt does the wiring for you, the manual path is two short blocks.</p>
 
         <div class="tabs" data-tabs>
           <div class="tabs-nav">
@@ -654,7 +660,7 @@
           <div class="tab-pane">
             <p>
               Construct <code>KetoyRuntime</code> by hand. Hold it and the loader as
-              <strong>instance fields on a custom <code>Application</code> subclass</strong> —
+              <strong>instance fields on a custom <code>Application</code> subclass</strong>  - 
               not on a Kotlin <code>object</code>. Static fields that hold a <code>Context</code>
               (<code>KetoyBundleLoader</code> does) trip lint's <code>StaticFieldLeak</code>
               warning. Instance fields on <code>Application</code> are tied to the process
@@ -689,7 +695,7 @@
         )
 
         <span class="tk-com">// Composable + constructor adapters go on dedicated registries</span>
-        <span class="tk-com">// hanging off the runtime — not on CapabilityRegistry.</span>
+        <span class="tk-com">// hanging off the runtime  -  not on CapabilityRegistry.</span>
         <span class="tk-fn">registerGeneratedAdapters</span>(ketoyRuntime.adapterRegistry)
         <span class="tk-fn">registerGeneratedConstructors</span>(ketoyRuntime.constructorRegistry)
 
@@ -699,7 +705,7 @@
               </div>
             </div>
 
-            <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code> — no factory boilerplate needed.</p>
+            <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code>  -  no factory boilerplate needed.</p>
 
             <div class="code-window">
               <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">MainActivity.kt</span></div>
@@ -725,7 +731,7 @@
             <p>
               Don't forget <code>android:name=".MyApplication"</code> in
               <code>AndroidManifest.xml</code>. Publishing <code>LocalKetoyRuntime</code> is the
-              only thing required for <code>KetoyScreen</code> to work without Hilt —
+              only thing required for <code>KetoyScreen</code> to work without Hilt  - 
               <code>KetoyScreen</code> raises <code>IllegalStateException</code> with explicit
               remediation guidance when neither <code>LocalKetoyRuntime</code> nor a
               <code>KetoyViewModelFactoryBuilder</code> is published. Misconfiguration fails
@@ -739,7 +745,7 @@
       <div class="step" id="screen">
         <span class="step-num">Step 03</span>
         <h2>Write your first KBC screen and mount it</h2>
-        <p class="intro">Same for both paths. Create the file directly inside your <code>:app</code> module — no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
+        <p class="intro">Same for both paths. Create the file directly inside your <code>:app</code> module  -  no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
 
         <div class="code-window">
           <div class="code-chrome">
@@ -771,12 +777,12 @@
           </div>
         </div>
 
-        <p>That's the entire KBC source. Native code in the same module — your existing screens, repositories, navigation graph — compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
+        <p>That's the entire KBC source. Native code in the same module  -  your existing screens, repositories, navigation graph  -  compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
 
         <h3>Mount it in your NavHost</h3>
         <p>
           Every <code>KetoyScreen</code> call site requires a trailing <code>nativeFallback</code>
-          lambda — the steady-state render when the bundle is absent, still loading, or the entry
+          lambda  -  the steady-state render when the bundle is absent, still loading, or the entry
           point can't be found. It should render identically to the KBC screen, so adopting
           Ketoy can never introduce a regression in any non-active-bundle case.
         </p>
@@ -793,7 +799,7 @@
                 entryPoint = <span class="tk-str">"HelloScreen"</span>,
                 bundleSource = <span class="tk-typ">KetoyBundleSource</span>.<span class="tk-fn">Asset</span>(<span class="tk-str">"ketoy/main.ktx"</span>),
             ) {
-                <span class="tk-com">// Native fallback — same UI, plain Compose.</span>
+                <span class="tk-com">// Native fallback  -  same UI, plain Compose.</span>
                 <span class="tk-fn">HelloScreen</span>()
             }
         }
@@ -833,34 +839,34 @@
             <span class="tag" style="color:#93f0c0;border-color:#1f3a2d">signed</span>
           </div>
           <div class="code-body">
-<pre><span class="tk-mut">KetoyBC: Compilation complete — 4 functions emitted, 1 composables,</span>
+<pre><span class="tk-mut">KetoyBC: Compilation complete  -  4 functions emitted, 1 composables,</span>
 <span class="tk-mut">0 view models, 1 entry points. Bundle ID: main. Wrote 1832 bytes to</span>
 <span class="tk-mut">app/src/main/assets/ketoy/main.ktx (signed)</span></pre>
           </div>
         </div>
 
         <p>
-          Launch the app — the KBC version of <code>HelloScreen</code> renders. Delete the
+          Launch the app  -  the KBC version of <code>HelloScreen</code> renders. Delete the
           <code>.ktx</code>, change the entry point to <code>"DoesNotExist"</code>, or toggle
-          airplane mode — the native fallback renders identically. That's the production
+          airplane mode  -  the native fallback renders identically. That's the production
           contract.
         </p>
-        <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI — it's regenerated deterministically.</p>
+        <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI  -  it's regenerated deterministically.</p>
       </div>
 
       <!-- ============ What's next ============ -->
       <div class="step" id="whats-next">
         <span class="step-num">Roadmap</span>
-        <h2>What ships next — cloud delivery</h2>
+        <h2>What ships next  -  cloud delivery</h2>
         <p class="intro">
           What you just built is the <strong>local-asset</strong> path: the <code>.ktx</code>
           ships inside the APK at compile time, and updates roll out through the Play Store
           like any other asset.
         </p>
         <p>
-          <strong>Cloud delivery</strong> — pushing a new <code>.ktx</code> to a CDN where
+          <strong>Cloud delivery</strong>  -  pushing a new <code>.ktx</code> to a CDN where
           connected devices fetch updates at the next process start
-          (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch) —
+          (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch)  - 
           uses <code>KetoyBundleSource.Remote(url)</code>. The wire format, signature
           verification, ETag cache, and runtime activation order are already implemented. The
           hosted infrastructure (signing pipeline, signed-URL distribution, telemetry) is
@@ -875,7 +881,7 @@
         <div class="card">
           <div class="num">→</div>
           <h3>Architecture overview</h3>
-          <p>The five-layer stack and why KBC bytecode — not JSON — is the wire format.</p>
+          <p>The five-layer stack and why KBC bytecode  -  not JSON  -  is the wire format.</p>
           <a class="link" href="architecture.html">Read the spec</a>
         </div>
         <div class="card">
@@ -887,7 +893,7 @@
         <div class="card">
           <div class="num">→</div>
           <h3>Custom adapters</h3>
-          <p>Add your own components beyond Material3 — the KSP processor handles the rest.</p>
+          <p>Add your own components beyond Material3  -  the KSP processor handles the rest.</p>
           <a class="link" href="docs.html">Read the guide</a>
         </div>
       </div>
@@ -965,5 +971,6 @@
   </script>
 
   <script src="scripts/theme.js"></script>
+  <script src="scripts/search.js"></script>
 </body>
 </html>

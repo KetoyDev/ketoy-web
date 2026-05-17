@@ -222,10 +222,16 @@
         <a href="docs.html" class="active">Docs</a>
       </nav>
       <div class="nav-right">
-        <div class="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <span>Search docs</span>
-          <span class="kbd">/</span>
+        <div class="search-wrap" id="searchWrap">
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="searchInput" type="text" placeholder="Search docs" autocomplete="off" />
+            <span class="kbd">/</span>
+          </div>
+          <div class="search-dropdown" id="searchDropdown">
+            <div class="search-results" id="searchResults"></div>
+            <p class="search-empty" id="searchEmpty">No results. Try a different term.</p>
+          </div>
         </div>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
           <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -297,7 +303,7 @@
         <span class="eyebrow">Documentation</span>
         <h1 style="margin-top:8px">Overview</h1>
         <p style="color:var(--muted);font-size:19px;line-height:1.5;margin-top:8px;margin-bottom:32px;max-width:680px">
-          Everything you need to ship Kotlin screens over the air — concepts, guides, and
+          Everything you need to ship Kotlin screens over the air  -  concepts, guides, and
           full reference for the compiler, bytecode, bundle format, and runtime.
         </p>
 
@@ -311,7 +317,7 @@
           <div class="card">
             <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg></div>
             <h3>How it works</h3>
-            <p>The five-layer pipeline — source, compiler, bundle, interpreter, renderer — and the guarantees at each layer.</p>
+            <p>The five-layer pipeline  -  source, compiler, bundle, interpreter, renderer  -  and the guarantees at each layer.</p>
             <a class="link" href="architecture.html">Architecture</a>
           </div>
           <div class="card">
@@ -329,19 +335,19 @@
         </div>
 
         <h2>Concepts at a glance</h2>
-        <div class="placeholder"><b>Placeholder — concept primer</b>Short conceptual explainers for: KBC bytecode, the two-layer parameter system, the capability registry, the compile-time sandbox, structured concurrency in KBC, the dev overlay.</div>
+        <div class="placeholder"><b>Placeholder  -  concept primer</b>Short conceptual explainers for: KBC bytecode, the two-layer parameter system, the capability registry, the compile-time sandbox, structured concurrency in KBC, the dev overlay.</div>
 
         <h2>Guides</h2>
-        <div class="placeholder"><b>Placeholder — guides index</b>Linkable cards for each guide topic: ViewModels & state, Coroutines & Flow, Navigation, Networking, Storage (KV/Room), Custom capabilities, Custom adapters.</div>
+        <div class="placeholder"><b>Placeholder  -  guides index</b>Linkable cards for each guide topic: ViewModels & state, Coroutines & Flow, Navigation, Networking, Storage (KV/Room), Custom capabilities, Custom adapters.</div>
 
         <h2>Reference</h2>
-        <div class="placeholder"><b>Placeholder — reference index</b>Linkable cards for each reference topic: KBC opcodes (104), .ktx bundle format, capability registry (67 IDs), composable adapters (35), constructor adapters (17), Compose tokens (88), compile-time error catalog.</div>
+        <div class="placeholder"><b>Placeholder  -  reference index</b>Linkable cards for each reference topic: KBC opcodes (104), .ktx bundle format, capability registry (67 IDs), composable adapters (35), constructor adapters (17), Compose tokens (88), compile-time error catalog.</div>
 
         <h2>Operations</h2>
-        <div class="placeholder"><b>Placeholder — ops topics</b>CDN delivery patterns, ETag and 304 cache behavior, Ed25519 signing key management & rotation, staged rollouts, A/B per cohort, telemetry &amp; error aggregation.</div>
+        <div class="placeholder"><b>Placeholder  -  ops topics</b>CDN delivery patterns, ETag and 304 cache behavior, Ed25519 signing key management & rotation, staged rollouts, A/B per cohort, telemetry &amp; error aggregation.</div>
 
         <h2>Release</h2>
-        <div class="placeholder" style="margin-bottom:48px"><b>Placeholder — release notes</b>0.3.3-alpha highlights, migration notes from 0.2.x, and the public roadmap (Tier-2 JIT, streaming bundles, ketoy.dev Developer Console).</div>
+        <div class="placeholder" style="margin-bottom:48px"><b>Placeholder  -  release notes</b>0.3.3-alpha highlights, migration notes from 0.2.x, and the public roadmap (Tier-2 JIT, streaming bundles, ketoy.dev Developer Console).</div>
 
         <div class="cta-banner">
           <div>
@@ -382,5 +388,6 @@
   </footer>
 
   <script src="scripts/theme.js"></script>
+  <script src="scripts/search.js"></script>
 </body>
 </html>

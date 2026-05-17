@@ -1,5 +1,5 @@
 /* ============================================================
-   Ketoy — site styles
+   Ketoy  -  site styles
    Type: Outfit (display/logo), Switzer (body), Urbanist (UI), JetBrains Mono (code)
    ============================================================ */
 
@@ -193,6 +193,10 @@ p { margin: 0; color: var(--ink-2); }
   align-items: center;
   gap: 8px;
 }
+/* ---- search wrap + inline dropdown ---- */
+.search-wrap {
+  position: relative;
+}
 .search {
   display: flex;
   align-items: center;
@@ -205,10 +209,25 @@ p { margin: 0; color: var(--ink-2); }
   font-family: var(--font-ui);
   font-size: 14px;
   min-width: 220px;
+  cursor: text;
+  transition: border-color 150ms, box-shadow 150ms;
 }
-.search svg { width: 14px; height: 14px; }
+.search svg { width: 14px; height: 14px; flex-shrink: 0; }
+.search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  cursor: text;
+}
+.search input::placeholder { color: var(--muted); }
 .search .kbd {
   margin-left: auto;
+  flex-shrink: 0;
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 1px 6px;
@@ -216,6 +235,76 @@ p { margin: 0; color: var(--ink-2); }
   border-radius: 4px;
   color: var(--muted-2);
   background: var(--card-bg);
+}
+.search-wrap.open .search {
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.search-hit {
+  background: var(--accent-soft-2);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+  border-radius: 6px;
+  scroll-margin-top: 90px;
+}
+
+/* ============== Search dropdown ============== */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 360px;
+  max-width: 480px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px -4px rgba(0,0,0,0.18), 0 2px 8px -2px rgba(0,0,0,0.08);
+  z-index: 200;
+  display: none;
+  padding: 8px;
+}
+.search-wrap.open .search-dropdown {
+  display: block;
+}
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 320px;
+  overflow: auto;
+}
+.search-result {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  color: var(--ink-2);
+  text-align: left;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+}
+.search-result:hover { background: var(--surface); }
+.search-result span {
+  font-weight: 600;
+  color: var(--ink);
+}
+.search-result small {
+  color: var(--muted);
+  font-size: 12.5px;
+  font-weight: 400;
+}
+.search-empty {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--muted);
+  display: none;
 }
 
 /* theme toggle */
@@ -400,7 +489,7 @@ p { margin: 0; color: var(--ink-2); }
   box-shadow: 0 0 0 4px rgba(43,182,115,.18);
 }
 
-/* hero code window — landscape ratio */
+/* hero code window  -  landscape ratio */
 .hero .code-window {
   border-color: #1d2027;
   box-shadow: 0 40px 100px -30px rgba(91,91,255,0.25), 0 8px 30px -10px rgba(0,0,0,0.4);
@@ -411,7 +500,7 @@ p { margin: 0; color: var(--ink-2); }
   line-height: 1.6;
 }
 
-/* hero stats strip — inside the black band */
+/* hero stats strip  -  inside the black band */
 .hero-stats {
   margin-top: 64px;
   display: grid;
@@ -1079,7 +1168,7 @@ footer.site-footer {
   border-radius: 5px;
 }
 
-/* spec list — constructor IDs, capability rows */
+/* spec list  -  constructor IDs, capability rows */
 .spec-list {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -1274,7 +1363,7 @@ footer.site-footer {
   .spec-row { grid-template-columns: 80px 1fr; }
   .spec-row .note { grid-column: 1 / -1; text-align: left; }
   .nav { display: none; }
-  .search { display: none; }
+  .search-wrap { display: none; }
   .stack-row { grid-template-columns: 60px 1fr; }
   .stack-row .meta { display: none; }
   section { padding: 64px 0; }
@@ -1336,7 +1425,7 @@ footer.site-footer {
   color: var(--ink);
 }
 
-/* CTA banner — was solid ink + white type; in dark mode, ink IS white,
+/* CTA banner  -  was solid ink + white type; in dark mode, ink IS white,
    so flip to a tinted-surface look */
 [data-theme="dark"] .cta-banner {
   background: var(--surface);

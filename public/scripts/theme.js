@@ -1,4 +1,4 @@
-// Ketoy — theme toggle (light by default, dark via localStorage).
+// Ketoy  -  theme toggle (light by default, dark via localStorage).
 // The inline boot script in each page's <head> applies the theme before
 // first paint; this file just wires the button click and persists.
 (function () {
