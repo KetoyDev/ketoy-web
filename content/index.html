@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ketoy — Ship Android Kotlin Updates Instantly | Runtime Updates for Compose Apps</title>
+  <meta name="description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta name="keywords" content="android instant updates, instant app updates android, android runtime updates, kotlin runtime, android code push, android hot updates, android live updates, android dynamic updates, compose runtime updates, android ota updates, jetpack compose runtime, compose ui updates, compose hot reload production, kotlin compose runtime, dynamic compose ui, runtime compose rendering, compose server driven ui, android compose infrastructure, server driven ui android, android sdui, sdui kotlin, dynamic ui android, remote ui android, json ui android, server rendered android ui, android ui from server, android release infrastructure, mobile deployment infrastructure, android deployment platform, android release automation, android ci cd updates, mobile app deployment system, android release engineering, mobile runtime infrastructure, play store approval delay, android app review delays, faster android app updates, ship android updates faster, android app rollout delay, avoid play store delays, android release bottleneck, instant bug fixes android, codepush alternative android, expo updates alternative, firebase remote config alternative, android hotfix system, android patch delivery, react native codepush for android native, native android codepush, Ketoy, Server Driven UI, Server-Driven UI Android, Remote Compose, Jetpack Compose runtime, Kotlin execution runtime, Android code push, OTA Android updates, ship app updates in seconds, ship app updates quickly, skip Play Store review, Android over the air updates, Compose over the air, Kotlin bundle, .ktx bundle, Ketoy Bytecode, KBC, Hermes for Kotlin, React Native alternative Android, mobile code push, CodePush Kotlin, SDUI, server driven UI framework, Kotlin DSL free, Android runtime, Android CI CD, continuous delivery Android, hot reload Android, feature flags Android, remote rendering Android" />
+  <meta name="author" content="Ketoy" />
+  <meta name="application-name" content="Ketoy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="theme-color" content="#08090a" />
+  <link rel="canonical" href="https://ketoy.dev/index.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ketoy" />
+  <meta property="og:title" content="Ketoy — Ship Android Kotlin Updates Instantly | Runtime Updates for Compose Apps" />
+  <meta property="og:description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta property="og:url" content="https://ketoy.dev/index.html" />
+  <meta property="og:image" content="https://ketoy.dev/assets/vol-img.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ketoy: Instant Android App Updates for Kotlin & Compose" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@KetoyDev" />
+  <meta name="twitter:creator" content="@KetoyDev" />
+  <meta name="twitter:title" content="Ketoy — Ship Android Kotlin Updates Instantly | Runtime Updates for Compose Apps" />
+  <meta name="twitter:description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta name="twitter:image" content="https://ketoy.dev/assets/vol-img.png" />
+  <meta name="twitter:image:alt" content="Ketoy: Instant Android App Updates" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/ketoy-logo.svg" />
+  <link rel="icon" href="assets/ketoy_logo.png" />
+  <link rel="apple-touch-icon" href="assets/ketoy_logo.png" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles/site.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "Ketoy",
+        "url": "https://ketoy.dev",
+        "logo": "https://ketoy.dev/assets/ketoy_logo.png",
+        "description": "Ketoy is a Kotlin runtime infrastructure for Android that enables instant app updates without Play Store releases.",
+        "sameAs": [
+          "https://twitter.com/KetoyDev",
+          "https://github.com/KetoyDev/ketoy"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Developer Support",
+          "email": "support@ketoy.dev"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Ketoy",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Android",
+        "description": "Ketoy is a Kotlin execution runtime for Android that lets teams ship Jetpack Compose, Coroutines, ViewModels, and Navigation over-the-air as a .ktx bundle, updating every device in about 60 seconds without a Play Store release. Hilt and Room stay in the host app; Ketoy exposes their functions for new features because updating them requires a Play Store release.",
+        "url": "https://ketoy.dev/",
+        "image": "https://ketoy.dev/assets/vol-img.png",
+        "softwareVersion": "0.2",
+        "keywords": "Android instant updates, Kotlin runtime, Server-Driven UI, Android OTA updates, Jetpack Compose runtime, Android code push, instant app updates, SDUI Android",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+        "publisher": { "@type": "Organization", "name": "Ketoy", "url": "https://ketoy.dev", "email": "support@ketoy.dev" },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "42"
+        },
+        "author": { "@type": "Organization", "name": "Ketoy" },
+        "isAccessibleForFree": true
+      },
+      {
+        "@type": "WebSite",
+        "name": "Ketoy",
+        "url": "https://ketoy.dev",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://ketoy.dev/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "description": "Instant Android app updates with Kotlin runtime execution"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://ketoy.dev/index.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Documentation",
+            "item": "https://ketoy.dev/docs.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Changelog",
+            "item": "https://ketoy.dev/docs.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ketoy is a Kotlin execution runtime for Android that runs Ketoy Bytecode compiled from plain Kotlin source, including Jetpack Compose, coroutines, ViewModels, and Navigation, delivered as a .ktx bundle. Hilt and Room stay in the host app; Ketoy exposes their functions for new features because updating them requires a Play Store release."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I ship Android app updates in seconds?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Write Kotlin, run ./gradlew ketoyBundle, upload the resulting .ktx to Ketoy Cloud, and the KetoyRuntime on every device fetches and executes the new bundle in about 60 seconds without Play Store review or binary split."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Ketoy a server-driven UI framework?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ketoy is stronger than a server-driven UI DSL: it executes real Kotlin on device with native Jetpack Compose rendering, real coroutine semantics and real ViewModel lifecycles, so you keep full-surface Compose without a custom schema."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this like CodePush or Hermes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "What Hermes is to React Native's JavaScript, Ketoy is to Kotlin and Compose: a purpose-built execution runtime, not a script interpreter wedged into a different stack."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is Ketoy different from CodePush for Android?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Unlike CodePush which is for JavaScript, Ketoy is a native Kotlin runtime that executes real Kotlin bytecode with full Jetpack Compose support, ViewModels, and Coroutines. It delivers faster updates without the JavaScript bridge overhead."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are the benefits of Server-Driven UI with Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Server-Driven UI (SDUI) with Ketoy provides instant UI updates without Play Store reviews, dynamic feature rollouts, A/B testing, and the ability to fix bugs in production immediately."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Ketoy work with existing Android projects?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Ketoy integrates seamlessly with existing Android projects. Hilt and Room stay in the host app, and Ketoy exposes their functions, so you can gradually adopt it without a complete rewrite."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Kotlin Coroutines with Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Ketoy supports full Kotlin Coroutines semantics within your bundled code, including suspend functions, Flow, and proper cancellation handling."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script>
+    // Apply theme before first paint to avoid flash.
+    (function () {
+      try {
+        if (localStorage.getItem('ketoy-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- ============ Topbar ============ -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/ketoy-logo.svg" alt="" />
+        <span class="brand-name">Ketoy</span>
+      </a>
+      <nav class="nav">
+        <a href="get-started.html">Get started</a>
+        <a href="features.html">Supported features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Docs</a>
+      </nav>
+      <div class="nav-right">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>Search docs</span>
+          <span class="kbd">/</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a class="btn btn-primary" href="get-started.html">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ Hero ============ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-tag">
+            <span class="pill">v0.3</span>
+            <span>is live</span>
+          </div>
+          <h1>Ship Android updates like it's a <strong>server response</strong>.</h1>
+          <p class="lede">
+            Write plain Kotlin and Jetpack Compose. Compile to a signed
+            <code style="font-family:var(--font-mono);font-size:0.92em;color:#fff;font-weight:500">.ktx</code>
+            bundle. Every user gets the new flow in under a minute — no Play Store release.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="get-started.html">
+              Install Ketoy
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a class="btn btn-ghost" href="architecture.html">How it works</a>
+          </div>
+        </div>
+
+        <div class="code-window" aria-label="Example Ketoy screen in Kotlin">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">CheckoutScreen.kt</span>
+            <span class="tag">@KetoyEntryPoint</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-an">@KetoyEntryPoint</span> <span class="tk-an">@Composable</span>
+<span class="tk-key">fun</span> <span class="tk-fn">CheckoutScreen</span>() {
+    <span class="tk-key">val</span> vm    = <span class="tk-fn">ketoyViewModel</span>&lt;<span class="tk-typ">CheckoutViewModel</span>&gt;()
+    <span class="tk-key">val</span> state <span class="tk-key">by</span> vm.state.<span class="tk-fn">collectAsState</span>()
+
+    <span class="tk-fn">Scaffold</span>(topBar = { <span class="tk-fn">TopAppBar</span>(title = { <span class="tk-fn">Text</span>(<span class="tk-str">"Checkout"</span>) }) }) { p -&gt;
+        <span class="tk-fn">LazyColumn</span>(modifier = <span class="tk-typ">Modifier</span>.<span class="tk-fn">padding</span>(p)) {
+            <span class="tk-fn">items</span>(state.cartItems) { item -&gt;
+                <span class="tk-fn">ProductCard</span>(name = item.name, price = item.price)
+            }
+        }
+        <span class="tk-fn">Button</span>(onClick = { vm.<span class="tk-fn">dispatch</span>(<span class="tk-str">"place_order"</span>) }) {
+            <span class="tk-fn">Text</span>(<span class="tk-str">"Place Order — $"</span> + state.total)
+        }
+    }
+}
+<span class="tk-com">// $ ./gradlew ketoyBundle  →  checkout.ktx  ·  3.4 KB</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats inside the black hero band -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="v">&lt; 50<small>ms</small></div>
+          <div class="l">Bundle load + verify + parse</div>
+        </div>
+        <div class="hero-stat">
+          <div class="v">&lt; 100<small>ms</small></div>
+          <div class="l">To first frame, cold</div>
+        </div>
+        <div class="hero-stat">
+          <div class="v">~4<small>KB</small></div>
+          <div class="l">Full checkout flow bundle</div>
+        </div>
+        <div class="hero-stat">
+          <div class="v">20<small>×</small></div>
+          <div class="l">Smaller than JSON SDUI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ What is Ketoy ============ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">No DSL · No schema · No migration</span>
+        <h2>Your existing Kotlin and Compose code. Shipped over the air.</h2>
+        <p>
+          Every server-driven UI system eventually invents a DSL. Ketoy doesn't. The only
+          change to your screen is one annotation — everything else is Kotlin you would
+          have written anyway.
+        </p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="num">01</div>
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+          </div>
+          <h3>Plain Kotlin</h3>
+          <p>Write full Jetpack Compose — coroutines, ViewModels, Navigation, Flow. The compiler plugin handles the rest.</p>
+          <a class="link" href="features.html">Supported features</a>
+        </div>
+
+        <div class="card">
+          <div class="num">02</div>
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <h3>KBC bytecode</h3>
+          <p>Compile to a register-based bytecode with 104 opcodes — purpose-built for Kotlin semantics, structured concurrency, and Compose recomposition.</p>
+          <a class="link" href="architecture.html">Read the spec</a>
+        </div>
+
+        <div class="card">
+          <div class="num">03</div>
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <h3>Native Compose render</h3>
+          <p>KSP-generated typed adapters call real Compose APIs. Every <code style="font-family:var(--font-mono);font-size:13px">TextStyle</code>, every <code style="font-family:var(--font-mono);font-size:13px">Shape</code>, real JVM object — native slot table, layout, GPU.</p>
+          <a class="link" href="architecture.html">Render pipeline</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Stack diagram ============ -->
+  <section class="surface">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">The five-layer stack</span>
+        <h2>From your <code style="font-family:var(--font-mono);font-size:0.88em;font-weight:500">.kt</code> source to the user's screen.</h2>
+        <p>One Gradle task per screen. The compiler does the heavy lifting; the runtime stays small.</p>
+      </div>
+
+      <div class="stack">
+        <div class="stack-row">
+          <span class="lvl">01</span>
+          <div>
+            <span class="name">Kotlin Source</span>
+            <span class="desc">Plain Kotlin + Compose. One annotation: <code style="font-family:var(--font-mono);font-size:13px;color:var(--accent-ink)">@KetoyEntryPoint</code>.</span>
+          </div>
+          <span class="meta">.kt</span>
+        </div>
+        <div class="stack-row">
+          <span class="lvl">02</span>
+          <div>
+            <span class="name">K2 Compiler Plugin</span>
+            <span class="desc">IR visitor compiles to KBC. Validates Android API access, reflection, GlobalScope at compile time.</span>
+          </div>
+          <span class="meta">IR → KBC</span>
+        </div>
+        <div class="stack-row accent">
+          <span class="lvl">03</span>
+          <div>
+            <span class="name">.ktx Bundle</span>
+            <span class="desc">Brotli-compressed KBC bytecode, Ed25519-signed. Typically 1.5 – 8 KB per screen.</span>
+          </div>
+          <span class="meta">CDN payload</span>
+        </div>
+        <div class="stack-row">
+          <span class="lvl">04</span>
+          <div>
+            <span class="name">KBC VM Interpreter</span>
+            <span class="desc">104 opcodes, register-based. Structured concurrency, Tier-1 on-device DEX JIT for hot functions.</span>
+          </div>
+          <span class="meta">runtime</span>
+        </div>
+        <div class="stack-row">
+          <span class="lvl">05</span>
+          <div>
+            <span class="name">Compose Renderer</span>
+            <span class="desc">KSP-generated typed adapters call real Compose APIs — native slot table, recomposition, layout, GPU.</span>
+          </div>
+          <span class="meta">Material3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Two-layer params ============ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">The two-layer parameter system</span>
+        <h2>Static where it can be. Real JVM objects where it must be.</h2>
+        <p>
+          Compose parameters split into two categories. Primitives, colors, and modifiers
+          are encoded statically — zero allocation. Complex types like
+          <code style="font-family:var(--font-mono);font-size:0.92em">TextStyle</code> and
+          <code style="font-family:var(--font-mono);font-size:0.92em">KeyboardOptions</code>
+          are constructed at runtime via <code style="font-family:var(--font-mono);font-size:0.92em">CONSTRUCT_JVM</code>.
+        </p>
+      </div>
+
+      <div class="cards-grid cols-2">
+        <div class="card dark">
+          <span class="eyebrow" style="color:#8e8eff">Layer 1</span>
+          <h3>KBCValue — static constants</h3>
+          <p>35 variants covering every Compose primitive. Decoded with a direct <code style="font-family:var(--font-mono);font-size:13px;color:#dcdcff">when()</code> at render time.</p>
+          <div style="font-family:var(--font-mono);font-size:13px;color:#c6c6cf;line-height:1.85;border-top:1px solid #1d2027;padding-top:14px">
+            <span style="color:#82aaff">Color.Red</span>          <span style="color:#5c6370">→</span> ColorARGB    <span style="color:#5c6370">(5 B)</span><br/>
+            <span style="color:#82aaff">FontWeight.Bold</span>    <span style="color:#5c6370">→</span> FontWeightInt<span style="color:#5c6370">(3 B)</span><br/>
+            <span style="color:#82aaff">16.sp</span>              <span style="color:#5c6370">→</span> Sp           <span style="color:#5c6370">(5 B)</span><br/>
+            <span style="color:#82aaff">Modifier.padding()</span> <span style="color:#5c6370">→</span> ModifierRef  <span style="color:#5c6370">(3 B)</span><br/>
+            <span style="color:#82aaff">&lt;default&gt;</span>     <span style="color:#5c6370">→</span> Default      <span style="color:#5c6370">(0 B)</span>
+          </div>
+        </div>
+
+        <div class="card dark">
+          <span class="eyebrow" style="color:#8e8eff">Layer 2</span>
+          <h3>CONSTRUCT_JVM — real objects</h3>
+          <p>17 built-in constructor adapters for complex types: TextStyle, KeyboardOptions, RoundedCornerShape, Shadow, AnnotatedString, and more.</p>
+          <div style="font-family:var(--font-mono);font-size:13px;color:#c6c6cf;line-height:1.85;border-top:1px solid #1d2027;padding-top:14px">
+            <span style="color:#c792ea">CONSTRUCT_JVM</span> r5 <span style="color:#ffcb6b">TEXT_STYLE</span><br/>
+            &nbsp;&nbsp;param[0]: <span style="color:#82aaff">Sp(16f)</span>             <span style="color:#5c6370">// fontSize</span><br/>
+            &nbsp;&nbsp;param[3]: <span style="color:#82aaff">FontWeightInt(700)</span>  <span style="color:#5c6370">// fontWeight</span><br/>
+            <span style="color:#c792ea">COMPOSABLE_CALL</span> <span style="color:#ffcb6b">OUTLINED_TEXT_FIELD</span><br/>
+            &nbsp;&nbsp;param[5]: <span style="color:#82aaff">Register(5)</span>         <span style="color:#5c6370">// real TextStyle</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Coverage ============ -->
+  <section class="surface">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Coverage</span>
+        <h2>Material3 components, coroutines, capabilities — all of it.</h2>
+        <p>Ketoy isn't a curated subset. KSP regenerates the entire adapter catalog from your Compose classpath.</p>
+      </div>
+
+      <div class="cards-grid cols-4">
+        <div class="card">
+          <div class="num">35</div>
+          <h3>Composable adapters</h3>
+          <p>Layout, containers, typography, actions, selection, media, feedback, navigation, dialogs — all parameters.</p>
+        </div>
+        <div class="card">
+          <div class="num">104</div>
+          <h3>KBC opcodes</h3>
+          <p>Logic, coroutine primitives, Compose state, UI dispatch, control flow, VM lifecycle.</p>
+        </div>
+        <div class="card">
+          <div class="num">67</div>
+          <h3>Built-in capabilities</h3>
+          <p>HTTP, KV store, Room, Navigation, platform APIs, dispatchers, Flow operators.</p>
+        </div>
+        <div class="card">
+          <div class="num">88</div>
+          <h3>Compose tokens</h3>
+          <p>Every Material constant — alignment, arrangement, keyboard types, IME actions — mapped statically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Security ============ -->
+  <section class="ink">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow" style="color:#9b9bff">Security model</span>
+        <h2>The load-bearing wall of the architecture.</h2>
+        <p>Security in Ketoy isn't a feature flag — it's the boundary between your runtime and everything else.</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="card dark">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 6v6c0 5 3.4 9.5 8 10 4.6-.5 8-5 8-10V6l-8-4z"/></svg>
+          </div>
+          <h3>Ed25519 signing</h3>
+          <p>Every bundle, every load. 64-byte signature verified before any parsing. The public key ships in your APK; the private key stays on your signing server.</p>
+        </div>
+        <div class="card dark">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h3>Compile-time sandbox</h3>
+          <p>The K2 plugin rejects direct Android API access, reflection, file I/O, and GlobalScope. Forbidden calls are build errors — not runtime exceptions.</p>
+        </div>
+        <div class="card dark">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          </div>
+          <h3>Play Store-compliant</h3>
+          <p>No pre-built DEX downloaded. The on-device JIT generates DEX from KBC locally — the same thing ART does with bytecode. Explicitly permitted by policy.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Quick start ============ -->
+  <section>
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Quick start</span>
+        <h2>Three blocks. One Gradle task.</h2>
+        <p>Add the plugin, write your screen, run <code style="font-family:var(--font-mono);font-size:0.9em">ketoyBundle</code>. Upload the <code style="font-family:var(--font-mono);font-size:0.9em">.ktx</code> file to your CDN.</p>
+      </div>
+
+      <div class="cards-grid">
+        <div class="code-window" style="box-shadow:none;border:1px solid #1d2027">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">build.gradle.kts</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-fn">plugins</span> {
+  <span class="tk-fn">id</span>(<span class="tk-str">"dev.ketoy.compiler"</span>) <span class="tk-key">version</span> <span class="tk-str">"0.3.3-alpha"</span>
+}
+
+<span class="tk-fn">dependencies</span> {
+  <span class="tk-fn">implementation</span>(<span class="tk-fn">platform</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-bom:0.3.3-alpha"</span>))
+  <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-runtime"</span>)
+  <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-hilt"</span>)
+  <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-adapters-material3"</span>)
+  <span class="tk-fn">ksp</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-ksp-processor"</span>)
+}</pre>
+          </div>
+        </div>
+
+        <div class="code-window" style="box-shadow:none;border:1px solid #1d2027">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">HomeScreen.kt</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-an">@KetoyEntryPoint</span>
+<span class="tk-an">@Composable</span>
+<span class="tk-key">fun</span> <span class="tk-fn">HomeScreen</span>() {
+  <span class="tk-key">val</span> vm    = <span class="tk-fn">ketoyViewModel</span>&lt;<span class="tk-typ">HomeViewModel</span>&gt;()
+  <span class="tk-key">val</span> state <span class="tk-key">by</span> vm.state.<span class="tk-fn">collectAsState</span>()
+
+  <span class="tk-fn">Column</span>(modifier = <span class="tk-typ">Modifier</span>.<span class="tk-fn">fillMaxSize</span>().<span class="tk-fn">padding</span>(<span class="tk-num">16</span>.dp)) {
+    <span class="tk-fn">Text</span>(<span class="tk-str">"Welcome, "</span> + state[<span class="tk-str">"name"</span>])
+    <span class="tk-fn">Button</span>(onClick = { vm.<span class="tk-fn">dispatch</span>(<span class="tk-str">"get_started"</span>) }) {
+      <span class="tk-fn">Text</span>(<span class="tk-str">"Get Started"</span>)
+    }
+  }
+}</pre>
+          </div>
+        </div>
+
+        <div class="code-window" style="box-shadow:none;border:1px solid #1d2027">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">terminal</span>
+            <span class="tag">~60s rollout</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-com"># Compile to KBC</span>
+$ ./gradlew :ketoy-screens:ketoyBundle
+
+<span class="tk-mut">&gt; Task :ketoy-screens:ketoyBundle</span>
+<span class="tk-mut">  HomeScreen.kt        → home.ktx        2.1 KB</span>
+<span class="tk-mut">  CheckoutScreen.kt    → checkout.ktx    3.4 KB</span>
+<span class="tk-mut">  Signed:    Ed25519</span>
+<span class="tk-mut">  Compressed:Brotli q=11</span>
+
+<span class="tk-com"># Upload to your CDN. Done.</span>
+$ aws s3 cp build/ketoy-bundles/ s3://cdn/ketoy/ \
+    --recursive --content-encoding br</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA ============ -->
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="cta-banner">
+        <div>
+          <h2>Write Kotlin. Ship the screen.</h2>
+          <p>Available now on Maven Central. Hilt integration, dev overlay, and the full Material3 adapter catalog included.</p>
+        </div>
+        <div class="right">
+          <a class="btn btn-ghost" href="docs.html">Read the docs</a>
+          <a class="btn btn-primary" href="get-started.html">Get started</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="index.html">
+            <img class="brand-mark" src="assets/ketoy-logo.svg" alt="" />
+            <span class="brand-name">Ketoy</span>
+          </a>
+          <p class="footer-brand-blurb">A server-driven execution runtime for Android. Write Kotlin, ship bytecode, render real Compose.</p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="get-started.html">Get started</a></li>
+            <li><a href="features.html">Supported features</a></li>
+            <li><a href="architecture.html">Architecture</a></li>
+            <li><a href="#">Release notes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Docs</h4>
+          <ul>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="docs.html">KBC spec</a></li>
+            <li><a href="docs.html">Capability registry</a></li>
+            <li><a href="docs.html">Bundle format</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Maven Central</a></li>
+            <li><a href="#">Sample apps</a></li>
+            <li><a href="#">Migration guide</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Community</h4>
+          <ul>
+            <li><a href="#">GitHub</a></li>
+            <li><a href="#">Discord</a></li>
+            <li><a href="#">Issues</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-meta">
+        <span>© 2026 Ketoy. <code style="font-family:var(--font-mono);font-size:12px">dev.ketoy.vm</code> · v0.3.3-alpha</span>
+        <span>Made for Android · Kotlin 2.0 · Compose</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="scripts/theme.js"></script>
+</body>
+</html>

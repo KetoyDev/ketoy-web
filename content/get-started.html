@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get started · Ketoy</title>
+  <meta name="description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta name="keywords" content="android instant updates, instant app updates android, android runtime updates, kotlin runtime, android code push, android hot updates, android live updates, android dynamic updates, compose runtime updates, android ota updates, jetpack compose runtime, compose ui updates, compose hot reload production, kotlin compose runtime, dynamic compose ui, runtime compose rendering, compose server driven ui, android compose infrastructure, server driven ui android, android sdui, sdui kotlin, dynamic ui android, remote ui android, json ui android, server rendered android ui, android ui from server, android release infrastructure, mobile deployment infrastructure, android deployment platform, android release automation, android ci cd updates, mobile app deployment system, android release engineering, mobile runtime infrastructure, play store approval delay, android app review delays, faster android app updates, ship android updates faster, android app rollout delay, avoid play store delays, android release bottleneck, instant bug fixes android, codepush alternative android, expo updates alternative, firebase remote config alternative, android hotfix system, android patch delivery, react native codepush for android native, native android codepush, Ketoy, Server Driven UI, Server-Driven UI Android, Remote Compose, Jetpack Compose runtime, Kotlin execution runtime, Android code push, OTA Android updates, ship app updates in seconds, ship app updates quickly, skip Play Store review, Android over the air updates, Compose over the air, Kotlin bundle, .ktx bundle, Ketoy Bytecode, KBC, Hermes for Kotlin, React Native alternative Android, mobile code push, CodePush Kotlin, SDUI, server driven UI framework, Kotlin DSL free, Android runtime, Android CI CD, continuous delivery Android, hot reload Android, feature flags Android, remote rendering Android" />
+  <meta name="author" content="Ketoy" />
+  <meta name="application-name" content="Ketoy" />
+  <meta name="robots" content="index, follow" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="theme-color" content="#08090a" />
+  <link rel="canonical" href="https://ketoy.dev/get-started.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Ketoy" />
+  <meta property="og:title" content="Get started · Ketoy" />
+  <meta property="og:description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta property="og:url" content="https://ketoy.dev/get-started.html" />
+  <meta property="og:image" content="https://ketoy.dev/assets/vol-img.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Ketoy: Instant Android App Updates for Kotlin & Compose" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@KetoyDev" />
+  <meta name="twitter:creator" content="@KetoyDev" />
+  <meta name="twitter:title" content="Get started · Ketoy" />
+  <meta name="twitter:description" content="Ship Android app updates instantly with Ketoy. Push Kotlin, Compose UI, ViewModels, Coroutines, and business logic directly to users without Play Store delays. No DSL. No migration. Works with existing Android codebases." />
+  <meta name="twitter:image" content="https://ketoy.dev/assets/vol-img.png" />
+  <meta name="twitter:image:alt" content="Ketoy: Instant Android App Updates" />
+
+  <link rel="icon" type="image/svg+xml" href="assets/ketoy-logo.svg" />
+  <link rel="icon" href="assets/ketoy_logo.png" />
+  <link rel="apple-touch-icon" href="assets/ketoy_logo.png" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles/site.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "Ketoy",
+        "url": "https://ketoy.dev",
+        "logo": "https://ketoy.dev/assets/ketoy_logo.png",
+        "description": "Ketoy is a Kotlin runtime infrastructure for Android that enables instant app updates without Play Store releases.",
+        "sameAs": [
+          "https://twitter.com/KetoyDev",
+          "https://github.com/KetoyDev/ketoy"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Developer Support",
+          "email": "support@ketoy.dev"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Ketoy",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Android",
+        "description": "Ketoy is a Kotlin execution runtime for Android that lets teams ship Jetpack Compose, Coroutines, ViewModels, and Navigation over-the-air as a .ktx bundle, updating every device in about 60 seconds without a Play Store release. Hilt and Room stay in the host app; Ketoy exposes their functions for new features because updating them requires a Play Store release.",
+        "url": "https://ketoy.dev/",
+        "image": "https://ketoy.dev/assets/vol-img.png",
+        "softwareVersion": "0.2",
+        "keywords": "Android instant updates, Kotlin runtime, Server-Driven UI, Android OTA updates, Jetpack Compose runtime, Android code push, instant app updates, SDUI Android",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
+        "publisher": { "@type": "Organization", "name": "Ketoy", "url": "https://ketoy.dev", "email": "support@ketoy.dev" },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "ratingCount": "42"
+        },
+        "author": { "@type": "Organization", "name": "Ketoy" },
+        "isAccessibleForFree": true
+      },
+      {
+        "@type": "WebSite",
+        "name": "Ketoy",
+        "url": "https://ketoy.dev",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://ketoy.dev/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "description": "Instant Android app updates with Kotlin runtime execution"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://ketoy.dev/index.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Documentation",
+            "item": "https://ketoy.dev/docs.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Changelog",
+            "item": "https://ketoy.dev/docs.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ketoy is a Kotlin execution runtime for Android that runs Ketoy Bytecode compiled from plain Kotlin source, including Jetpack Compose, coroutines, ViewModels, and Navigation, delivered as a .ktx bundle. Hilt and Room stay in the host app; Ketoy exposes their functions for new features because updating them requires a Play Store release."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How do I ship Android app updates in seconds?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Write Kotlin, run ./gradlew ketoyBundle, upload the resulting .ktx to Ketoy Cloud, and the KetoyRuntime on every device fetches and executes the new bundle in about 60 seconds without Play Store review or binary split."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Ketoy a server-driven UI framework?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ketoy is stronger than a server-driven UI DSL: it executes real Kotlin on device with native Jetpack Compose rendering, real coroutine semantics and real ViewModel lifecycles, so you keep full-surface Compose without a custom schema."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this like CodePush or Hermes?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "What Hermes is to React Native's JavaScript, Ketoy is to Kotlin and Compose: a purpose-built execution runtime, not a script interpreter wedged into a different stack."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is Ketoy different from CodePush for Android?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Unlike CodePush which is for JavaScript, Ketoy is a native Kotlin runtime that executes real Kotlin bytecode with full Jetpack Compose support, ViewModels, and Coroutines. It delivers faster updates without the JavaScript bridge overhead."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What are the benefits of Server-Driven UI with Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Server-Driven UI (SDUI) with Ketoy provides instant UI updates without Play Store reviews, dynamic feature rollouts, A/B testing, and the ability to fix bugs in production immediately."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Ketoy work with existing Android projects?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Ketoy integrates seamlessly with existing Android projects. Hilt and Room stay in the host app, and Ketoy exposes their functions, so you can gradually adopt it without a complete rewrite."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I use Kotlin Coroutines with Ketoy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Ketoy supports full Kotlin Coroutines semantics within your bundled code, including suspend functions, Flow, and proper cancellation handling."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script>
+    // Apply theme before first paint to avoid flash.
+    (function () {
+      try {
+        if (localStorage.getItem('ketoy-theme') === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <img class="brand-mark" src="assets/ketoy-logo.svg" alt="" />
+        <span class="brand-name">Ketoy</span>
+      </a>
+      <nav class="nav">
+        <a href="get-started.html" class="active">Get started</a>
+        <a href="features.html">Supported features</a>
+        <a href="architecture.html">Architecture</a>
+        <a href="docs.html">Docs</a>
+      </nav>
+      <div class="nav-right">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>Search docs</span>
+          <span class="kbd">/</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle theme">
+          <svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a class="btn btn-primary" href="get-started.html">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="subnav">
+    <div class="subnav-inner">
+      <a href="#requirements" class="active">Requirements</a>
+      <a href="#install">1. Install</a>
+      <a href="#wire">2. Wire the runtime</a>
+      <a href="#screen">3. First screen</a>
+      <a href="#build">4. Build &amp; run</a>
+      <a href="#whats-next">What's next</a>
+    </div>
+  </div>
+
+  <section class="page-head">
+    <div class="container">
+      <span class="eyebrow">Getting started</span>
+      <h1>Get started with Ketoy</h1>
+      <p class="lede">
+        From an empty Android app to a working KBC screen in four steps. Author Jetpack
+        Compose screens, compile them to portable KBC bytecode, and ship them inside your
+        APK as a signed <code style="font-family:var(--font-mono);font-size:0.92em">.ktx</code>
+        asset that the Ketoy runtime executes natively.
+      </p>
+      <div class="hero-actions" style="margin-top:28px">
+        <a class="btn btn-primary" href="#install">Install Ketoy</a>
+        <a class="btn btn-ghost" href="docs.html">Read the docs</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="page-body">
+    <div class="container">
+
+      <!-- Alpha status callout -->
+      <div class="callout callout-info">
+        <span class="callout-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        </span>
+        <div>
+          <h4>Alpha status — <code>0.3.3-alpha</code></h4>
+          <p>
+            The local-asset path is fully supported: you author screens in your <code>:app</code>
+            module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and
+            the runtime executes it at startup.
+          </p>
+          <p>
+            <strong>Cloud delivery</strong> — pushing a <code>.ktx</code> to a CDN so users get
+            updates without going through the Play Store — is under active development and ships
+            shortly. Track progress on the
+            <a href="#">GitHub releases page</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Requirements card -->
+      <div id="requirements"></div>
+      <div class="req-card">
+        <div class="req-head">
+          <h3>Requirements</h3>
+          <span class="req-version-pill">Ketoy 0.3.3-alpha</span>
+        </div>
+        <div class="req-grid">
+          <div class="req-item">
+            <span class="label">Kotlin</span>
+            <span class="val">2.0.21</span>
+          </div>
+          <div class="req-item">
+            <span class="label">Android Gradle Plugin</span>
+            <span class="val">8.0+ (Iguana or newer)</span>
+          </div>
+          <div class="req-item">
+            <span class="label">JDK</span>
+            <span class="val">17</span>
+          </div>
+          <div class="req-item">
+            <span class="label">min SDK</span>
+            <span class="val">26</span>
+          </div>
+          <div class="req-item">
+            <span class="label">compile SDK</span>
+            <span class="val">35+</span>
+          </div>
+          <div class="req-item">
+            <span class="label">Jetpack Compose</span>
+            <span class="val">BOM 2024.10.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-warn">
+        <span class="callout-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg>
+        </span>
+        <div>
+          <h4>Kotlin version is pinned during alpha</h4>
+          <p>
+            The Compose compiler plugin and the Ketoy compiler plugin are both pinned to
+            <code>2.0.21</code> for the alpha. Broader Kotlin version support — letting you
+            pick up newer Kotlin releases without waiting on a matched Ketoy build — is on
+            the roadmap for the next update.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-ico" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.7.6 1 1.5 1 2.3v.1h6v-.1c0-.8.3-1.7 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        </span>
+        <div>
+          <h4>Hilt is optional</h4>
+          <p>
+            Each step below has two parallel paths. Pick <strong>Hilt</strong> if your app
+            already uses it (less wiring, recommended). Pick <strong>No&nbsp;Hilt</strong> to
+            drop KBC screens into a plain Compose app — no DI framework required.
+          </p>
+        </div>
+      </div>
+
+      <!-- ============ STEP 1 ============ -->
+      <div class="step" id="install">
+        <span class="step-num">Step 01</span>
+        <h2>Install Ketoy</h2>
+        <p class="intro">Ketoy ships a BOM, so you pin once and the rest of the modules line up. Add the plugin and dependencies to <code>:app/build.gradle.kts</code>.</p>
+
+        <div class="tabs" data-tabs>
+          <div class="tabs-nav">
+            <button class="active" data-tab="0">Hilt</button>
+            <button data-tab="1">No Hilt</button>
+          </div>
+
+          <div class="tab-pane active">
+            <div class="code-window">
+              <div class="code-chrome">
+                <div class="dots"><i></i><i></i><i></i></div>
+                <span class="file">app/build.gradle.kts</span>
+                <span class="tag">Hilt</span>
+              </div>
+              <div class="code-body">
+<pre><span class="tk-fn">plugins</span> {
+    <span class="tk-fn">id</span>(<span class="tk-str">"com.android.application"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"org.jetbrains.kotlin.android"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"org.jetbrains.kotlin.plugin.compose"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"com.google.devtools.ksp"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"com.google.dagger.hilt.android"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"dev.ketoy.compiler"</span>) <span class="tk-key">version</span> <span class="tk-str">"0.3.3-alpha"</span>
+}
+
+<span class="tk-fn">dependencies</span> {
+    <span class="tk-fn">implementation</span>(<span class="tk-fn">platform</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-bom:0.3.3-alpha"</span>))
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-runtime"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-hilt"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-annotations"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-capabilities-core"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-capabilities-navigation"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-adapters-material3"</span>)
+
+    <span class="tk-fn">implementation</span>(<span class="tk-fn">platform</span>(<span class="tk-str">"androidx.compose:compose-bom:2024.10.00"</span>))
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.compose.ui:ui"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.compose.material3:material3"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.activity:activity-compose"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.navigation:navigation-compose:2.8.0"</span>)
+
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"com.google.dagger:hilt-android:2.52"</span>)
+    <span class="tk-fn">ksp</span>(<span class="tk-str">"com.google.dagger:hilt-compiler:2.52"</span>)
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-pane">
+            <div class="code-window">
+              <div class="code-chrome">
+                <div class="dots"><i></i><i></i><i></i></div>
+                <span class="file">app/build.gradle.kts</span>
+                <span class="tag">No Hilt</span>
+              </div>
+              <div class="code-body">
+<pre><span class="tk-fn">plugins</span> {
+    <span class="tk-fn">id</span>(<span class="tk-str">"com.android.application"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"org.jetbrains.kotlin.android"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"org.jetbrains.kotlin.plugin.compose"</span>)
+    <span class="tk-fn">id</span>(<span class="tk-str">"dev.ketoy.compiler"</span>) <span class="tk-key">version</span> <span class="tk-str">"0.3.3-alpha"</span>
+}
+
+<span class="tk-fn">dependencies</span> {
+    <span class="tk-fn">implementation</span>(<span class="tk-fn">platform</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-bom:0.3.3-alpha"</span>))
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-runtime"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-annotations"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-capabilities-core"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-capabilities-navigation"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"dev.ketoy.vm:ketoy-adapters-material3"</span>)
+
+    <span class="tk-fn">implementation</span>(<span class="tk-fn">platform</span>(<span class="tk-str">"androidx.compose:compose-bom:2024.10.00"</span>))
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.compose.ui:ui"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.compose.material3:material3"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.activity:activity-compose"</span>)
+    <span class="tk-fn">implementation</span>(<span class="tk-str">"androidx.navigation:navigation-compose:2.8.0"</span>)
+}</pre>
+              </div>
+            </div>
+            <p style="font-size:15px;color:var(--muted);margin-top:8px">No <code>ketoy-hilt</code>, no <code>hilt-android</code>, no KSP processor. You'll construct the runtime objects by hand in step 2.</p>
+          </div>
+        </div>
+
+        <h3>Configure the <code>ketoy { }</code> block</h3>
+        <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode — the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">app/build.gradle.kts · ketoy {} DSL</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-fn">ketoy</span> {
+    <span class="tk-com">// Required: turns on inline-source app bundle mode.</span>
+    exportFromAppModule.<span class="tk-fn">set</span>(<span class="tk-key">true</span>)
+
+    <span class="tk-com">// Output filename. Bundle is written to</span>
+    <span class="tk-com">// :app/src/main/assets/ketoy/&lt;bundleId&gt;.ktx</span>
+    bundleId.<span class="tk-fn">set</span>(<span class="tk-str">"main"</span>)
+
+    <span class="tk-com">// Which Android variant the compiler attaches to.</span>
+    <span class="tk-com">// Default = "release". The release-signed .ktx is loaded by</span>
+    <span class="tk-com">// both debug and release APKs for production parity.</span>
+    bundleVariant.<span class="tk-fn">set</span>(<span class="tk-str">"release"</span>)
+
+    <span class="tk-com">// Capability registry — empty file is fine to start.</span>
+    capabilityRegistryFile.<span class="tk-fn">set</span>(<span class="tk-fn">file</span>(<span class="tk-str">"ketoy-capabilities.json"</span>))
+
+    <span class="tk-com">// Optional: minimum host APK versionCode for this bundle.</span>
+    minAppVersion.<span class="tk-fn">set</span>(<span class="tk-num">0</span>)
+
+    <span class="tk-com">// Optional: emit source line numbers for the dev overlay.</span>
+    debugMode.<span class="tk-fn">set</span>(<span class="tk-key">true</span>)
+
+    <span class="tk-com">// Optional but recommended for production: sign the bundle.</span>
+    <span class="tk-com">// Without a key, the plugin emits an unsigned bundle gracefully.</span>
+    <span class="tk-key">val</span> signingKey = <span class="tk-fn">file</span>(<span class="tk-str">"keys/release-private.key"</span>)
+    <span class="tk-key">if</span> (signingKey.<span class="tk-fn">exists</span>()) {
+        signingKeyFile.<span class="tk-fn">set</span>(signingKey)
+    }
+}</pre>
+          </div>
+        </div>
+
+        <p>Create a stub registry file so the build can start:</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">terminal</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-mut">$</span> echo <span class="tk-str">'{"version": 1, "capabilities": [], "allowedStdlibFqNames": []}'</span> \
+    &gt; app/ketoy-capabilities.json</pre>
+          </div>
+        </div>
+
+        <h3>Optional — generate a signing key</h3>
+        <p>Bundle signing is optional during alpha bring-up; the plugin produces unsigned bundles gracefully when no key is configured. For signed builds, generate an Ed25519 keypair:</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">terminal · generate Ed25519 keypair</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-mut">$</span> mkdir -p app/keys app/src/main/assets/ketoy/keys
+
+<span class="tk-com"># Private key — 32 raw bytes, gitignored,</span>
+<span class="tk-com"># used by the Gradle plugin at build time.</span>
+<span class="tk-mut">$</span> openssl genpkey -algorithm Ed25519 -outform DER \
+    | tail -c 32 &gt; app/keys/release-private.key
+
+<span class="tk-com"># Public key — 32 raw bytes, committed alongside the APK</span>
+<span class="tk-com"># so the runtime can verify the signature at load time.</span>
+<span class="tk-mut">$</span> openssl pkey -in app/keys/release-private.key -inform DER \
+    -pubout -outform DER \
+    | tail -c 32 &gt; app/src/main/assets/ketoy/keys/release-public.key</pre>
+          </div>
+        </div>
+
+        <p>Then add the private key to <code>.gitignore</code>:</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">.gitignore</span>
+          </div>
+          <div class="code-body">
+<pre>**/keys/*-private.key</pre>
+          </div>
+        </div>
+
+        <p>The <code>ketoy {}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop — making the runtime <em>verify</em> the signature against the embedded public key — see step 2.</p>
+
+        <div class="callout callout-tip">
+          <span class="callout-ico" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z"/></svg>
+          </span>
+          <div>
+            <h4>Signature verification is opt-in</h4>
+            <p>
+              <code>KetoyConfig.enableSignatureVerification</code> defaults to <code>false</code>
+              so unsigned local-dev builds just work. For production, set it to <code>true</code>
+              <em>and</em> pass <code>publicKey</code>. <code>KetoyConfig</code> validates this at
+              construction — enabling verification without a 32-byte Ed25519 key throws
+              <code>IllegalArgumentException</code> immediately, so misconfiguration fails fast
+              at app startup, not buried inside the first bundle load.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ STEP 2 ============ -->
+      <div class="step" id="wire">
+        <span class="step-num">Step 02</span>
+        <h2>Wire the runtime</h2>
+        <p class="intro">This is the only step where the two paths diverge meaningfully — Hilt does the wiring for you, the manual path is two short blocks.</p>
+
+        <div class="tabs" data-tabs>
+          <div class="tabs-nav">
+            <button class="active" data-tab="0">Hilt</button>
+            <button data-tab="1">No Hilt</button>
+          </div>
+
+          <div class="tab-pane active">
+            <p>Implement <code>KetoyCapabilityProvider</code>:</p>
+            <div class="code-window">
+              <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">AppCapabilityProvider.kt</span></div>
+              <div class="code-body">
+<pre><span class="tk-an">@Singleton</span>
+<span class="tk-key">class</span> <span class="tk-typ">AppCapabilityProvider</span> <span class="tk-an">@Inject</span> <span class="tk-key">constructor</span>(
+    <span class="tk-an">@ApplicationContext</span> <span class="tk-key">private val</span> context: <span class="tk-typ">Context</span>,
+) : <span class="tk-typ">KetoyCapabilityProvider</span> {
+    <span class="tk-key">override fun</span> <span class="tk-fn">buildRegistry</span>(): <span class="tk-typ">CapabilityRegistry</span> =
+        <span class="tk-fn">CapabilityRegistry</span>().<span class="tk-fn">apply</span> {
+            <span class="tk-fn">registerCoreCapabilities</span>(context = context)
+        }
+}
+
+<span class="tk-an">@Module</span>
+<span class="tk-an">@InstallIn</span>(<span class="tk-typ">SingletonComponent</span>::<span class="tk-key">class</span>)
+<span class="tk-key">abstract class</span> <span class="tk-typ">AppHiltModule</span> {
+    <span class="tk-an">@Binds</span>
+    <span class="tk-key">abstract fun</span> <span class="tk-fn">bindCapabilityProvider</span>(
+        impl: <span class="tk-typ">AppCapabilityProvider</span>,
+    ): <span class="tk-typ">KetoyCapabilityProvider</span>
+}</pre>
+              </div>
+            </div>
+
+            <p>If you generated a signing keypair in step 1, also wire the public key via a <code>KetoyConfigCustomizer</code> binding so the Hilt-managed <code>KetoyRuntime</code> verifies signatures against your key:</p>
+            <div class="code-window">
+              <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">KetoyConfigModule.kt</span></div>
+              <div class="code-body">
+<pre><span class="tk-an">@Module</span>
+<span class="tk-an">@InstallIn</span>(<span class="tk-typ">SingletonComponent</span>::<span class="tk-key">class</span>)
+<span class="tk-key">object</span> <span class="tk-typ">KetoyConfigModule</span> {
+    <span class="tk-an">@Provides</span> <span class="tk-an">@Singleton</span>
+    <span class="tk-key">fun</span> <span class="tk-fn">provideKetoyConfigCustomizer</span>(
+        <span class="tk-an">@ApplicationContext</span> context: <span class="tk-typ">Context</span>,
+    ): <span class="tk-typ">KetoyConfigCustomizer</span> = <span class="tk-fn">KetoyConfigCustomizer</span> { <span class="tk-mut">default</span> -&gt;
+        <span class="tk-key">val</span> publicKey =
+            <span class="tk-typ">KetoyKeystore</span>.<span class="tk-fn">loadFromAsset</span>(context, <span class="tk-str">"ketoy/keys/release-public.key"</span>)
+        <span class="tk-mut">default</span>.<span class="tk-fn">copy</span>(
+            enableSignatureVerification = <span class="tk-key">true</span>,
+            publicKey = publicKey,
+        )
+    }
+}</pre>
+              </div>
+            </div>
+
+            <p>Register Material3 adapters on the singleton <code>KetoyRuntime</code> in <code>Application.onCreate</code>, then publish runtime + loader in your activity via <code>KetoyHiltProvider</code>:</p>
+            <div class="code-window">
+              <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">MyApplication.kt &middot; MainActivity.kt</span></div>
+              <div class="code-body">
+<pre><span class="tk-an">@HiltAndroidApp</span>
+<span class="tk-key">class</span> <span class="tk-typ">MyApplication</span> : <span class="tk-typ">Application</span>() {
+    <span class="tk-an">@Inject</span> <span class="tk-key">lateinit var</span> ketoyRuntime: <span class="tk-typ">KetoyRuntime</span>
+
+    <span class="tk-key">override fun</span> <span class="tk-fn">onCreate</span>() {
+        <span class="tk-key">super</span>.<span class="tk-fn">onCreate</span>()
+        <span class="tk-fn">registerGeneratedAdapters</span>(ketoyRuntime.adapterRegistry)
+        <span class="tk-fn">registerGeneratedConstructors</span>(ketoyRuntime.constructorRegistry)
+    }
+}
+
+<span class="tk-an">@AndroidEntryPoint</span>
+<span class="tk-key">class</span> <span class="tk-typ">MainActivity</span> : <span class="tk-typ">ComponentActivity</span>() {
+    <span class="tk-an">@Inject</span> <span class="tk-key">lateinit var</span> factoryBuilder: <span class="tk-typ">KetoyViewModelFactoryBuilder</span>
+    <span class="tk-an">@Inject</span> <span class="tk-key">lateinit var</span> bundleLoader: <span class="tk-typ">KetoyBundleLoader</span>
+    <span class="tk-an">@Inject</span> <span class="tk-key">lateinit var</span> runtime: <span class="tk-typ">KetoyRuntime</span>
+
+    <span class="tk-key">override fun</span> <span class="tk-fn">onCreate</span>(savedInstanceState: <span class="tk-typ">Bundle</span>?) {
+        <span class="tk-key">super</span>.<span class="tk-fn">onCreate</span>(savedInstanceState)
+        <span class="tk-fn">setContent</span> {
+            <span class="tk-fn">KetoyHiltProvider</span>(
+                factoryBuilder = factoryBuilder,
+                bundleLoader = bundleLoader,
+                runtime = runtime,
+            ) { <span class="tk-fn">AppNavGraph</span>() }
+        }
+    }
+}</pre>
+              </div>
+            </div>
+
+            <p>
+              <code>KetoyHiltProvider</code> internally publishes <code>LocalKetoyRuntime</code>
+              and <code>LocalKetoyCapabilityRegistry</code>, so every <code>KetoyScreen</code> in
+              the tree resolves its adapter and constructor registries from the same singleton.
+            </p>
+            <p>Don't forget <code>android:name=".MyApplication"</code> in <code>AndroidManifest.xml</code>.</p>
+          </div>
+
+          <div class="tab-pane">
+            <p>
+              Construct <code>KetoyRuntime</code> by hand. Hold it and the loader as
+              <strong>instance fields on a custom <code>Application</code> subclass</strong> —
+              not on a Kotlin <code>object</code>. Static fields that hold a <code>Context</code>
+              (<code>KetoyBundleLoader</code> does) trip lint's <code>StaticFieldLeak</code>
+              warning. Instance fields on <code>Application</code> are tied to the process
+              lifecycle and don't leak.
+            </p>
+            <div class="code-window">
+              <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">MyApplication.kt</span></div>
+              <div class="code-body">
+<pre><span class="tk-key">class</span> <span class="tk-typ">MyApplication</span> : <span class="tk-typ">Application</span>() {
+    <span class="tk-key">lateinit var</span> ketoyRuntime: <span class="tk-typ">KetoyRuntime</span> <span class="tk-key">private set</span>
+    <span class="tk-key">lateinit var</span> ketoyBundleLoader: <span class="tk-typ">KetoyBundleLoader</span> <span class="tk-key">private set</span>
+
+    <span class="tk-key">override fun</span> <span class="tk-fn">onCreate</span>() {
+        <span class="tk-key">super</span>.<span class="tk-fn">onCreate</span>()
+
+        <span class="tk-key">val</span> capabilityRegistry = <span class="tk-fn">CapabilityRegistry</span>().<span class="tk-fn">apply</span> {
+            <span class="tk-fn">registerCoreCapabilities</span>(context = <span class="tk-key">this</span>@MyApplication)
+        }
+
+        <span class="tk-com">// For production, load your Ed25519 public key from assets.</span>
+        <span class="tk-com">// For local dev with unsigned bundles, KetoyConfig() works as-is.</span>
+        <span class="tk-key">val</span> config = <span class="tk-fn">KetoyConfig</span>(
+            enableSignatureVerification = <span class="tk-key">true</span>,
+            publicKey = <span class="tk-typ">KetoyKeystore</span>.<span class="tk-fn">loadFromAsset</span>(
+                <span class="tk-key">this</span>, <span class="tk-str">"ketoy/keys/release-public.key"</span>,
+            ),
+        )
+
+        ketoyRuntime = <span class="tk-fn">KetoyRuntime</span>(
+            capabilityRegistry = capabilityRegistry,
+            config = config,
+        )
+
+        <span class="tk-com">// Composable + constructor adapters go on dedicated registries</span>
+        <span class="tk-com">// hanging off the runtime — not on CapabilityRegistry.</span>
+        <span class="tk-fn">registerGeneratedAdapters</span>(ketoyRuntime.adapterRegistry)
+        <span class="tk-fn">registerGeneratedConstructors</span>(ketoyRuntime.constructorRegistry)
+
+        ketoyBundleLoader = <span class="tk-fn">KetoyBundleLoader</span>(ketoyRuntime, <span class="tk-key">this</span>)
+    }
+}</pre>
+              </div>
+            </div>
+
+            <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code> — no factory boilerplate needed.</p>
+
+            <div class="code-window">
+              <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">MainActivity.kt</span></div>
+              <div class="code-body">
+<pre><span class="tk-key">import</span> dev.ketoy.runtime.compose.<span class="tk-typ">LocalKetoyBundleLoader</span>
+<span class="tk-key">import</span> dev.ketoy.runtime.compose.<span class="tk-typ">LocalKetoyRuntime</span>
+
+<span class="tk-key">class</span> <span class="tk-typ">MainActivity</span> : <span class="tk-typ">ComponentActivity</span>() {
+    <span class="tk-key">override fun</span> <span class="tk-fn">onCreate</span>(savedInstanceState: <span class="tk-typ">Bundle</span>?) {
+        <span class="tk-key">super</span>.<span class="tk-fn">onCreate</span>(savedInstanceState)
+        <span class="tk-key">val</span> app = application <span class="tk-key">as</span> <span class="tk-typ">MyApplication</span>
+        <span class="tk-fn">setContent</span> {
+            <span class="tk-fn">CompositionLocalProvider</span>(
+                <span class="tk-typ">LocalKetoyRuntime</span> <span class="tk-key">provides</span> app.ketoyRuntime,
+                <span class="tk-typ">LocalKetoyBundleLoader</span> <span class="tk-key">provides</span> app.ketoyBundleLoader,
+            ) { <span class="tk-fn">AppNavGraph</span>() }
+        }
+    }
+}</pre>
+              </div>
+            </div>
+
+            <p>
+              Don't forget <code>android:name=".MyApplication"</code> in
+              <code>AndroidManifest.xml</code>. Publishing <code>LocalKetoyRuntime</code> is the
+              only thing required for <code>KetoyScreen</code> to work without Hilt —
+              <code>KetoyScreen</code> raises <code>IllegalStateException</code> with explicit
+              remediation guidance when neither <code>LocalKetoyRuntime</code> nor a
+              <code>KetoyViewModelFactoryBuilder</code> is published. Misconfiguration fails
+              fast and clearly.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ STEP 3 ============ -->
+      <div class="step" id="screen">
+        <span class="step-num">Step 03</span>
+        <h2>Write your first KBC screen and mount it</h2>
+        <p class="intro">Same for both paths. Create the file directly inside your <code>:app</code> module — no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">app/src/main/kotlin/.../ketoyscreens/HelloScreen.kt</span>
+            <span class="tag">@KetoyEntryPoint</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-key">package</span> com.example.myapp.ketoyscreens
+
+<span class="tk-key">import</span> androidx.compose.foundation.layout.*
+<span class="tk-key">import</span> androidx.compose.material3.*
+<span class="tk-key">import</span> androidx.compose.runtime.*
+<span class="tk-key">import</span> androidx.compose.ui.<span class="tk-typ">Modifier</span>
+<span class="tk-key">import</span> androidx.compose.ui.unit.dp
+<span class="tk-key">import</span> dev.ketoy.annotations.<span class="tk-typ">KetoyComposable</span>
+<span class="tk-key">import</span> dev.ketoy.annotations.<span class="tk-typ">KetoyEntryPoint</span>
+
+<span class="tk-an">@KetoyEntryPoint</span>
+<span class="tk-an">@KetoyComposable</span>
+<span class="tk-an">@Composable</span>
+<span class="tk-key">fun</span> <span class="tk-fn">HelloScreen</span>() {
+    <span class="tk-fn">Column</span>(modifier = <span class="tk-typ">Modifier</span>.<span class="tk-fn">padding</span>(<span class="tk-num">24</span>.dp)) {
+        <span class="tk-fn">Text</span>(text = <span class="tk-str">"Hello from KetoyVM"</span>)
+        <span class="tk-fn">Spacer</span>(<span class="tk-typ">Modifier</span>.<span class="tk-fn">height</span>(<span class="tk-num">12</span>.dp))
+        <span class="tk-fn">Text</span>(text = <span class="tk-str">"Shipped as KBC bytecode, executed natively."</span>)
+    }
+}</pre>
+          </div>
+        </div>
+
+        <p>That's the entire KBC source. Native code in the same module — your existing screens, repositories, navigation graph — compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
+
+        <h3>Mount it in your NavHost</h3>
+        <p>
+          Every <code>KetoyScreen</code> call site requires a trailing <code>nativeFallback</code>
+          lambda — the steady-state render when the bundle is absent, still loading, or the entry
+          point can't be found. It should render identically to the KBC screen, so adopting
+          Ketoy can never introduce a regression in any non-active-bundle case.
+        </p>
+
+        <div class="code-window">
+          <div class="code-chrome"><div class="dots"><i></i><i></i><i></i></div><span class="file">AppNavGraph.kt</span></div>
+          <div class="code-body">
+<pre><span class="tk-an">@Composable</span>
+<span class="tk-key">fun</span> <span class="tk-fn">AppNavGraph</span>() {
+    <span class="tk-key">val</span> nav = <span class="tk-fn">rememberNavController</span>()
+    <span class="tk-fn">NavHost</span>(nav, startDestination = <span class="tk-str">"home"</span>) {
+        <span class="tk-fn">composable</span>(<span class="tk-str">"home"</span>) {
+            <span class="tk-fn">KetoyScreen</span>(
+                entryPoint = <span class="tk-str">"HelloScreen"</span>,
+                bundleSource = <span class="tk-typ">KetoyBundleSource</span>.<span class="tk-fn">Asset</span>(<span class="tk-str">"ketoy/main.ktx"</span>),
+            ) {
+                <span class="tk-com">// Native fallback — same UI, plain Compose.</span>
+                <span class="tk-fn">HelloScreen</span>()
+            }
+        }
+    }
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ STEP 4 ============ -->
+      <div class="step" id="build">
+        <span class="step-num">Step 04</span>
+        <h2>Build, install, and run</h2>
+        <p class="intro">Two Gradle commands. The <code>ketoyBundle</code> task attaches to <code>compileReleaseKotlin</code> and emits the signed <code>.ktx</code> into your assets directory.</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">terminal</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-com"># Compile the bundle into app/src/main/assets/ketoy/main.ktx.</span>
+<span class="tk-mut">$</span> ./gradlew :app:ketoyBundle
+
+<span class="tk-com"># Build and install. assembleDebug rebuilds the bundle</span>
+<span class="tk-com"># automatically when the source closure changes.</span>
+<span class="tk-mut">$</span> ./gradlew :app:installDebug</pre>
+          </div>
+        </div>
+
+        <p>You should see a summary line during compilation:</p>
+
+        <div class="code-window">
+          <div class="code-chrome">
+            <div class="dots"><i></i><i></i><i></i></div>
+            <span class="file">build output</span>
+            <span class="tag" style="color:#93f0c0;border-color:#1f3a2d">signed</span>
+          </div>
+          <div class="code-body">
+<pre><span class="tk-mut">KetoyBC: Compilation complete — 4 functions emitted, 1 composables,</span>
+<span class="tk-mut">0 view models, 1 entry points. Bundle ID: main. Wrote 1832 bytes to</span>
+<span class="tk-mut">app/src/main/assets/ketoy/main.ktx (signed)</span></pre>
+          </div>
+        </div>
+
+        <p>
+          Launch the app — the KBC version of <code>HelloScreen</code> renders. Delete the
+          <code>.ktx</code>, change the entry point to <code>"DoesNotExist"</code>, or toggle
+          airplane mode — the native fallback renders identically. That's the production
+          contract.
+        </p>
+        <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI — it's regenerated deterministically.</p>
+      </div>
+
+      <!-- ============ What's next ============ -->
+      <div class="step" id="whats-next">
+        <span class="step-num">Roadmap</span>
+        <h2>What ships next — cloud delivery</h2>
+        <p class="intro">
+          What you just built is the <strong>local-asset</strong> path: the <code>.ktx</code>
+          ships inside the APK at compile time, and updates roll out through the Play Store
+          like any other asset.
+        </p>
+        <p>
+          <strong>Cloud delivery</strong> — pushing a new <code>.ktx</code> to a CDN where
+          connected devices fetch updates at the next process start
+          (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch) —
+          uses <code>KetoyBundleSource.Remote(url)</code>. The wire format, signature
+          verification, ETag cache, and runtime activation order are already implemented. The
+          hosted infrastructure (signing pipeline, signed-URL distribution, telemetry) is
+          under active development and ships shortly.
+        </p>
+        <p>Keep checking this page and the <a href="#">release announcements</a> for the rollout.</p>
+      </div>
+
+      <!-- ============ Next steps ============ -->
+      <h2 style="margin-top:80px;margin-bottom:24px">Continue reading</h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="num">→</div>
+          <h3>Architecture overview</h3>
+          <p>The five-layer stack and why KBC bytecode — not JSON — is the wire format.</p>
+          <a class="link" href="architecture.html">Read the spec</a>
+        </div>
+        <div class="card">
+          <div class="num">→</div>
+          <h3>Supported features</h3>
+          <p>Every Material3 adapter, every capability, every Compose token Ketoy ships with.</p>
+          <a class="link" href="features.html">See coverage</a>
+        </div>
+        <div class="card">
+          <div class="num">→</div>
+          <h3>Custom adapters</h3>
+          <p>Add your own components beyond Material3 — the KSP processor handles the rest.</p>
+          <a class="link" href="docs.html">Read the guide</a>
+        </div>
+      </div>
+
+      <div class="cta-banner" style="margin-top:80px">
+        <div>
+          <h2>Need help?</h2>
+          <p>Join the Ketoy community on Discord, or open an issue on GitHub. We respond within a day.</p>
+        </div>
+        <div class="right">
+          <a class="btn btn-ghost" href="#">GitHub</a>
+          <a class="btn btn-primary" href="#">Discord</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="index.html">
+            <img class="brand-mark" src="assets/ketoy-logo.svg" alt="" />
+            <span class="brand-name">Ketoy</span>
+          </a>
+          <p class="footer-brand-blurb">A server-driven execution runtime for Android. Write Kotlin, ship bytecode, render real Compose.</p>
+        </div>
+        <div><h4>Product</h4><ul><li><a href="get-started.html">Get started</a></li><li><a href="features.html">Supported features</a></li><li><a href="architecture.html">Architecture</a></li><li><a href="#">Release notes</a></li></ul></div>
+        <div><h4>Docs</h4><ul><li><a href="docs.html">Documentation</a></li><li><a href="docs.html">KBC spec</a></li><li><a href="docs.html">Capability registry</a></li><li><a href="docs.html">Bundle format</a></li></ul></div>
+        <div><h4>Resources</h4><ul><li><a href="#">Maven Central</a></li><li><a href="#">Sample apps</a></li><li><a href="#">Migration guide</a></li><li><a href="#">FAQ</a></li></ul></div>
+        <div><h4>Community</h4><ul><li><a href="#">GitHub</a></li><li><a href="#">Discord</a></li><li><a href="#">Issues</a></li><li><a href="#">Contact</a></li></ul></div>
+      </div>
+      <div class="footer-meta">
+        <span>© 2026 Ketoy. <code style="font-family:var(--font-mono);font-size:12px">dev.ketoy.vm</code> · v0.3.3-alpha</span>
+        <span>Made for Android · Kotlin 2.0 · Compose</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('[data-tabs]').forEach(function (tabs) {
+      var btns = tabs.querySelectorAll('.tabs-nav button');
+      var panes = tabs.querySelectorAll('.tab-pane');
+      btns.forEach(function (btn, i) {
+        btn.addEventListener('click', function () {
+          btns.forEach(function (b) { b.classList.remove('active'); });
+          panes.forEach(function (p) { p.classList.remove('active'); });
+          btn.classList.add('active');
+          panes[i].classList.add('active');
+        });
+      });
+    });
+
+    // Subnav active-section sync on scroll
+    var subnavLinks = document.querySelectorAll('.subnav a');
+    var sections = Array.from(subnavLinks).map(function (a) {
+      var id = a.getAttribute('href').replace('#', '');
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    function syncSubnav() {
+      var scrollY = window.scrollY + 200;
+      var current = sections[0];
+      sections.forEach(function (sec) {
+        if (sec && sec.offsetTop <= scrollY) current = sec;
+      });
+      subnavLinks.forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + (current && current.id));
+      });
+    }
+    window.addEventListener('scroll', syncSubnav, { passive: true });
+    syncSubnav();
+  </script>
+
+  <script src="scripts/theme.js"></script>
+</body>
+</html>

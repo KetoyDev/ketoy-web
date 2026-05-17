@@ -1,5 +1,5 @@
 # Robots.txt for Ketoy - Allow all search engines
-# Generated: 2026-05-14
+# Generated: 2026-05-17
 
 User-agent: *
 Allow: /
