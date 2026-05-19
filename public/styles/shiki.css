@@ -1,0 +1,20 @@
+/* Shiki: force transparent background so the dark .code-body chrome shows. */
+.shiki-body {
+  padding: 22px 24px 26px;
+  overflow-x: auto;
+}
+.shiki-body pre.shiki,
+.shiki-body pre.shiki code {
+  margin: 0;
+  background: transparent !important;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+.hero .shiki-body {
+  padding: 18px 22px 22px;
+}
+.hero .shiki-body pre.shiki {
+  font-size: 12.5px;
+  line-height: 1.6;
+}

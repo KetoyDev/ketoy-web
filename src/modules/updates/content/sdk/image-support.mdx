@@ -1,0 +1,107 @@
+import { SDK_VERSION_FULL } from '@/constants';
+
+export const meta = {
+  id: 'image-support',
+  section: 'sdk',
+  title: 'Drawables: Image(painterResource(R.drawable.X), …)',
+  summary:
+    'Render drawables straight from KBC source — vectors, PNGs, WebPs — through the new IMAGE adapter, R8-safe by construction.',
+  chip: 'Alpha',
+  chipClass: 'uchip-beta',
+  date: 'May 19, 2026',
+  tag: `SDK · ${SDK_VERSION_FULL}`,
+  metaTag: `SDK · ${SDK_VERSION_FULL}`,
+};
+
+Same shape, same R8-safe pattern, applied to drawables.
+
+### In your KBC source
+
+<CodeWindow file="ProductCard.kt">
+{`@KetoyComposable
+fun ProductCard() {
+    Image(
+        painter = painterResource(R.drawable.hero),
+        contentDescription = "Hero image",
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(180.dp)
+            .clip(RoundedCornerShape(16.dp)),
+        contentScale = ContentScale.Crop,
+    )
+}`}
+</CodeWindow>
+
+Vector drawables, PNGs, WebPs — anything `painterResource` already
+handles in your existing Compose code. The compiler plugin collapses
+`painterResource(R.drawable.X)` into a string literal carrying just
+the resource name; the new `IMAGE` adapter (ID `0x0024`) calls
+`getPainter(...)` at render time and the host resolver hands back the
+right `Painter`.
+
+### Wiring it on the host — with Hilt
+
+<CodeWindow file="KetoyModule.kt">
+{`@Provides
+@Singleton
+fun provideMaterialDrawableResolver(): MaterialDrawableResolver =
+    materialDrawableResolver {
+        register("hero", R.drawable.hero)
+        register("logo", R.drawable.logo)
+    }
+
+@Provides
+@Singleton
+fun provideKetoyConfigCustomizer(
+    drawableResolver: MaterialDrawableResolver,
+): KetoyConfigCustomizer = KetoyConfigCustomizer { default ->
+    default.copy(drawableResolver = drawableResolver)
+}`}
+</CodeWindow>
+
+### Wiring it on the host — without Hilt
+
+<CodeWindow file="MyApplication.kt">
+{`override fun onCreate() {
+    super.onCreate()
+
+    val drawableResolver = materialDrawableResolver {
+        register("hero", R.drawable.hero)
+        register("logo", R.drawable.logo)
+    }
+
+    val config = KetoyConfig(drawableResolver = drawableResolver)
+
+    ketoyRuntime = KetoyRuntime(
+        capabilityRegistry = CapabilityRegistry().apply {
+            registerCoreCapabilities(context = this@MyApplication)
+        },
+        config = config,
+    )
+}`}
+</CodeWindow>
+
+The `R.drawable.X` reference is a compile-time field read — R8 keeps
+the drawable alive in release builds automatically.
+
+### Combine with fonts, icons, and the rest
+
+Resolvers compose cleanly. A real production setup typically wires all
+three resource resolvers together:
+
+<CodeWindow file="KetoyConfig.kt">
+{`default.copy(
+    imageVectorResolver = materialIconsResolver,    // Material icons
+    fontFamilyResolver  = fontFamilyResolver,       // R.font.X
+    drawableResolver    = drawableResolver,         // R.drawable.X
+)`}
+</CodeWindow>
+
+Each one is independent — register only what your KBC source uses.
+
+<ChipRow>
+  <Chip>painterResource()</Chip>
+  <Chip>VectorDrawable</Chip>
+  <Chip>PNG · WebP</Chip>
+  <Chip>R8-safe</Chip>
+</ChipRow>

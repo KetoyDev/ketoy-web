@@ -1,0 +1,124 @@
+import { SDK_VERSION_FULL } from '@/constants';
+
+export const meta = {
+  id: 'custom-fonts',
+  section: 'sdk',
+  title: 'Custom fonts: FontFamily(Font(R.font.X))',
+  summary:
+    'Drop a .ttf into res/font/, register it once, then reference it from KBC source exactly like plain Compose.',
+  chip: 'Alpha',
+  chipClass: 'uchip-beta',
+  date: 'May 19, 2026',
+  tag: `SDK · ${SDK_VERSION_FULL}`,
+  metaTag: `SDK · ${SDK_VERSION_FULL}`,
+};
+
+Drop your `.ttf` / `.otf` into `res/font/`, register it once at app
+startup, then reference it from KBC source exactly the way you would in
+any other Compose codebase.
+
+### In your KBC source
+
+<CodeWindow file="HeroCard.kt">
+{`@KetoyComposable
+fun HeroCard() {
+    Text(
+        text = "Ship Kotlin. Server-side. Today.",
+        fontSize = 18.sp,
+        fontFamily = FontFamily(Font(R.font.courgette_regular)),
+    )
+}`}
+</CodeWindow>
+
+That's the entire surface area. The compiler plugin notices the
+`FontFamily(Font(R.font.X))` shape and atomically collapses it into a
+single string literal carrying just `"courgette_regular"`. At render
+time, your host APK resolves that name to the real `FontFamily` you
+registered — no reflection, no `getIdentifier` lookups, no risk of R8
+silently stripping the resource in release builds.
+
+The five generic family singletons (`FontFamily.Default`,
+`FontFamily.SansSerif`, `FontFamily.Serif`, `FontFamily.Monospace`,
+`FontFamily.Cursive`) work too, with zero host-side setup.
+
+### Wiring it on the host — with Hilt
+
+<CodeWindow file="KetoyModule.kt">
+{`@Provides
+@Singleton
+fun provideMaterialFontFamilyResolver(): MaterialFontFamilyResolver =
+    materialFontFamilyResolver {
+        register(
+            "courgette_regular",
+            FontFamily(Font(R.font.courgette_regular)),
+        )
+    }
+
+@Provides
+@Singleton
+fun provideKetoyConfigCustomizer(
+    fontFamilyResolver: MaterialFontFamilyResolver,
+): KetoyConfigCustomizer = KetoyConfigCustomizer { default ->
+    default.copy(fontFamilyResolver = fontFamilyResolver)
+}`}
+</CodeWindow>
+
+Every KBC screen rendered through `KetoyScreen` picks up the resolver
+automatically.
+
+### Wiring it on the host — without Hilt
+
+<CodeWindow file="MyApplication.kt">
+{`class MyApplication : Application() {
+    lateinit var ketoyRuntime: KetoyRuntime
+
+    override fun onCreate() {
+        super.onCreate()
+
+        val fontResolver = materialFontFamilyResolver {
+            register(
+                "courgette_regular",
+                FontFamily(Font(R.font.courgette_regular)),
+            )
+        }
+
+        val config = KetoyConfig(fontFamilyResolver = fontResolver)
+
+        ketoyRuntime = KetoyRuntime(
+            capabilityRegistry = CapabilityRegistry().apply {
+                registerCoreCapabilities(context = this@MyApplication)
+            },
+            config = config,
+        )
+    }
+}`}
+</CodeWindow>
+
+The `R.font.X` reference at the `register(...)` call site is a
+compile-time field read — R8 sees it and keeps your font resource
+alive in release builds. No `-keep` rules required.
+
+### Multi-font families
+
+<CodeWindow file="Typography.kt">
+{`val brand = FontFamily(
+    Font(R.font.inter_regular, FontWeight.Normal),
+    Font(R.font.inter_medium,  FontWeight.Medium),
+    Font(R.font.inter_bold,    FontWeight.Bold),
+)
+materialFontFamilyResolver {
+    register("inter_regular", brand)
+    register("inter_medium",  brand)
+    register("inter_bold",    brand)
+}`}
+</CodeWindow>
+
+KBC source can reference any of the three resource names and get the
+full family — Compose picks the right weight at render time.
+
+<ChipRow>
+  <Chip>FontFamily()</Chip>
+  <Chip>Font()</Chip>
+  <Chip>R8-safe</Chip>
+  <Chip>Hilt + non-Hilt</Chip>
+</ChipRow>

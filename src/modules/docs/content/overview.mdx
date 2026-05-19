@@ -1,0 +1,86 @@
+import Link from 'next/link';
+import { SDK_VERSION_FULL } from '@/constants';
+
+<span className="eyebrow">Documentation</span>
+<h1 style={{ marginTop: 8 }}>Overview</h1>
+<p style={{ color: 'var(--muted)', fontSize: 19, lineHeight: 1.5, marginTop: 8, marginBottom: 32, maxWidth: 680 }}>
+  Everything you need to ship Kotlin screens over the air — concepts, guides, and full reference for the compiler, bytecode, bundle format, and runtime.
+</p>
+
+<div className="cards-grid cols-2" style={{ marginBottom: 48 }}>
+  <div className="card">
+    <div className="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M5 12h14M13 5l7 7-7 7" />
+      </svg>
+    </div>
+    <h3>Start here</h3>
+    <p>Install Ketoy, write your first <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@KetoyEntryPoint</code>, and ship a bundle in under fifteen minutes.</p>
+    <Link className="link" href="/get-started">Get started</Link>
+  </div>
+  <div className="card">
+    <div className="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M3 3h18v18H3z" />
+        <path d="M3 9h18M9 21V9" />
+      </svg>
+    </div>
+    <h3>How it works</h3>
+    <p>The five-layer pipeline — source, compiler, bundle, interpreter, renderer — and the guarantees at each layer.</p>
+    <Link className="link" href="/architecture">Architecture</Link>
+  </div>
+  <div className="card">
+    <div className="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
+      </svg>
+    </div>
+    <h3>What’s supported</h3>
+    <p>35 Material3 adapters, 67 capabilities, 88 Compose tokens, and the full coroutine surface area.</p>
+    <Link className="link" href="/features">Supported features</Link>
+  </div>
+  <div className="card">
+    <div className="icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <path d="M4 4h16v6H4zM4 14h16v6H4z" />
+        <circle cx="8" cy="7" r="1" fill="currentColor" />
+        <circle cx="8" cy="17" r="1" fill="currentColor" />
+      </svg>
+    </div>
+    <h3>Reference</h3>
+    <p>KBC opcodes, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code> wire format, capability registry, compile-time error catalog.</p>
+    <a className="link" href="#">All reference</a>
+  </div>
+</div>
+
+## Concepts at a glance
+
+<div className="placeholder"><b>Placeholder — concept primer</b>Short conceptual explainers for: KBC bytecode, the two-layer parameter system, the capability registry, the compile-time sandbox, structured concurrency in KBC, the dev overlay.</div>
+
+## Guides
+
+<div className="placeholder"><b>Placeholder — guides index</b>Linkable cards for each guide topic: ViewModels & state, Coroutines & Flow, Navigation, Networking, Storage (KV/Room), Custom capabilities, Custom adapters.</div>
+
+## Reference
+
+<div className="placeholder"><b>Placeholder — reference index</b>Linkable cards for each reference topic: KBC opcodes (104), .ktx bundle format, capability registry (67 IDs), composable adapters (35), constructor adapters (17), Compose tokens (88), compile-time error catalog.</div>
+
+## Operations
+
+<div className="placeholder"><b>Placeholder — ops topics</b>CDN delivery patterns, ETag and 304 cache behavior, Ed25519 signing key management & rotation, staged rollouts, A/B per cohort, telemetry & error aggregation.</div>
+
+## Release
+
+<div className="placeholder" style={{ marginBottom: 48 }}><b>Placeholder — release notes</b>{SDK_VERSION_FULL} highlights, migration notes from 0.2.x, and the public roadmap (Tier-2 JIT, streaming bundles, ketoy.dev Developer Console).</div>
+
+<div className="cta-banner">
+  <div>
+    <h2>Have a question?</h2>
+    <p>Join the Ketoy community on Discord or open an issue on GitHub.</p>
+  </div>
+  <div className="right">
+    <a className="btn btn-ghost" href="#">GitHub</a>
+    <a className="btn btn-primary" href="#">Discord</a>
+  </div>
+</div>
