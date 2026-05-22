@@ -75,7 +75,7 @@ export default function SupportModal({ open, onClose }) {
           <div>
             <h3>Talk to a human</h3>
             <p className="modal-sub">
-              Drop us a note. Real engineers read these — no Tier-1 ticket triage, no chatbots.
+              Drop us a note. Real engineers read these - no Tier-1 ticket triage, no chatbots.
               (We have an AI that ships code. Not one that answers email.)
             </p>
             {error && (
@@ -93,7 +93,7 @@ export default function SupportModal({ open, onClose }) {
               </div>
               <div className="field">
                 <label htmlFor="sQuery">Your query</label>
-                <textarea id="sQuery" name="query" required placeholder="e.g. We have a Compose Multiplatform setup with custom Material3 themeing — does Ketoy work with that?" value={query} onChange={(e) => setQuery(e.target.value)} />
+                <textarea id="sQuery" name="query" required placeholder="e.g. We have a Compose Multiplatform setup with custom Material3 themeing - does Ketoy work with that?" value={query} onChange={(e) => setQuery(e.target.value)} />
               </div>
               <div className="modal-actions">
                 <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
@@ -119,7 +119,7 @@ export default function SupportModal({ open, onClose }) {
                 <path d="m5 12 5 5L20 7" />
               </svg>
             </div>
-            <h4>Got it — we’ll be in touch.</h4>
+            <h4>Got it - we’ll be in touch.</h4>
             <p>You’ll usually hear back within a few hours.<br />Worst case, by tomorrow morning your time.</p>
             <button type="button" className="btn btn-ghost" onClick={onClose}>Close</button>
           </div>

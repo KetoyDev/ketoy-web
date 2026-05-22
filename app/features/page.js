@@ -10,7 +10,7 @@ import {
 export const metadata = {
   title: 'Supported features · Ketoy',
   description:
-    'Every Ketoy feature grounded in the actual source — composables, modifiers, capabilities, KBC opcodes, and tooling.',
+    'Every Ketoy feature grounded in the actual source - composables, modifiers, capabilities, KBC opcodes, and tooling.',
 };
 
 const C = ({ children, size = '0.92em' }) => (
@@ -37,7 +37,7 @@ export default function FeaturesPage() {
           <span className="eyebrow">Reference · code-verified</span>
           <h1>Supported features</h1>
           <p className="lede">
-            Every entry on this page is grounded in the actual source — not the plan docs.
+            Every entry on this page is grounded in the actual source - not the plan docs.
             &ldquo;Supported&rdquo; means the path is wired end-to-end: the compiler emits, the{' '}
             <C>.ktx</C> wire format carries it, the runtime resolves it, and an adapter consumes it. Audited against HEAD on 2026-05-17.
           </p>
@@ -65,7 +65,7 @@ export default function FeaturesPage() {
               <p>
                 KSP reads <C>adapter-scan-roots.txt</C>, resolves each FQ name against the real
                 Compose / Material3 / Foundation / Coil declarations on the build classpath, and
-                emits typed adapters. Every parameter on every adapter is wired — never a curated subset.
+                emits typed adapters. Every parameter on every adapter is wired - never a curated subset.
               </p>
             </div>
 
@@ -100,7 +100,7 @@ export default function FeaturesPage() {
               ))}
             </div>
 
-            <Callout title="App-specific composables — range 0x4000+">
+            <Callout title="App-specific composables - range 0x4000+">
               <p>
                 The host registers custom adapters on <code>KBCAdapterRegistry</code> and supplies
                 a matching FQ in its own scan-roots file. Additional adapter catalogs published by
@@ -113,7 +113,7 @@ export default function FeaturesPage() {
           <div id="constructors" style={{ marginBottom: 64 }}>
             <div className="section-head" style={{ marginBottom: 24 }}>
               <span className="eyebrow">02 · Constructor parameters</span>
-              <h2 style={{ marginTop: 8 }}>CONSTRUCT_JVM — registered adapters</h2>
+              <h2 style={{ marginTop: 8 }}>CONSTRUCT_JVM - registered adapters</h2>
               <p>
                 Complex Compose value types aren&rsquo;t encoded inline. The compiler emits a{' '}
                 <C>CONSTRUCT_JVM</C> opcode that builds the object via a registered constructor
@@ -132,7 +132,7 @@ export default function FeaturesPage() {
               ))}
             </div>
 
-            <Callout kind="warn" title="TextStyle and friends — deferred">
+            <Callout kind="warn" title="TextStyle and friends - deferred">
               <p>
                 IDs are reserved for <code>TEXT_STYLE</code>, <code>SPAN_STYLE</code>,
                 <code>PARAGRAPH_STYLE</code>, <code>TEXT_FIELD_VALUE</code>,
@@ -160,7 +160,7 @@ export default function FeaturesPage() {
                 The IR walker extracts modifier builder calls at emit time into a{' '}
                 <C>KBCModifierDescriptor</C>, pools it into the bundle&rsquo;s modifier table, and
                 references it via <C>KBCValue.ModifierRef(idx)</C>. Argument resolution is{' '}
-                <strong>named-arg</strong> — so K2&rsquo;s partial-default lowering like{' '}
+                <strong>named-arg</strong> - so K2&rsquo;s partial-default lowering like{' '}
                 <C>padding(top = 48.dp, start = 16.dp)</C> works correctly.
               </p>
             </div>
@@ -180,7 +180,7 @@ export default function FeaturesPage() {
             </p>
 
             <p style={{ marginTop: 18 }}>
-              <strong>Shapes</strong> — <C>KBCShape</C> covers:
+              <strong>Shapes</strong> - <C>KBCShape</C> covers:
               <span className="chip" style={{ marginLeft: 6 }}>Rectangle</span>
               <span className="chip">Circle</span>
               <span className="chip">RoundedCorner(size)</span>
@@ -211,7 +211,7 @@ export default function FeaturesPage() {
               ))}
             </div>
 
-            <Callout title={<>Material icons — R8-safe, no <code>-keep</code> rules</>}>
+            <Callout title={<>Material icons - R8-safe, no <code>-keep</code> rules</>}>
               <p>
                 Material icons flow through <code>KBCValue.StringLiteral</code> carrying the
                 canonical FQ. The host registers a <code>MaterialIconsResolver</code> built via the
@@ -224,7 +224,7 @@ export default function FeaturesPage() {
                 The compiler&rsquo;s <code>ComposeTokenRegistry</code> pattern-matches all 10
                 Material icon style packages and 13 <code>Icons.&lt;get-Style&gt;</code> selectors.
                 Missing-icon fallback is a 24×24 transparent <code>PlaceholderImageVector</code>
-                — surfaces gaps visibly rather than crashing.
+                - surfaces gaps visibly rather than crashing.
               </p>
             </Callout>
           </div>
@@ -279,7 +279,7 @@ export default function FeaturesPage() {
           <div id="viewmodels" style={{ marginBottom: 64 }}>
             <div className="section-head" style={{ marginBottom: 24 }}>
               <span className="eyebrow">06 · ViewModel support</span>
-              <h2 style={{ marginTop: 8 }}>Two layers — host-side and KBC-side</h2>
+              <h2 style={{ marginTop: 8 }}>Two layers - host-side and KBC-side</h2>
               <p>Both layers are load-bearing in production. The host owns lifecycle and persistence; KBC owns business logic.</p>
             </div>
 
@@ -296,7 +296,7 @@ export default function FeaturesPage() {
                   {['state: StateFlow','getState','setState','setStateAll','removeState','observeState','dispatch'].map((c) => <span className="chip" key={c}>{c}</span>)}
                 </div>
                 <p style={{ fontSize: 13.5, color: 'var(--muted)', marginTop: 14 }}>
-                  State map is <C>Map&lt;String, Any?&gt;</C>. Persistable types — primitives + arrays — mirror to <C>SavedStateHandle</C>. Restore priority: SavedState &gt; initialExtras &gt; empty.
+                  State map is <C>Map&lt;String, Any?&gt;</C>. Persistable types - primitives + arrays - mirror to <C>SavedStateHandle</C>. Restore priority: SavedState &gt; initialExtras &gt; empty.
                 </p>
               </div>
 
@@ -312,7 +312,7 @@ export default function FeaturesPage() {
                   {['viewModelScope','getState','setState','observeState'].map((c) => <span className="chip" key={c}>{c}</span>)}
                 </div>
                 <p style={{ fontSize: 13.5, color: 'var(--muted)', marginTop: 14 }}>
-                  <C>open fun init()</C> runs once after binding. Default no-op. Constructor parameters resolve via the host&rsquo;s <C>KetoyCapabilityProvider</C> — capability IDs only, never Hilt graph access.
+                  <C>open fun init()</C> runs once after binding. Default no-op. Constructor parameters resolve via the host&rsquo;s <C>KetoyCapabilityProvider</C> - capability IDs only, never Hilt graph access.
                 </p>
               </div>
             </div>
@@ -342,16 +342,16 @@ class CounterViewModel : KetoyBaseViewModel() {
                   <li><span><code>MutableStateFlow</code> / <code>MutableSharedFlow</code> via <code>STATE_FLOW_CREATE</code> / <code>SHARED_FLOW_CREATE</code></span></li>
                   <li><span><code>viewModelScope.launch {'{ }'}</code> and <code>async {'{ }'}</code></span></li>
                   <li><span><code>suspend</code> functions, <code>withContext(Dispatchers.IO)</code>, <code>Flow.collect</code></span></li>
-                  <li><span>Every Flow operator — <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>flatMapLatest</code>, <code>combine</code>, <code>take</code>, <code>distinctUntilChanged</code></span></li>
+                  <li><span>Every Flow operator - <code>map</code>, <code>filter</code>, <code>debounce</code>, <code>flatMapLatest</code>, <code>combine</code>, <code>take</code>, <code>distinctUntilChanged</code></span></li>
                   <li><span>Calls to host capabilities through <code>@KetoyCapabilityStub</code> (Room DAO, Retrofit, DataStore)</span></li>
-                  <li><span>Plain Kotlin — data classes, sealed classes, branches, loops</span></li>
+                  <li><span>Plain Kotlin - data classes, sealed classes, branches, loops</span></li>
                   <li><span>Cross-ViewModel calls within the same bundle (via capability path)</span></li>
                 </ul>
               </div>
               <div className="dont-list">
                 <h4>You can&rsquo;t</h4>
                 <ul>
-                  <li><span><strong>Inject host dependencies directly.</strong> Hilt is host-side only — KBC never sees the graph.</span></li>
+                  <li><span><strong>Inject host dependencies directly.</strong> Hilt is host-side only - KBC never sees the graph.</span></li>
                   <li><span><strong>Hold non-persistable state across process death.</strong> Values outside the allowlist drop at save time, reappear absent on restore.</span></li>
                   <li><span><strong>Override <code>onCleared</code>.</strong> Lifecycle is owned by <code>KetoyVirtualViewModel</code>; <code>init()</code> is the only entry. Cleanup is implicit via <code>viewModelScope</code> cancellation.</span></li>
                 </ul>
@@ -385,7 +385,7 @@ class CounterViewModel : KetoyBaseViewModel() {
               <h2 style={{ marginTop: 8 }}>67 built-in IDs across 8 ranges</h2>
               <p>
                 The bridge between KBC and the host platform. KBC code never sees Hilt, Retrofit,
-                OkHttp, Room DAOs, DataStore, or the Android <C>Context</C> — every interaction
+                OkHttp, Room DAOs, DataStore, or the Android <C>Context</C> - every interaction
                 routes through a Short-ID-keyed lambda registered on <C>CapabilityRegistry</C>.
               </p>
             </div>
@@ -413,7 +413,7 @@ class CounterViewModel : KetoyBaseViewModel() {
                 calls a <code>@KetoyCapabilityStub</code>-marked function and the compiler plugin
                 rewrites the call to <code>INVOKE_CAPABILITY_SUSPEND</code>.
               </p>
-              <p>Retrofit, DataStore typed flows, Bluetooth, camera, WorkManager — same pattern, same wrap-as-capability flow.</p>
+              <p>Retrofit, DataStore typed flows, Bluetooth, camera, WorkManager - same pattern, same wrap-as-capability flow.</p>
             </Callout>
           </div>
 
@@ -427,7 +427,7 @@ class CounterViewModel : KetoyBaseViewModel() {
             <div className="cards-grid cols-2">
               <div className="card">
                 <h3>.ktx bundle format</h3>
-                <p style={{ fontSize: 14.5 }}>Brotli-compressed, Ed25519-signed binary container. Format <strong>v2</strong> — additive, so pre-2.1 readers parse v2 files with one field defaulted. 10 ordered sections.</p>
+                <p style={{ fontSize: 14.5 }}>Brotli-compressed, Ed25519-signed binary container. Format <strong>v2</strong> - additive, so pre-2.1 readers parse v2 files with one field defaulted. 10 ordered sections.</p>
                 <div className="params" style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginTop: 8 }}>
                   {['STRING_POOL','ADAPTER_MANIFEST','CONSTRUCTOR_MANIFEST','CAPABILITY_MANIFEST','MODIFIER_TABLE','FUNCTION_TABLE','CODE','DEBUG_INFO','ENTRY_POINTS','BUNDLE_METADATA'].map((c) => <span className="chip" key={c}>{c}</span>)}
                 </div>
@@ -445,12 +445,12 @@ class CounterViewModel : KetoyBaseViewModel() {
               </div>
               <div className="card">
                 <h3>Tier-1 JIT</h3>
-                <p style={{ fontSize: 14.5 }}>DexMaker-backed JIT for whitelisted pure-logic functions — no capabilities, no coroutines, no Compose, no DIV/MOD on Int/Long. Activated on API 26+ when <C>enableJIT = true</C>. Translation failures fall back to the interpreter silently.</p>
+                <p style={{ fontSize: 14.5 }}>DexMaker-backed JIT for whitelisted pure-logic functions - no capabilities, no coroutines, no Compose, no DIV/MOD on Int/Long. Activated on API 26+ when <C>enableJIT = true</C>. Translation failures fall back to the interpreter silently.</p>
                 <p style={{ fontSize: 13.5, color: 'var(--muted)', marginTop: 6 }}>Speed gate: ≥1.5× over the interpreter.</p>
               </div>
               <div className="card">
                 <h3>Dev overlay</h3>
-                <p style={{ fontSize: 14.5 }}>Auto-enabled on debug builds (<C>FLAG_DEBUGGABLE</C>). Shows COMPOSABLE_CALL / CONSTRUCT_JVM / capability dispatch logs with human-readable names. Every emit site is gated — zero overhead in release.</p>
+                <p style={{ fontSize: 14.5 }}>Auto-enabled on debug builds (<C>FLAG_DEBUGGABLE</C>). Shows COMPOSABLE_CALL / CONSTRUCT_JVM / capability dispatch logs with human-readable names. Every emit site is gated - zero overhead in release.</p>
               </div>
               <div className="card">
                 <h3>Test infrastructure</h3>
@@ -480,13 +480,13 @@ class CounterViewModel : KetoyBaseViewModel() {
               </div>
             </div>
 
-            <p style={{ fontSize: 15, color: 'var(--muted)', marginTop: 18 }}><C>./gradlew ketoyBundle</C> produces a signed <C>.ktx</C> against the host-supplied private key. The runtime activation policy (<C>PackageInfo.longVersionCode</C> check, rollback, <C>onBundleAppVersionMismatch</C> callback) is plumbed through the format but not yet enforced at runtime — that&rsquo;s a Phase 11B/D item.</p>
+            <p style={{ fontSize: 15, color: 'var(--muted)', marginTop: 18 }}><C>./gradlew ketoyBundle</C> produces a signed <C>.ktx</C> against the host-supplied private key. The runtime activation policy (<C>PackageInfo.longVersionCode</C> check, rollback, <C>onBundleAppVersionMismatch</C> callback) is plumbed through the format but not yet enforced at runtime - that&rsquo;s a Phase 11B/D item.</p>
           </div>
 
           <div className="cta-banner">
             <div>
               <h2>Ready to ship?</h2>
-              <p>The local-asset path is fully supported today. Cloud delivery — push <C size="0.92em">.ktx</C> to a CDN, users get updates without a Play Store release — is in active development.</p>
+              <p>The local-asset path is fully supported today. Cloud delivery - push <C size="0.92em">.ktx</C> to a CDN, users get updates without a Play Store release - is in active development.</p>
             </div>
             <div className="right">
               <Link className="btn btn-ghost" href="/architecture">Read the architecture</Link>

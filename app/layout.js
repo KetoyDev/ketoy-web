@@ -14,9 +14,9 @@ const THEME_BOOT = `
 `;
 
 export const metadata = {
-  title: 'Ketoy — AI-native app updates for Android',
+  title: 'Ketoy - AI-native app updates for Android',
   description:
-    "AI-native Android update infrastructure. Ship UI changes, features, fixes and experiments in under 60 seconds — fully within Play Store policies.",
+    "AI-native Android update infrastructure. Ship UI changes, features, fixes and experiments in under 60 seconds - fully within Play Store policies.",
   icons: { icon: '/assets/ketoy-logo.svg' },
 };
 

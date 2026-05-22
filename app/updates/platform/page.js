@@ -2,7 +2,7 @@ import UpdatesListView from '@/modules/updates/components/UpdatesListView';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
 
 export const metadata = {
-  title: 'Platform updates — Ketoy',
+  title: 'Platform updates - Ketoy',
   description:
     'Every change to the Ketoy runtime, Cloud, signing pipeline and developer tooling.',
 };

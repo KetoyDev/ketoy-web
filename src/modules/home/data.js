@@ -48,12 +48,12 @@ export const aiFeatures = [
 ];
 
 export const supportCards = [
-  { tag: 'UI', h: 'Jetpack Compose & Material 3', p: <>All 35 Material3 composables with <em>every</em> parameter. Text, TextField, Button, Scaffold, LazyColumn — the works.</>, chips: ['Scaffold','LazyColumn','OutlinedTextField','Button','TopAppBar','AlertDialog','+29 more'] },
-  { tag: 'Language', h: 'Plain Kotlin', p: 'K2-compatible. Sealed classes, data classes, extension functions, lambdas with captures, top-level functions — all of it, compiled to KBC bytecode.', chips: ['data class','sealed','when','extensions','closures'] },
-  { tag: 'Async', h: 'Coroutines & Flow', p: <>First-class. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>launch</code>, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>async</code>, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>withContext</code>, structured concurrency, 9 Flow operators. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>GlobalScope</code> stays banned — you’re welcome.</>, chips: ['launch','async','StateFlow','collectAsState','debounce'] },
+  { tag: 'UI', h: 'Jetpack Compose & Material 3', p: <>All 35 Material3 composables with <em>every</em> parameter. Text, TextField, Button, Scaffold, LazyColumn - the works.</>, chips: ['Scaffold','LazyColumn','OutlinedTextField','Button','TopAppBar','AlertDialog','+29 more'] },
+  { tag: 'Language', h: 'Plain Kotlin', p: 'K2-compatible. Sealed classes, data classes, extension functions, lambdas with captures, top-level functions - all of it, compiled to KBC bytecode.', chips: ['data class','sealed','when','extensions','closures'] },
+  { tag: 'Async', h: 'Coroutines & Flow', p: <>First-class. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>launch</code>, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>async</code>, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>withContext</code>, structured concurrency, 9 Flow operators. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>GlobalScope</code> stays banned - you’re welcome.</>, chips: ['launch','async','StateFlow','collectAsState','debounce'] },
   { tag: 'State', h: 'ViewModel', p: <>Real Android <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>ViewModel</code>. Real <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>viewModelScope</code>. Survives config changes. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>SavedStateHandle</code> for process death. Hilt-friendly.</>, chips: ['viewModelScope','SavedStateHandle','@HiltViewModel','dispatch()'] },
   { tag: 'I/O', h: 'Networking, Storage, Navigation', p: 'HTTP (Ktor/OkHttp), DataStore KV, Room queries, NavController push/pop/deep-link. 67 built-in capabilities. Register your own for app-specific stuff.', chips: ['HTTP','DataStore','Room','NavController','+ your SDKs'] },
-  { tag: 'DI', h: 'Hilt', p: <>Drop-in. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>ketoy-hilt</code> wires everything. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@Inject</code> in your ViewModels exactly like before. We added a debug overlay too — you’ll like it.</>, chips: ['@Inject','@HiltViewModel','@Module','dev overlay'] },
+  { tag: 'DI', h: 'Hilt', p: <>Drop-in. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>ketoy-hilt</code> wires everything. <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@Inject</code> in your ViewModels exactly like before. We added a debug overlay too - you’ll like it.</>, chips: ['@Inject','@HiltViewModel','@Module','dev overlay'] },
 ];
 
 export const nopeItems = [
@@ -78,7 +78,7 @@ export const whatIsCards = [
     num: '02',
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2 4 6v6c0 5 3.4 9.5 8 10 4.6-.5 8-5 8-10V6l-8-4z" /><path d="M9 12l2 2 4-4" /></svg>,
     h: 'Totally legal',
-    p: 'Ketoy doesn’t download executable DEX. The JIT generates it on-device from KBC — exactly like ART does with bytecode. Same lane as Lua in a game engine. Play Store-compliant.',
+    p: 'Ketoy doesn’t download executable DEX. The JIT generates it on-device from KBC - exactly like ART does with bytecode. Same lane as Lua in a game engine. Play Store-compliant.',
     cta: 'Read the security model',
     href: '#security',
   },
@@ -114,11 +114,11 @@ export const legalCards = [
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 2v20M2 12h20" /></svg>,
     quote: '"But isn’t this against Play Store policy?"',
-    p: <>No, and we have asked. Ketoy does <em>not</em> download executable DEX or JVM bytecode. The on-device JIT generates DEX <em>locally</em> from KBC — exactly the same operation ART performs on regular bytecode. Same legal lane as Lua scripts in a game engine, or JavaScript in a WebView. Explicitly permitted by Google’s Developer Program Policies.</>,
+    p: <>No, and we have asked. Ketoy does <em>not</em> download executable DEX or JVM bytecode. The on-device JIT generates DEX <em>locally</em> from KBC - exactly the same operation ART performs on regular bytecode. Same legal lane as Lua scripts in a game engine, or JavaScript in a WebView. Explicitly permitted by Google’s Developer Program Policies.</>,
   },
   {
     icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>,
     quote: '"Okay but what if you go down?"',
-    p: 'Bundles are cached on-device, keyed by SHA-256. The runtime checks an ETag with your CDN; if there’s no internet, no response, no signed update — the last good bundle keeps rendering. Your app degrades to "exactly the experience it had yesterday." Acceptable, in our opinion.',
+    p: 'Bundles are cached on-device, keyed by SHA-256. The runtime checks an ETag with your CDN; if there’s no internet, no response, no signed update - the last good bundle keeps rendering. Your app degrades to "exactly the experience it had yesterday." Acceptable, in our opinion.',
   },
 ];

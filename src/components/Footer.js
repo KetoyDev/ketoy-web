@@ -47,7 +47,7 @@ export default function Footer() {
             <ul>
               <li><a href="#">GitHub</a></li>
               <li><a href="#">Discord</a></li>
-              <li><a href="#">Issues</a></li>
+              <li><Link href="/issue">Report an issue</Link></li>
               <li><a href="#">Contact</a></li>
             </ul>
           </div>

@@ -5,11 +5,11 @@ import { useMemo, useState } from 'react';
 const fmt = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 function verdict(days) {
-  if (days < 30) return 'Not bad, comparatively. Still — what would your team ship with that month back?';
+  if (days < 30) return 'Not bad, comparatively. Still - what would your team ship with that month back?';
   if (days < 90) return 'That’s a quarter of a year, gone. Refreshing the Play Console. We’re sure your team enjoyed it.';
   if (days < 180) return 'That’s more than half a year your team spent waiting on someone else’s queue.';
   if (days < 365) return 'That’s most of a calendar year staring at a progress bar. Every. Single. Release.';
-  return 'At this point the waiting is the job. Genuinely — install Ketoy.';
+  return 'At this point the waiting is the job. Genuinely - install Ketoy.';
 }
 
 export default function Calculator() {
@@ -38,7 +38,7 @@ export default function Calculator() {
         </div>
         <div>
           <div className="control-label">
-            <span>Average review wait — days per release</span>
+            <span>Average review wait - days per release</span>
             <b>{wpd}</b>
           </div>
           <input type="range" min="1" max="14" step="0.5" value={wpd} onChange={(e) => setWpd(+e.target.value)} />

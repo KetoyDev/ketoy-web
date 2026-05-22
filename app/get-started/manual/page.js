@@ -9,7 +9,7 @@ import { manualSubnavItems, manualRequirements, continueCards } from '@/modules/
 export const metadata = {
   title: 'Manual setup · Ketoy',
   description:
-    'Step-by-step manual setup for adding Ketoy to an existing Android app — no CLI required.',
+    'Step-by-step manual setup for adding Ketoy to an existing Android app - no CLI required.',
 };
 
 const HILT_GRADLE = `plugins {
@@ -75,7 +75,7 @@ const KETOY_DSL = `ketoy {
     // both debug and release APKs for production parity.
     bundleVariant.set("release")
 
-    // Capability registry — empty file is fine to start.
+    // Capability registry - empty file is fine to start.
     capabilityRegistryFile.set(file("ketoy-capabilities.json"))
 
     // Optional: minimum host APK versionCode for this bundle.
@@ -182,7 +182,7 @@ const NO_HILT_APP = `class MyApplication : Application() {
         )
 
         // Composable + constructor adapters go on dedicated registries
-        // hanging off the runtime — not on CapabilityRegistry.
+        // hanging off the runtime - not on CapabilityRegistry.
         registerGeneratedAdapters(ketoyRuntime.adapterRegistry)
         registerGeneratedConstructors(ketoyRuntime.constructorRegistry)
 
@@ -236,7 +236,7 @@ fun AppNavGraph() {
                 entryPoint = "HelloScreen",
                 bundleSource = KetoyBundleSource.Asset("ketoy/main.ktx"),
             ) {
-                // Native fallback — same UI, plain Compose.
+                // Native fallback - same UI, plain Compose.
                 HelloScreen()
             }
         }
@@ -266,12 +266,12 @@ export default function ManualGetStartedPage() {
         <div className="container">
 
           <Callout kind="info" title="Most people should use the CLI">
-            <p>The <Link href="/get-started"><code>ketoy</code> CLI</Link> automates everything below — surgical edits to <code>build.gradle.kts</code>, key generation, Application/MainActivity wiring, the sample screen — in a single <code>ketoy init</code> command. This page exists for people who want to understand every line, or who need to integrate Ketoy into a non-standard project layout where the CLI's anchors don't apply.</p>
+            <p>The <Link href="/get-started"><code>ketoy</code> CLI</Link> automates everything below - surgical edits to <code>build.gradle.kts</code>, key generation, Application/MainActivity wiring, the sample screen - in a single <code>ketoy init</code> command. This page exists for people who want to understand every line, or who need to integrate Ketoy into a non-standard project layout where the CLI's anchors don't apply.</p>
           </Callout>
 
-          <Callout title={<>Alpha status — <code>{SDK_VERSION_FULL}</code></>}>
+          <Callout title={<>Alpha status - <code>{SDK_VERSION_FULL}</code></>}>
             <p>The local-asset path is fully supported: you author screens in your <code>:app</code> module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and the runtime executes it at startup.</p>
-            <p><strong>Cloud delivery</strong> — pushing a <code>.ktx</code> to a CDN so users get updates without going through the Play Store — is under active development and ships shortly. Track progress on the <a href="#">GitHub releases page</a>.</p>
+            <p><strong>Cloud delivery</strong> - pushing a <code>.ktx</code> to a CDN so users get updates without going through the Play Store - is under active development and ships shortly. Track progress on the <a href="#">GitHub releases page</a>.</p>
           </Callout>
 
           <div id="requirements"></div>
@@ -291,11 +291,11 @@ export default function ManualGetStartedPage() {
           </div>
 
           <Callout kind="warn" title="Kotlin version is pinned during alpha">
-            <p>The Compose compiler plugin and the Ketoy compiler plugin are both pinned to <code>2.0.21</code> for the alpha. Broader Kotlin version support — letting you pick up newer Kotlin releases without waiting on a matched Ketoy build — is on the roadmap for the next update.</p>
+            <p>The Compose compiler plugin and the Ketoy compiler plugin are both pinned to <code>2.0.21</code> for the alpha. Broader Kotlin version support - letting you pick up newer Kotlin releases without waiting on a matched Ketoy build - is on the roadmap for the next update.</p>
           </Callout>
 
           <Callout kind="info" title="Hilt is optional">
-            <p>Each step below has two parallel paths. Pick <strong>Hilt</strong> if your app already uses it (less wiring, recommended). Pick <strong>No&nbsp;Hilt</strong> to drop KBC screens into a plain Compose app — no DI framework required.</p>
+            <p>Each step below has two parallel paths. Pick <strong>Hilt</strong> if your app already uses it (less wiring, recommended). Pick <strong>No&nbsp;Hilt</strong> to drop KBC screens into a plain Compose app - no DI framework required.</p>
           </Callout>
 
           {/* STEP 1 */}
@@ -327,7 +327,7 @@ export default function ManualGetStartedPage() {
             />
 
             <h3>Configure the <code>ketoy {'{ }'}</code> block</h3>
-            <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode — the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
+            <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode - the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
 
             <CodeWindow file="app/build.gradle.kts · ketoy {} DSL">{KETOY_DSL}</CodeWindow>
 
@@ -336,17 +336,17 @@ export default function ManualGetStartedPage() {
             <CodeWindow file="terminal">{`$ echo '{"version": 1, "capabilities": [], "allowedStdlibFqNames": []}' \\
     > app/ketoy-capabilities.json`}</CodeWindow>
 
-            <h3>Optional — generate a signing key</h3>
+            <h3>Optional - generate a signing key</h3>
             <p>Bundle signing is optional during alpha bring-up; the plugin produces unsigned bundles gracefully when no key is configured. For signed builds, generate an Ed25519 keypair:</p>
 
             <CodeWindow file="terminal · generate Ed25519 keypair">{`$ mkdir -p app/keys app/src/main/assets/ketoy/keys
 
-# Private key — 32 raw bytes, gitignored,
+# Private key - 32 raw bytes, gitignored,
 # used by the Gradle plugin at build time.
 $ openssl genpkey -algorithm Ed25519 -outform DER \\
     | tail -c 32 > app/keys/release-private.key
 
-# Public key — 32 raw bytes, committed alongside the APK
+# Public key - 32 raw bytes, committed alongside the APK
 # so the runtime can verify the signature at load time.
 $ openssl pkey -in app/keys/release-private.key -inform DER \\
     -pubout -outform DER \\
@@ -355,10 +355,10 @@ $ openssl pkey -in app/keys/release-private.key -inform DER \\
             <p>Then add the private key to <code>.gitignore</code>:</p>
             <CodeWindow file=".gitignore">{`**/keys/*-private.key`}</CodeWindow>
 
-            <p>The <code>ketoy {'{}'}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop — making the runtime <em>verify</em> the signature against the embedded public key — see step 2.</p>
+            <p>The <code>ketoy {'{}'}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop - making the runtime <em>verify</em> the signature against the embedded public key - see step 2.</p>
 
             <Callout kind="info" title="Signature verification is opt-in">
-              <p><code>KetoyConfig.enableSignatureVerification</code> defaults to <code>false</code> so unsigned local-dev builds just work. For production, set it to <code>true</code> <em>and</em> pass <code>publicKey</code>. <code>KetoyConfig</code> validates this at construction — enabling verification without a 32-byte Ed25519 key throws <code>IllegalArgumentException</code> immediately, so misconfiguration fails fast at app startup, not buried inside the first bundle load.</p>
+              <p><code>KetoyConfig.enableSignatureVerification</code> defaults to <code>false</code> so unsigned local-dev builds just work. For production, set it to <code>true</code> <em>and</em> pass <code>publicKey</code>. <code>KetoyConfig</code> validates this at construction - enabling verification without a 32-byte Ed25519 key throws <code>IllegalArgumentException</code> immediately, so misconfiguration fails fast at app startup, not buried inside the first bundle load.</p>
             </Callout>
           </div>
 
@@ -366,7 +366,7 @@ $ openssl pkey -in app/keys/release-private.key -inform DER \\
           <div className="step" id="wire">
             <span className="step-num">Step 02</span>
             <h2>Wire the runtime</h2>
-            <p className="intro">This is the only step where the two paths diverge meaningfully — Hilt does the wiring for you, the manual path is two short blocks.</p>
+            <p className="intro">This is the only step where the two paths diverge meaningfully - Hilt does the wiring for you, the manual path is two short blocks.</p>
 
             <Tabs
               tabs={[
@@ -389,11 +389,11 @@ $ openssl pkey -in app/keys/release-private.key -inform DER \\
                   label: 'No Hilt',
                   content: (
                     <>
-                      <p>Construct <code>KetoyRuntime</code> by hand. Hold it and the loader as <strong>instance fields on a custom <code>Application</code> subclass</strong> — not on a Kotlin <code>object</code>. Static fields that hold a <code>Context</code> (<code>KetoyBundleLoader</code> does) trip lint&rsquo;s <code>StaticFieldLeak</code> warning. Instance fields on <code>Application</code> are tied to the process lifecycle and don&rsquo;t leak.</p>
+                      <p>Construct <code>KetoyRuntime</code> by hand. Hold it and the loader as <strong>instance fields on a custom <code>Application</code> subclass</strong> - not on a Kotlin <code>object</code>. Static fields that hold a <code>Context</code> (<code>KetoyBundleLoader</code> does) trip lint&rsquo;s <code>StaticFieldLeak</code> warning. Instance fields on <code>Application</code> are tied to the process lifecycle and don&rsquo;t leak.</p>
                       <CodeWindow file="MyApplication.kt">{NO_HILT_APP}</CodeWindow>
-                      <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code> — no factory boilerplate needed.</p>
+                      <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code> - no factory boilerplate needed.</p>
                       <CodeWindow file="MainActivity.kt">{NO_HILT_MAIN}</CodeWindow>
-                      <p>Don&rsquo;t forget <code>android:name=&quot;.MyApplication&quot;</code> in <code>AndroidManifest.xml</code>. Publishing <code>LocalKetoyRuntime</code> is the only thing required for <code>KetoyScreen</code> to work without Hilt — <code>KetoyScreen</code> raises <code>IllegalStateException</code> with explicit remediation guidance when neither <code>LocalKetoyRuntime</code> nor a <code>KetoyViewModelFactoryBuilder</code> is published. Misconfiguration fails fast and clearly.</p>
+                      <p>Don&rsquo;t forget <code>android:name=&quot;.MyApplication&quot;</code> in <code>AndroidManifest.xml</code>. Publishing <code>LocalKetoyRuntime</code> is the only thing required for <code>KetoyScreen</code> to work without Hilt - <code>KetoyScreen</code> raises <code>IllegalStateException</code> with explicit remediation guidance when neither <code>LocalKetoyRuntime</code> nor a <code>KetoyViewModelFactoryBuilder</code> is published. Misconfiguration fails fast and clearly.</p>
                     </>
                   ),
                 },
@@ -405,14 +405,14 @@ $ openssl pkey -in app/keys/release-private.key -inform DER \\
           <div className="step" id="screen">
             <span className="step-num">Step 03</span>
             <h2>Write your first KBC screen and mount it</h2>
-            <p className="intro">Same for both paths. Create the file directly inside your <code>:app</code> module — no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
+            <p className="intro">Same for both paths. Create the file directly inside your <code>:app</code> module - no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
 
             <CodeWindow file="app/src/main/kotlin/.../ketoyscreens/HelloScreen.kt" tag="@KetoyEntryPoint">{HELLO_SCREEN}</CodeWindow>
 
-            <p>That&rsquo;s the entire KBC source. Native code in the same module — your existing screens, repositories, navigation graph — compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
+            <p>That&rsquo;s the entire KBC source. Native code in the same module - your existing screens, repositories, navigation graph - compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
 
             <h3>Mount it in your NavHost</h3>
-            <p>Every <code>KetoyScreen</code> call site requires a trailing <code>nativeFallback</code> lambda — the steady-state render when the bundle is absent, still loading, or the entry point can&rsquo;t be found. It should render identically to the KBC screen, so adopting Ketoy can never introduce a regression in any non-active-bundle case.</p>
+            <p>Every <code>KetoyScreen</code> call site requires a trailing <code>nativeFallback</code> lambda - the steady-state render when the bundle is absent, still loading, or the entry point can&rsquo;t be found. It should render identically to the KBC screen, so adopting Ketoy can never introduce a regression in any non-active-bundle case.</p>
 
             <CodeWindow file="AppNavGraph.kt">{NAV_GRAPH}</CodeWindow>
           </div>
@@ -432,20 +432,20 @@ $ ./gradlew :app:installDebug`}</CodeWindow>
 
             <p>You should see a summary line during compilation:</p>
 
-            <CodeWindow file="build output" tag="signed" tagStyle={{ color: '#93f0c0', borderColor: '#1f3a2d' }}>{`KetoyBC: Compilation complete — 4 functions emitted, 1 composables,
+            <CodeWindow file="build output" tag="signed" tagStyle={{ color: '#93f0c0', borderColor: '#1f3a2d' }}>{`KetoyBC: Compilation complete - 4 functions emitted, 1 composables,
 0 view models, 1 entry points. Bundle ID: main. Wrote 1832 bytes to
 app/src/main/assets/ketoy/main.ktx (signed)`}</CodeWindow>
 
-            <p>Launch the app — the KBC version of <code>HelloScreen</code> renders. Delete the <code>.ktx</code>, change the entry point to <code>&quot;DoesNotExist&quot;</code>, or toggle airplane mode — the native fallback renders identically. That&rsquo;s the production contract.</p>
-            <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI — it&rsquo;s regenerated deterministically.</p>
+            <p>Launch the app - the KBC version of <code>HelloScreen</code> renders. Delete the <code>.ktx</code>, change the entry point to <code>&quot;DoesNotExist&quot;</code>, or toggle airplane mode - the native fallback renders identically. That&rsquo;s the production contract.</p>
+            <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI - it&rsquo;s regenerated deterministically.</p>
           </div>
 
           {/* What's next */}
           <div className="step" id="whats-next">
             <span className="step-num">Roadmap</span>
-            <h2>What ships next — cloud delivery</h2>
+            <h2>What ships next - cloud delivery</h2>
             <p className="intro">What you just built is the <strong>local-asset</strong> path: the <code>.ktx</code> ships inside the APK at compile time, and updates roll out through the Play Store like any other asset.</p>
-            <p><strong>Cloud delivery</strong> — pushing a new <code>.ktx</code> to a CDN where connected devices fetch updates at the next process start (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch) — uses <code>KetoyBundleSource.Remote(url)</code>. The wire format, signature verification, ETag cache, and runtime activation order are already implemented. The hosted infrastructure (signing pipeline, signed-URL distribution, telemetry) is under active development and ships shortly.</p>
+            <p><strong>Cloud delivery</strong> - pushing a new <code>.ktx</code> to a CDN where connected devices fetch updates at the next process start (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch) - uses <code>KetoyBundleSource.Remote(url)</code>. The wire format, signature verification, ETag cache, and runtime activation order are already implemented. The hosted infrastructure (signing pipeline, signed-URL distribution, telemetry) is under active development and ships shortly.</p>
             <p>Keep checking this page and the <a href="#">release announcements</a> for the rollout.</p>
           </div>
 

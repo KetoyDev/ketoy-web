@@ -18,7 +18,7 @@ export default function ArchitecturePage() {
           <span className="eyebrow">Deep dive</span>
           <h1>Architecture</h1>
           <p className="lede">
-            How Ketoy turns a Kotlin file into bytecode on a CDN and a rendered Compose frame on a user&rsquo;s screen — every stage of the pipeline, every guarantee at every layer.
+            How Ketoy turns a Kotlin file into bytecode on a CDN and a rendered Compose frame on a user&rsquo;s screen - every stage of the pipeline, every guarantee at every layer.
           </p>
         </div>
       </section>
@@ -52,7 +52,7 @@ export default function ArchitecturePage() {
               <h2 style={{ marginTop: 8 }}>K2 IR visitor</h2>
               <p>Walks the Kotlin IR, emits COMPOSABLE_CALL and CONSTRUCT_JVM instructions, resolves modifiers, snapshots closures.</p>
             </div>
-            <div className="placeholder"><b>Placeholder — compiler internals</b>IR visitor walkthrough, named-arg modifier resolution, closure conversion algorithm, capability validator architecture, the six error categories.</div>
+            <div className="placeholder"><b>Placeholder - compiler internals</b>IR visitor walkthrough, named-arg modifier resolution, closure conversion algorithm, capability validator architecture, the six error categories.</div>
           </div>
 
           <div id="bytecode" style={{ marginBottom: 64 }}>
@@ -70,7 +70,7 @@ export default function ArchitecturePage() {
                 </div>
               ))}
             </div>
-            <div className="placeholder" style={{ marginTop: 24 }}><b>Placeholder — opcode reference</b>Per-opcode operand layout, semantics, exception behavior, and a worked example for each category.</div>
+            <div className="placeholder" style={{ marginTop: 24 }}><b>Placeholder - opcode reference</b>Per-opcode operand layout, semantics, exception behavior, and a worked example for each category.</div>
           </div>
 
           <div id="bundle" style={{ marginBottom: 64 }}>
@@ -101,7 +101,7 @@ export default function ArchitecturePage() {
 ├── MODIFIER_TABLE       `}<span className="tk-com">// lazy-resolved modifier chains</span>{`
 ├── FUNCTION_TABLE       `}<span className="tk-com">// metadata + suspension + handlers</span>{`
 ├── CODE                 `}<span className="tk-com">// KBC instruction stream (Brotli)</span>{`
-├── DEBUG_INFO           `}<span className="tk-com">// line numbers — debug builds</span>{`
+├── DEBUG_INFO           `}<span className="tk-com">// line numbers - debug builds</span>{`
 ├── BUNDLE_METADATA      `}<span className="tk-com">// IDs + descriptors</span>{`
 └── ENTRY_POINTS         `}<span className="tk-com">// name → function index</span>{`
 
@@ -110,16 +110,16 @@ export default function ArchitecturePage() {
                 </pre>
               </div>
             </div>
-            <div className="placeholder"><b>Placeholder — section-by-section spec</b>Field widths, encoding (varint vs. fixed), padding rules, forward-compat strategy when adding sections in v3+.</div>
+            <div className="placeholder"><b>Placeholder - section-by-section spec</b>Field widths, encoding (varint vs. fixed), padding rules, forward-compat strategy when adding sections in v3+.</div>
           </div>
 
           <div id="interpreter" style={{ marginBottom: 64 }}>
             <div className="section-head" style={{ marginBottom: 24 }}>
               <span className="eyebrow">05 · Interpreter &amp; JIT</span>
               <h2 style={{ marginTop: 8 }}>Register-based VM with on-device DEX JIT</h2>
-              <p>Tier-1 JIT uses DexMaker to generate DEX from hot KBC functions — locally, at runtime, on API 26+.</p>
+              <p>Tier-1 JIT uses DexMaker to generate DEX from hot KBC functions - locally, at runtime, on API 26+.</p>
             </div>
-            <div className="placeholder"><b>Placeholder — interpreter internals</b>Register file layout, continuation table, exception handler tables, hot-function detection, DexMaker integration, Tier-2 (planned) type-propagation register model.</div>
+            <div className="placeholder"><b>Placeholder - interpreter internals</b>Register file layout, continuation table, exception handler tables, hot-function detection, DexMaker integration, Tier-2 (planned) type-propagation register model.</div>
           </div>
 
           <div id="renderer" style={{ marginBottom: 64 }}>
@@ -128,16 +128,16 @@ export default function ArchitecturePage() {
               <h2 style={{ marginTop: 8 }}>KSP-generated typed adapters</h2>
               <p>Every Material3 component has a typed adapter that decodes a KBCParamSet and invokes the real Compose function. No reflection at the call site.</p>
             </div>
-            <div className="placeholder"><b>Placeholder — adapter generation</b>How KSP scans the Compose classpath, the generated code shape, the two-layer parameter system end-to-end, registering app-specific adapters.</div>
+            <div className="placeholder"><b>Placeholder - adapter generation</b>How KSP scans the Compose classpath, the generated code shape, the two-layer parameter system end-to-end, registering app-specific adapters.</div>
           </div>
 
           <div id="security" style={{ marginBottom: 64 }}>
             <div className="section-head" style={{ marginBottom: 24 }}>
               <span className="eyebrow">07 · Security</span>
               <h2 style={{ marginTop: 8 }}>Sandbox at the boundary</h2>
-              <p>Ed25519 signatures, the compile-time capability sandbox, and Play Store compliance — three independent guarantees.</p>
+              <p>Ed25519 signatures, the compile-time capability sandbox, and Play Store compliance - three independent guarantees.</p>
             </div>
-            <div className="placeholder"><b>Placeholder — security deep dive</b>Threat model, signing key rotation, sandbox enforcement points (compile, link, runtime), why on-device DEX-from-bytecode is compliant under DPA.</div>
+            <div className="placeholder"><b>Placeholder - security deep dive</b>Threat model, signing key rotation, sandbox enforcement points (compile, link, runtime), why on-device DEX-from-bytecode is compliant under DPA.</div>
           </div>
 
           <div id="performance">

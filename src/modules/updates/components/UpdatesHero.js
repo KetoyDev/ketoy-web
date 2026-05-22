@@ -3,7 +3,7 @@ import { SDK_VERSION_FULL } from '@/constants';
 export default function UpdatesHero({
   eyebrow = `Live · v${SDK_VERSION_FULL}`,
   title = 'What’s new in Ketoy.',
-  lede = 'A running log of platform and SDK changes — what shipped, what’s in beta, and what’s coming next. Pick a card to read the full notes.',
+  lede = 'A running log of platform and SDK changes - what shipped, what’s in beta, and what’s coming next. Pick a card to read the full notes.',
 }) {
   return (
     <section className="updates-hero">

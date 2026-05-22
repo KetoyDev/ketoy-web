@@ -1573,6 +1573,222 @@ footer.site-footer {
 }
 
 /* ============================================================
+   Issue / bug report page
+   ============================================================ */
+
+/* Standalone .support-tag (also used by .support-card on home) */
+.card > .support-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  border: 1px solid rgba(61,220,132,0.35);
+  border-radius: 999px;
+  padding: 4px 10px;
+  margin-bottom: 14px;
+}
+
+/* Centered form card */
+.issue-form-card {
+  max-width: 680px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+}
+
+.issue-form { display: flex; flex-direction: column; gap: 20px; }
+.issue-form .field { display: flex; flex-direction: column; gap: 8px; }
+.issue-form label {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+.issue-form input,
+.issue-form textarea {
+  font: inherit;
+  font-size: 15px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--ink);
+  transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  outline: none;
+  resize: vertical;
+  width: 100%;
+}
+.issue-form input::placeholder,
+.issue-form textarea::placeholder { color: var(--muted-2); }
+.issue-form input:focus,
+.issue-form textarea:focus {
+  border-color: var(--accent-ink);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.issue-form .form-error {
+  font-size: 14px;
+  color: #b1331f;
+  background: #fdf0ee;
+  border: 1px solid #f5c6c1;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 0;
+}
+.issue-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+.issue-form-actions .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.issue-success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 4px;
+}
+.issue-success .check {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-ink);
+}
+.issue-success h4 {
+  font-family: var(--font-display, inherit);
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+}
+.issue-success p {
+  font-size: 15.5px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Security panel (lives inside section.ink) */
+.security-panel {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 0;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.security-panel-main {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.security-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4AE389;
+  background: rgba(74,227,137,0.1);
+  border: 1px solid rgba(74,227,137,0.25);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+.security-email-big {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 22px;
+  background: linear-gradient(135deg,#3DDC84 0%,#1f9f5a 100%);
+  border-radius: 12px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.security-email-big:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -10px rgba(61,220,132,0.45);
+}
+.security-panel-sub {
+  font-size: 14.5px;
+  color: #9da0a8 !important;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 320px;
+}
+.security-panel-promises {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+}
+.security-promise {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.security-promise-num {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: #4AE389;
+  min-width: 48px;
+  line-height: 1;
+  padding-top: 2px;
+}
+.security-promise-text {
+  font-size: 14.5px;
+  color: #b6b5b0;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .security-panel { grid-template-columns: 1fr; }
+  .security-panel-main { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .issue-form-card { padding: 24px; }
+}
+
+[data-theme="dark"] .issue-form input,
+[data-theme="dark"] .issue-form textarea {
+  background: var(--surface-2);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+[data-theme="dark"] .issue-form input:focus,
+[data-theme="dark"] .issue-form textarea:focus {
+  background: var(--bg);
+}
+[data-theme="dark"] .issue-form .form-error {
+  background: #2d1210;
+  border-color: #6b2822;
+  color: #f1a79a;
+}
+
+/* ============================================================
    Topbar "Get started" button — slimmer vertical padding so the
    button reads long-and-wide alongside the 38px theme toggle.
    ============================================================ */

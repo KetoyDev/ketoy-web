@@ -4,9 +4,9 @@ import UpdatesSection from '@/modules/updates/components/UpdatesSection';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
 
 export const metadata = {
-  title: 'Latest updates — Ketoy',
+  title: 'Latest updates - Ketoy',
   description:
-    "Platform and Ketoy SDK updates — release notes, new features, and what's coming next.",
+    "Platform and Ketoy SDK updates - release notes, new features, and what's coming next.",
 };
 
 export default function UpdatesPage() {
@@ -40,7 +40,7 @@ export default function UpdatesPage() {
             <div>
               <h2>Stay ahead of the release train.</h2>
               <p>
-                Get a monthly digest of platform, SDK and tooling changes — straight from the team.
+                Get a monthly digest of platform, SDK and tooling changes - straight from the team.
               </p>
             </div>
             <div className="right">

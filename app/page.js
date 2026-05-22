@@ -10,9 +10,9 @@ import {
 } from '@/modules/home/data';
 
 export const metadata = {
-  title: 'Ketoy — AI-native app updates for Android',
+  title: 'Ketoy - AI-native app updates for Android',
   description:
-    'AI-native Android update infrastructure. Ship UI changes, features, fixes and experiments in under 60 seconds — fully within Play Store policies.',
+    'AI-native Android update infrastructure. Ship UI changes, features, fixes and experiments in under 60 seconds - fully within Play Store policies.',
 };
 
 const CHECKOUT_KT = `@KetoyEntryPoint @Composable
@@ -27,7 +27,7 @@ fun CheckoutScreen() {
             }
         }
         Button(onClick = { vm.dispatch("place_order") }) {
-            Text("Place Order — $" + state.total)
+            Text("Place Order - $" + state.total)
         }
     }
 }
@@ -89,7 +89,7 @@ export default function HomePage() {
               </div>
               <h1>AI-native app updates for <strong>Android</strong>.</h1>
               <p className="lede">
-                Make your Android apps update <em style={{ fontStyle: 'normal', color: '#fff', fontWeight: 500 }}>themselves</em> in under 60 seconds — UI changes, features, fixes, experiments. Fully within Play Store policies. Plus AI workflows that let you ship most changes by prompt instead of spinning up a release train for every tiny edit.
+                Make your Android apps update <em style={{ fontStyle: 'normal', color: '#fff', fontWeight: 500 }}>themselves</em> in under 60 seconds - UI changes, features, fixes, experiments. Fully within Play Store policies. Plus AI workflows that let you ship most changes by prompt instead of spinning up a release train for every tiny edit.
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/get-started">
@@ -122,7 +122,7 @@ export default function HomePage() {
             <span className="eyebrow">The Play Store math · brace yourself</span>
             <h2>How many days has your team spent <em style={{ fontStyle: 'normal', background: 'linear-gradient(98deg,#4285F4 0%,#1a66cc 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>waiting</em> for review this year?</h2>
             <p>
-              Update tested. Tagged. Signed. Uploaded. Now you wait. The marketing team waits. The PM refreshes the dashboard. Customer support copy-pastes &ldquo;fix is coming soon.&rdquo; Drag the sliders — be honest — and find out exactly how much of your life Play Store review has eaten.
+              Update tested. Tagged. Signed. Uploaded. Now you wait. The marketing team waits. The PM refreshes the dashboard. Customer support copy-pastes &ldquo;fix is coming soon.&rdquo; Drag the sliders - be honest - and find out exactly how much of your life Play Store review has eaten.
             </p>
           </div>
           <Calculator />
@@ -136,7 +136,7 @@ export default function HomePage() {
             <span className="eyebrow">AI-native, by design</span>
             <h2>Ship most updates by <em style={{ fontStyle: 'normal', background: 'linear-gradient(135deg,#3DDC84 0%,#4285F4 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>prompt</em>. Skip the release train for every tiny edit.</h2>
             <p>
-              Ketoy isn’t just a runtime — it’s an update <em style={{ fontStyle: 'normal' }}>infrastructure</em>. Most product changes (copy tweaks, layout shuffles, A/B variants, hotfixes) don’t need a four-person standup. Describe them. Ketoy plans the change, generates the bundle, signs it, and stages it for review — one workflow, no separate dev / release / ops coordination.
+              Ketoy isn’t just a runtime - it’s an update <em style={{ fontStyle: 'normal' }}>infrastructure</em>. Most product changes (copy tweaks, layout shuffles, A/B variants, hotfixes) don’t need a four-person standup. Describe them. Ketoy plans the change, generates the bundle, signs it, and stages it for review - one workflow, no separate dev / release / ops coordination.
             </p>
           </div>
 
@@ -310,7 +310,7 @@ export default function HomePage() {
             <span className="eyebrow">Quick start · the whole tutorial fits on a screen</span>
             <h2>Three blocks. One Gradle task. One CDN upload.</h2>
             <p>
-              Add the plugin to your app module. Write your screen the way you’d write any other Compose screen. Run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>ketoyBundle</code>. Upload. Look up at the clock — yep, that fast.
+              Add the plugin to your app module. Write your screen the way you’d write any other Compose screen. Run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>ketoyBundle</code>. Upload. Look up at the clock - yep, that fast.
             </p>
           </div>
 
@@ -329,7 +329,7 @@ export default function HomePage() {
             <div>
               <h2>Write Kotlin. Ship the screen. Reclaim your week.</h2>
               <p>
-                Available now on Maven Central. Hilt integration, dev overlay, and the full Material3 adapter catalog included. No credit card, no waitlist, no sales call — it’s a Gradle plugin.
+                Available now on Maven Central. Hilt integration, dev overlay, and the full Material3 adapter catalog included. No credit card, no waitlist, no sales call - it’s a Gradle plugin.
               </p>
             </div>
             <div className="right">

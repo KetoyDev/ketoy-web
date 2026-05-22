@@ -36,7 +36,7 @@ export const manualRequirements = [
 ];
 
 export const continueCards = [
-  { h: 'Architecture overview', p: 'The five-layer stack and why KBC bytecode — not JSON — is the wire format.', cta: 'Read the spec', href: '/architecture' },
+  { h: 'Architecture overview', p: 'The five-layer stack and why KBC bytecode - not JSON - is the wire format.', cta: 'Read the spec', href: '/architecture' },
   { h: 'Supported features', p: 'Every Material3 adapter, every capability, every Compose token Ketoy ships with.', cta: 'See coverage', href: '/features' },
-  { h: 'Custom adapters', p: 'Add your own components beyond Material3 — the KSP processor handles the rest.', cta: 'Read the guide', href: '/docs' },
+  { h: 'Custom adapters', p: 'Add your own components beyond Material3 - the KSP processor handles the rest.', cta: 'Read the guide', href: '/docs' },
 ];

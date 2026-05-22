@@ -2,8 +2,8 @@ import UpdatesListView from '@/modules/updates/components/UpdatesListView';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
 
 export const metadata = {
-  title: 'SDK updates — Ketoy',
-  description: 'Every change to the Ketoy SDK — Compose components, adapters and capabilities.',
+  title: 'SDK updates - Ketoy',
+  description: 'Every change to the Ketoy SDK - Compose components, adapters and capabilities.',
 };
 
 const SdkIcon = (
@@ -20,7 +20,7 @@ export default function SdkUpdatesPage() {
     <UpdatesListView
       sectionIcon={SdkIcon}
       title="SDK updates"
-      description="Every change to the Ketoy SDK — Compose components, adapters and capabilities."
+      description="Every change to the Ketoy SDK - Compose components, adapters and capabilities."
       updates={updates}
     />
   );

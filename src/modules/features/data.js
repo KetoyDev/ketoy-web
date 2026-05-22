@@ -13,7 +13,7 @@ export const subnavItems = [
 
 export const statusCards = [
   { num: 16, h: 'Composable adapters', p: 'Fully routed Material3 + Foundation + Coil components, KSP-generated.' },
-  { num: 27, h: 'Modifier operations', p: 'Named-arg modifier folding — padding, fill, size, background, clickable.' },
+  { num: 27, h: 'Modifier operations', p: 'Named-arg modifier folding - padding, fill, size, background, clickable.' },
   { num: 67, h: 'Built-in capabilities', p: 'Network, storage, navigation, platform, dispatchers, Flow operators.' },
   { num: 106, h: 'KBC opcodes', p: 'Logic, coroutine, Compose state, control flow, VM lifecycle.' },
 ];
@@ -24,7 +24,7 @@ export const compCards = [
   { name: 'Row', id: '0x0003', desc: 'Same shape as Column.', params: ['modifier','horizontalArrangement','verticalAlignment'] },
   { name: 'Box', id: '0x0004', desc: 'Content slot at source-position 3.', params: ['modifier','contentAlignment','propagateMinConstraints'] },
   { name: 'Scaffold', id: '0x0007', desc: 'Full Material3 signature with the trailing PaddingValues content slot.', params: ['topBar','bottomBar','snackbarHost','floatingActionButton','fabPosition','containerColor','contentColor','contentWindowInsets'] },
-  { name: 'Surface', id: '0x0008', desc: 'Non-clickable overload — the clickable variant is excluded.', params: ['modifier','shape','color','contentColor','tonalElevation','shadowElevation','border'] },
+  { name: 'Surface', id: '0x0008', desc: 'Non-clickable overload - the clickable variant is excluded.', params: ['modifier','shape','color','contentColor','tonalElevation','shadowElevation','border'] },
   { name: 'Card', id: '0x0009', desc: '6-param non-clickable overload. Colors and elevation built via CardDefaults object factories.', params: ['modifier','shape','colors','elevation','border'] },
   { name: 'Spacer', id: '0x000B', desc: 'Modifier-only. Width/height live in the modifier chain (Modifier.height(20.dp)).', params: ['modifier'] },
   { name: 'Button', id: '0x000C', desc: 'Full Material3 shape with content slot at source position 9.', params: ['onClick','modifier','enabled','shape','colors','elevation','border','contentPadding','interactionSource'] },
@@ -33,7 +33,7 @@ export const compCards = [
   { name: 'Checkbox', id: '0x0014', desc: 'Full signature.', params: ['checked','onCheckedChange','modifier','enabled','colors','interactionSource'] },
   { name: 'Switch', id: '0x0016', desc: 'Full signature with thumbContent slot.', params: ['checked','onCheckedChange','modifier','thumbContent','enabled','colors','interactionSource'] },
   { name: 'AsyncImage', id: '0x0018', desc: 'Coil 16-arg post-1.x overload (clipToBounds at pos 14).', params: ['model','contentDescription','modifier','placeholder','error','fallback','onLoading','onSuccess','onError','alignment','contentScale','alpha','colorFilter','filterQuality','clipToBounds'] },
-  { name: 'Icon', id: '0x0019', desc: 'ImageVector overload — picked via nullability-aware disambiguator over Painter / ImageBitmap variants. Resolved at runtime via a host-provided KBCImageVectorResolver.', params: ['imageVector','contentDescription','modifier','tint'] },
+  { name: 'Icon', id: '0x0019', desc: 'ImageVector overload - picked via nullability-aware disambiguator over Painter / ImageBitmap variants. Resolved at runtime via a host-provided KBCImageVectorResolver.', params: ['imageVector','contentDescription','modifier','tint'] },
   { name: 'TopAppBar', id: '0x001D', desc: 'Post-1.2 overload with expandedHeight: Dp. Colors/insets/scrollBehavior fall through to Compose defaults. Requires @OptIn(ExperimentalMaterial3Api::class) in KBC source.', params: ['title','modifier','navigationIcon','actions','expandedHeight'] },
 ];
 
@@ -74,9 +74,9 @@ export const tokenCards = [
 
 export const kotlinCards = [
   { num: '2.2', h: 'Primitives & arithmetic', p: 'Int, Long, Float, Double, Boolean, String, Unit, null, Char. Full arithmetic, comparison, boolean ops, Int↔Long/Float/Double conversions, nullable boxing/unboxing.', chips: ['ADD_INT','SUB_INT','MUL_INT','DIV_INT','MOD_INT','NEG_INT','_LONG','_FLOAT','_DOUBLE'] },
-  { num: '2.3', h: 'Strings', p: 'Variadic STRING_CONCAT — every +, interpolation, or multi-arg concat collapses to one opcode. Per-bundle deduplicated string pool.', chips: ['STRING_CONCAT','STRING_LENGTH','STRING_SUBSTR','INT_TO_STRING'] },
-  { num: '2.4', h: 'Control flow', p: 'if, when, while, do-while, break, continue, return, throw, and try/catch.', extra: 'Caveat: catch is currently catch-all — multi-catch collapses to the first handler. Rethrow inside a catch works correctly.' },
-  { num: '2.5', h: 'Lambdas & closures', p: 'val onClick = { }, list.forEach { }, lambda parameters to adapters. Closures with captured outer-scope locals are fully supported via KBCValue.ClosureRef — capture values snapshot eagerly at slot resolution time.', extra: 'Audited against 6 capture patterns: single, multi, navigation-onClick, nested two-level, branch, non-capturing baseline.' },
+  { num: '2.3', h: 'Strings', p: 'Variadic STRING_CONCAT - every +, interpolation, or multi-arg concat collapses to one opcode. Per-bundle deduplicated string pool.', chips: ['STRING_CONCAT','STRING_LENGTH','STRING_SUBSTR','INT_TO_STRING'] },
+  { num: '2.4', h: 'Control flow', p: 'if, when, while, do-while, break, continue, return, throw, and try/catch.', extra: 'Caveat: catch is currently catch-all - multi-catch collapses to the first handler. Rethrow inside a catch works correctly.' },
+  { num: '2.5', h: 'Lambdas & closures', p: 'val onClick = { }, list.forEach { }, lambda parameters to adapters. Closures with captured outer-scope locals are fully supported via KBCValue.ClosureRef - capture values snapshot eagerly at slot resolution time.', extra: 'Audited against 6 capture patterns: single, multi, navigation-onClick, nested two-level, branch, non-capturing baseline.' },
   { num: '2.6', h: 'Coroutines', p: 'State-machine lowering with SUSPEND_POINT/RESUME_VALUE chains. Structured concurrency via SupervisorJob. CancellationException is preserved.', chips: ['LAUNCH','ASYNC','AWAIT','WITH_CONTEXT','FLOW_EMIT','FLOW_COLLECT','COLLECT_AS_STATE'] },
   { num: '2.8', h: 'Collections', p: 'listOf, mapOf, mutableListOf intrinsified. Bigger stdlib ops (map, filter, reduce) flow through INVOKE_VIRTUAL against the KBC heap.', chips: ['LIST_NEW','LIST_ADD','LIST_GET','LIST_SIZE','LIST_FOR_EACH','MAP_NEW','MAP_PUT','MAP_GET'] },
 ];
@@ -102,7 +102,7 @@ export const nonGoalRows = [
   ['UnregisteredCapability', '@KetoyCapabilityStub referencing an ID not in the host’s registry JSON'],
   ['UnregisteredComposable', '@Composable callee not in the catalog or AdapterFqNameRegistry'],
   ['NonKbcConstructor', 'Compose-domain constructor without a registered adapter'],
-  ['UnregisteredCall', 'Anything else — includes up to 3 fuzzy-match suggestions'],
+  ['UnregisteredCall', 'Anything else - includes up to 3 fuzzy-match suggestions'],
 ];
 
 export const capabilityRows = [
