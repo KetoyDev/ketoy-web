@@ -1,5 +1,15 @@
 export const subnavItems = [
   { id: 'requirements', label: 'Requirements' },
+  { id: 'install', label: '1. Install the CLI' },
+  { id: 'init', label: '2. ketoy init' },
+  { id: 'auth', label: '3. Pick a provider' },
+  { id: 'run', label: '4. Build & run' },
+  { id: 'commands', label: 'Command reference' },
+  { id: 'safety', label: 'Safety & privacy' },
+];
+
+export const manualSubnavItems = [
+  { id: 'requirements', label: 'Requirements' },
   { id: 'install', label: '1. Install' },
   { id: 'wire', label: '2. Wire the runtime' },
   { id: 'screen', label: '3. First screen' },
@@ -8,6 +18,15 @@ export const subnavItems = [
 ];
 
 export const requirements = [
+  ['Node.js', '20+'],
+  ['Kotlin', '2.0.21 (auto-pinned)'],
+  ['Android Gradle Plugin', '8.x (auto-pinned)'],
+  ['JDK', '17'],
+  ['min SDK', '26'],
+  ['Jetpack Compose', 'BOM 2024.10.00 (auto-pinned)'],
+];
+
+export const manualRequirements = [
   ['Kotlin', '2.0.21'],
   ['Android Gradle Plugin', '8.0+ (Iguana or newer)'],
   ['JDK', '17'],

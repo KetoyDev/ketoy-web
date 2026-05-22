@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { SDK_VERSION_FULL } from '@/constants';
 import Subnav from '@/components/Subnav';
-import Tabs from '@/components/Tabs';
 import CodeWindow from '@/components/CodeWindow';
 import Callout from '@/modules/features/components/Callout';
 import { subnavItems, requirements, continueCards } from '@/modules/get-started/data';
@@ -9,239 +8,64 @@ import { subnavItems, requirements, continueCards } from '@/modules/get-started/
 export const metadata = {
   title: 'Get started · Ketoy',
   description:
-    'From an empty Android app to a working KBC screen in four steps with Ketoy.',
+    'From an empty Android project to a working KBC screen in three commands with the Ketoy AI CLI.',
 };
 
-const HILT_GRADLE = `plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
-    id("dev.ketoy.compiler") version "${SDK_VERSION_FULL}"
-}
+const AUTH_PROVIDERS = `$ ketoy auth anthropic         # Anthropic Claude
+$ ketoy auth openai            # OpenAI
+$ ketoy auth google            # Google Gemini
+$ ketoy auth mistral           # Mistral
+$ ketoy auth groq              # Groq
+$ ketoy auth xai               # xAI
+$ ketoy auth openrouter        # 200+ models via one key
+$ ketoy auth ollama            # local — no API key, just a base URL
 
-dependencies {
-    implementation(platform("dev.ketoy.vm:ketoy-bom:${SDK_VERSION_FULL}"))
-    implementation("dev.ketoy.vm:ketoy-runtime")
-    implementation("dev.ketoy.vm:ketoy-hilt")
-    implementation("dev.ketoy.vm:ketoy-annotations")
-    implementation("dev.ketoy.vm:ketoy-capabilities-core")
-    implementation("dev.ketoy.vm:ketoy-capabilities-navigation")
-    implementation("dev.ketoy.vm:ketoy-adapters-material3")
+$ ketoy auth --list            # see what's configured (redacted)`;
 
-    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.activity:activity-compose")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
+const PICK_MODEL = `# Set a default model used by every command.
+$ ketoy config set model anthropic:claude-sonnet-4-5
+$ ketoy config set model openai:gpt-4o
+$ ketoy config set model google:gemini-2.0-flash-exp
+$ ketoy config set model openrouter:meta-llama/llama-3.1-405b-instruct
 
-    implementation("com.google.dagger:hilt-android:2.52")
-    ksp("com.google.dagger:hilt-compiler:2.52")
-}`;
+# Or override per-command.
+$ ketoy chat --model anthropic:claude-sonnet-4-5`;
 
-const NO_HILT_GRADLE = `plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("dev.ketoy.compiler") version "${SDK_VERSION_FULL}"
-}
+const INIT_FLAGS = `$ ketoy init                        # interactive, asks before each edit
+$ ketoy init -y                     # accept defaults, no prompts
+$ ketoy init --dry-run              # show the plan, write nothing
+$ ketoy init --hilt                 # opt into Hilt wiring
+$ ketoy init --no-install-screen    # skip the MainActivity wrap`;
 
-dependencies {
-    implementation(platform("dev.ketoy.vm:ketoy-bom:${SDK_VERSION_FULL}"))
-    implementation("dev.ketoy.vm:ketoy-runtime")
-    implementation("dev.ketoy.vm:ketoy-annotations")
-    implementation("dev.ketoy.vm:ketoy-capabilities-core")
-    implementation("dev.ketoy.vm:ketoy-capabilities-navigation")
-    implementation("dev.ketoy.vm:ketoy-adapters-material3")
+const INIT_OUTPUT = `Detected: namespace=com.example.myapp, applicationId=com.example.myapp,
+          minSdk=26, Hilt=no, Application=none, MainActivity=present
 
-    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.activity:activity-compose")
-    implementation("androidx.navigation:navigation-compose:2.8.0")
-}`;
+Plan (6 edits, 4 new files):
+  edit  app/build.gradle.kts        + Ketoy plugin, dependencies, ketoy {} block
+  edit  app/src/main/AndroidManifest.xml   + android:name=".MyApplication"
+  edit  app/src/main/.../MainActivity.kt   wrap setContent { … } with KetoyScreen
+  edit  gradle/libs.versions.toml          pin Kotlin 2.0.21, AGP 8.13.2, Compose BOM
+  edit  .gitignore                         + **/keys/*-private.key
+  new   app/src/main/.../MyApplication.kt
+  new   app/src/main/.../ketoyscreens/HelloKetoyScreen.kt
+  new   app/ketoy-capabilities.json
+  new   .ketoy/state.json
 
-const KETOY_DSL = `ketoy {
-    // Required: turns on inline-source app bundle mode.
-    exportFromAppModule.set(true)
+Apply? [y/N]`;
 
-    // Output filename. Bundle is written to
-    // :app/src/main/assets/ketoy/<bundleId>.ktx
-    bundleId.set("main")
+const RUN_COMMANDS = `$ ketoy build`
 
-    // Which Android variant the compiler attaches to.
-    // Default = "release". The release-signed .ktx is loaded by
-    // both debug and release APKs for production parity.
-    bundleVariant.set("release")
+const CHAT_EXAMPLES = `$ ketoy chat
+> add a settings screen with a dark-mode switch and version row
 
-    // Capability registry — empty file is fine to start.
-    capabilityRegistryFile.set(file("ketoy-capabilities.json"))
+$ ketoy chat "convert app/src/main/.../HomeScreen.kt to a KetoyComposable"
 
-    // Optional: minimum host APK versionCode for this bundle.
-    minAppVersion.set(0)
+$ ketoy migrate app/src/main/.../HomeScreen.kt app/src/main/.../ProfileScreen.kt
 
-    // Optional: emit source line numbers for the dev overlay.
-    debugMode.set(true)
+$ ketoy doctor                # runs default build, diagnoses failures
+$ ketoy doctor :app:ketoyBundle
 
-    // Optional but recommended for production: sign the bundle.
-    // Without a key, the plugin emits an unsigned bundle gracefully.
-    val signingKey = file("keys/release-private.key")
-    if (signingKey.exists()) {
-        signingKeyFile.set(signingKey)
-    }
-}`;
-
-const HILT_CAPABILITY = `@Singleton
-class AppCapabilityProvider @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : KetoyCapabilityProvider {
-    override fun buildRegistry(): CapabilityRegistry =
-        CapabilityRegistry().apply {
-            registerCoreCapabilities(context = context)
-        }
-}
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class AppHiltModule {
-    @Binds
-    abstract fun bindCapabilityProvider(
-        impl: AppCapabilityProvider,
-    ): KetoyCapabilityProvider
-}`;
-
-const HILT_CONFIG_MODULE = `@Module
-@InstallIn(SingletonComponent::class)
-object KetoyConfigModule {
-    @Provides @Singleton
-    fun provideKetoyConfigCustomizer(
-        @ApplicationContext context: Context,
-    ): KetoyConfigCustomizer = KetoyConfigCustomizer { default ->
-        val publicKey =
-            KetoyKeystore.loadFromAsset(context, "ketoy/keys/release-public.key")
-        default.copy(
-            enableSignatureVerification = true,
-            publicKey = publicKey,
-        )
-    }
-}`;
-
-const HILT_APP = `@HiltAndroidApp
-class MyApplication : Application() {
-    @Inject lateinit var ketoyRuntime: KetoyRuntime
-
-    override fun onCreate() {
-        super.onCreate()
-        registerGeneratedAdapters(ketoyRuntime.adapterRegistry)
-        registerGeneratedConstructors(ketoyRuntime.constructorRegistry)
-    }
-}
-
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-    @Inject lateinit var factoryBuilder: KetoyViewModelFactoryBuilder
-    @Inject lateinit var bundleLoader: KetoyBundleLoader
-    @Inject lateinit var runtime: KetoyRuntime
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            KetoyHiltProvider(
-                factoryBuilder = factoryBuilder,
-                bundleLoader = bundleLoader,
-                runtime = runtime,
-            ) { AppNavGraph() }
-        }
-    }
-}`;
-
-const NO_HILT_APP = `class MyApplication : Application() {
-    lateinit var ketoyRuntime: KetoyRuntime private set
-    lateinit var ketoyBundleLoader: KetoyBundleLoader private set
-
-    override fun onCreate() {
-        super.onCreate()
-
-        val capabilityRegistry = CapabilityRegistry().apply {
-            registerCoreCapabilities(context = this@MyApplication)
-        }
-
-        // For production, load your Ed25519 public key from assets.
-        // For local dev with unsigned bundles, KetoyConfig() works as-is.
-        val config = KetoyConfig(
-            enableSignatureVerification = true,
-            publicKey = KetoyKeystore.loadFromAsset(
-                this, "ketoy/keys/release-public.key",
-            ),
-        )
-
-        ketoyRuntime = KetoyRuntime(
-            capabilityRegistry = capabilityRegistry,
-            config = config,
-        )
-
-        // Composable + constructor adapters go on dedicated registries
-        // hanging off the runtime — not on CapabilityRegistry.
-        registerGeneratedAdapters(ketoyRuntime.adapterRegistry)
-        registerGeneratedConstructors(ketoyRuntime.constructorRegistry)
-
-        ketoyBundleLoader = KetoyBundleLoader(ketoyRuntime, this)
-    }
-}`;
-
-const NO_HILT_MAIN = `import dev.ketoy.runtime.compose.LocalKetoyBundleLoader
-import dev.ketoy.runtime.compose.LocalKetoyRuntime
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val app = application as MyApplication
-        setContent {
-            CompositionLocalProvider(
-                LocalKetoyRuntime provides app.ketoyRuntime,
-                LocalKetoyBundleLoader provides app.ketoyBundleLoader,
-            ) { AppNavGraph() }
-        }
-    }
-}`;
-
-const HELLO_SCREEN = `package com.example.myapp.ketoyscreens
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import dev.ketoy.annotations.KetoyComposable
-import dev.ketoy.annotations.KetoyEntryPoint
-
-@KetoyEntryPoint
-@KetoyComposable
-@Composable
-fun HelloScreen() {
-    Column(modifier = Modifier.padding(24.dp)) {
-        Text(text = "Hello from KetoyVM")
-        Spacer(Modifier.height(12.dp))
-        Text(text = "Shipped as KBC bytecode, executed natively.")
-    }
-}`;
-
-const NAV_GRAPH = `@Composable
-fun AppNavGraph() {
-    val nav = rememberNavController()
-    NavHost(nav, startDestination = "home") {
-        composable("home") {
-            KetoyScreen(
-                entryPoint = "HelloScreen",
-                bundleSource = KetoyBundleSource.Asset("ketoy/main.ktx"),
-            ) {
-                // Native fallback — same UI, plain Compose.
-                HelloScreen()
-            }
-        }
-    }
-}`;
+$ ketoy analyze app/src/main/assets/ketoy/main.ktx --manifest --strings`;
 
 export default function GetStartedPage() {
   return (
@@ -253,11 +77,11 @@ export default function GetStartedPage() {
           <span className="eyebrow">Getting started</span>
           <h1>Get started with Ketoy</h1>
           <p className="lede">
-            From an empty Android app to a working KBC screen in four steps. Author Jetpack Compose screens, compile them to portable KBC bytecode, and ship them inside your APK as a signed <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.92em' }}>.ktx</code> asset that the Ketoy runtime executes natively.
+            Three commands and Ketoy is wired into your Android project — plugin pinned, runtime bootstrapped, sample <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.92em' }}>@KetoyComposable</code> screen mounted, signed <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.92em' }}>.ktx</code> emitted into your APK. The <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.92em' }}>ketoy</code> CLI is an AI agent — bring your own model from Anthropic, OpenAI, Gemini, Mistral, Groq, xAI, OpenRouter, or local Ollama.
           </p>
           <div className="hero-actions" style={{ marginTop: 28 }}>
-            <a className="btn btn-primary" href="#install">Install Ketoy</a>
-            <Link className="btn btn-ghost" href="/docs">Read the docs</Link>
+            <a className="btn btn-primary" href="#install">Install the CLI</a>
+            <Link className="btn btn-ghost" href="/get-started/manual">Set up manually</Link>
           </div>
         </div>
       </section>
@@ -266,7 +90,7 @@ export default function GetStartedPage() {
         <div className="container">
 
           <Callout title={<>Alpha status — <code>{SDK_VERSION_FULL}</code></>}>
-            <p>The local-asset path is fully supported: you author screens in your <code>:app</code> module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and the runtime executes it at startup.</p>
+            <p>The local-asset path is fully supported: <code>ketoy init</code> wires up your <code>:app</code> module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and the runtime executes it at startup.</p>
             <p><strong>Cloud delivery</strong> — pushing a <code>.ktx</code> to a CDN so users get updates without going through the Play Store — is under active development and ships shortly. Track progress on the <a href="#">GitHub releases page</a>.</p>
           </Callout>
 
@@ -287,162 +111,138 @@ export default function GetStartedPage() {
           </div>
 
           <Callout kind="warn" title="Kotlin version is pinned during alpha">
-            <p>The Compose compiler plugin and the Ketoy compiler plugin are both pinned to <code>2.0.21</code> for the alpha. Broader Kotlin version support — letting you pick up newer Kotlin releases without waiting on a matched Ketoy build — is on the roadmap for the next update.</p>
-          </Callout>
-
-          <Callout kind="info" title="Hilt is optional">
-            <p>Each step below has two parallel paths. Pick <strong>Hilt</strong> if your app already uses it (less wiring, recommended). Pick <strong>No&nbsp;Hilt</strong> to drop KBC screens into a plain Compose app — no DI framework required.</p>
+            <p>The Compose compiler plugin and the Ketoy compiler plugin are both pinned to <code>2.0.21</code> for the alpha. <code>ketoy init</code> pins your <code>gradle/libs.versions.toml</code> automatically to the matched Kotlin / AGP / Compose BOM combination. These pins are temporary — they go away once Ketoy ships its own embedded Kotlin compiler.</p>
           </Callout>
 
           {/* STEP 1 */}
           <div className="step" id="install">
             <span className="step-num">Step 01</span>
-            <h2>Install Ketoy</h2>
-            <p className="intro">Ketoy ships a BOM, so you pin once and the rest of the modules line up. Add the plugin and dependencies to <code>:app/build.gradle.kts</code>.</p>
+            <h2>Install the CLI</h2>
+            <p className="intro">The npm package is <code>ketoy-dev</code> (the bare <code>ketoy</code> name is blocked by npm's similarity heuristic). The installed binary is still <code>ketoy</code>.</p>
 
-            <Tabs
-              tabs={[
-                {
-                  label: 'Hilt',
-                  content: (
-                    <CodeWindow file="app/build.gradle.kts" tag="Hilt">{HILT_GRADLE}</CodeWindow>
-                  ),
-                },
-                {
-                  label: 'No Hilt',
-                  content: (
-                    <>
-                      <CodeWindow file="app/build.gradle.kts" tag="No Hilt">{NO_HILT_GRADLE}</CodeWindow>
-                      <p style={{ fontSize: 15, color: 'var(--muted)', marginTop: 8 }}>
-                        No <code>ketoy-hilt</code>, no <code>hilt-android</code>, no KSP processor. You&rsquo;ll construct the runtime objects by hand in step 2.
-                      </p>
-                    </>
-                  ),
-                },
-              ]}
-            />
+            <CodeWindow file="terminal">{`$ npm i -g ketoy-dev
+$ ketoy version`}</CodeWindow>
 
-            <h3>Configure the <code>ketoy {'{ }'}</code> block</h3>
-            <p>Configure the plugin in the same <code>:app/build.gradle.kts</code>. This turns on inline-source app bundle mode — the compiler attaches to <code>compile&lt;variant&gt;Kotlin</code> and emits one signed <code>.ktx</code> containing every declaration reachable from your annotated entry points.</p>
-
-            <CodeWindow file="app/build.gradle.kts · ketoy {} DSL">{KETOY_DSL}</CodeWindow>
-
-            <p>Create a stub registry file so the build can start:</p>
-
-            <CodeWindow file="terminal">{`$ echo '{"version": 1, "capabilities": [], "allowedStdlibFqNames": []}' \\
-    > app/ketoy-capabilities.json`}</CodeWindow>
-
-            <h3>Optional — generate a signing key</h3>
-            <p>Bundle signing is optional during alpha bring-up; the plugin produces unsigned bundles gracefully when no key is configured. For signed builds, generate an Ed25519 keypair:</p>
-
-            <CodeWindow file="terminal · generate Ed25519 keypair">{`$ mkdir -p app/keys app/src/main/assets/ketoy/keys
-
-# Private key — 32 raw bytes, gitignored,
-# used by the Gradle plugin at build time.
-$ openssl genpkey -algorithm Ed25519 -outform DER \\
-    | tail -c 32 > app/keys/release-private.key
-
-# Public key — 32 raw bytes, committed alongside the APK
-# so the runtime can verify the signature at load time.
-$ openssl pkey -in app/keys/release-private.key -inform DER \\
-    -pubout -outform DER \\
-    | tail -c 32 > app/src/main/assets/ketoy/keys/release-public.key`}</CodeWindow>
-
-            <p>Then add the private key to <code>.gitignore</code>:</p>
-            <CodeWindow file=".gitignore">{`**/keys/*-private.key`}</CodeWindow>
-
-            <p>The <code>ketoy {'{}'}</code> block above already wires <code>signingKeyFile</code> when the file exists. To complete the loop — making the runtime <em>verify</em> the signature against the embedded public key — see step 2.</p>
-
-            <Callout kind="info" title="Signature verification is opt-in">
-              <p><code>KetoyConfig.enableSignatureVerification</code> defaults to <code>false</code> so unsigned local-dev builds just work. For production, set it to <code>true</code> <em>and</em> pass <code>publicKey</code>. <code>KetoyConfig</code> validates this at construction — enabling verification without a 32-byte Ed25519 key throws <code>IllegalArgumentException</code> immediately, so misconfiguration fails fast at app startup, not buried inside the first bundle load.</p>
-            </Callout>
+            <p>Requires Node.js 20 or newer. Every command runs in the current working directory — there's nothing global to maintain beyond the API-key store at <code>~/.ketoy-cli/</code>.</p>
           </div>
 
           {/* STEP 2 */}
-          <div className="step" id="wire">
+          <div className="step" id="init">
             <span className="step-num">Step 02</span>
-            <h2>Wire the runtime</h2>
-            <p className="intro">This is the only step where the two paths diverge meaningfully — Hilt does the wiring for you, the manual path is two short blocks.</p>
+            <h2>Run <code>ketoy init</code> in your project</h2>
+            <p className="intro">From the root of your Android project (the directory containing <code>settings.gradle.kts</code> and <code>app/build.gradle.kts</code>), run <code>ketoy init</code>. The CLI inspects your project, plans every change, and asks before applying.</p>
 
-            <Tabs
-              tabs={[
-                {
-                  label: 'Hilt',
-                  content: (
-                    <>
-                      <p>Implement <code>KetoyCapabilityProvider</code>:</p>
-                      <CodeWindow file="AppCapabilityProvider.kt">{HILT_CAPABILITY}</CodeWindow>
-                      <p>If you generated a signing keypair in step 1, also wire the public key via a <code>KetoyConfigCustomizer</code> binding so the Hilt-managed <code>KetoyRuntime</code> verifies signatures against your key:</p>
-                      <CodeWindow file="KetoyConfigModule.kt">{HILT_CONFIG_MODULE}</CodeWindow>
-                      <p>Register Material3 adapters on the singleton <code>KetoyRuntime</code> in <code>Application.onCreate</code>, then publish runtime + loader in your activity via <code>KetoyHiltProvider</code>:</p>
-                      <CodeWindow file="MyApplication.kt · MainActivity.kt">{HILT_APP}</CodeWindow>
-                      <p><code>KetoyHiltProvider</code> internally publishes <code>LocalKetoyRuntime</code> and <code>LocalKetoyCapabilityRegistry</code>, so every <code>KetoyScreen</code> in the tree resolves its adapter and constructor registries from the same singleton.</p>
-                      <p>Don&rsquo;t forget <code>android:name=&quot;.MyApplication&quot;</code> in <code>AndroidManifest.xml</code>.</p>
-                    </>
-                  ),
-                },
-                {
-                  label: 'No Hilt',
-                  content: (
-                    <>
-                      <p>Construct <code>KetoyRuntime</code> by hand. Hold it and the loader as <strong>instance fields on a custom <code>Application</code> subclass</strong> — not on a Kotlin <code>object</code>. Static fields that hold a <code>Context</code> (<code>KetoyBundleLoader</code> does) trip lint&rsquo;s <code>StaticFieldLeak</code> warning. Instance fields on <code>Application</code> are tied to the process lifecycle and don&rsquo;t leak.</p>
-                      <CodeWindow file="MyApplication.kt">{NO_HILT_APP}</CodeWindow>
-                      <p>Publish the runtime and loader via composition locals in <code>MainActivity</code>. <code>KetoyScreen</code> auto-derives the <code>CapabilityRegistry</code>, <code>KBCAdapterRegistry</code>, and <code>KBCConstructorRegistry</code> from <code>LocalKetoyRuntime</code> — no factory boilerplate needed.</p>
-                      <CodeWindow file="MainActivity.kt">{NO_HILT_MAIN}</CodeWindow>
-                      <p>Don&rsquo;t forget <code>android:name=&quot;.MyApplication&quot;</code> in <code>AndroidManifest.xml</code>. Publishing <code>LocalKetoyRuntime</code> is the only thing required for <code>KetoyScreen</code> to work without Hilt — <code>KetoyScreen</code> raises <code>IllegalStateException</code> with explicit remediation guidance when neither <code>LocalKetoyRuntime</code> nor a <code>KetoyViewModelFactoryBuilder</code> is published. Misconfiguration fails fast and clearly.</p>
-                    </>
-                  ),
-                },
-              ]}
-            />
+            <CodeWindow file="terminal">{INIT_FLAGS}</CodeWindow>
+
+            <p>A typical interactive plan looks like this:</p>
+
+            <CodeWindow file="terminal · ketoy init">{INIT_OUTPUT}</CodeWindow>
+
+            <h3>What it does</h3>
+            <ol style={{ paddingLeft: 22, lineHeight: 1.7 }}>
+              <li><strong>Detects</strong> your <code>namespace</code>, <code>applicationId</code>, <code>minSdk</code>, Hilt usage, existing <code>Application</code> class, and existing <code>MainActivity</code>.</li>
+              <li><strong>Pins versions</strong> in <code>gradle/libs.versions.toml</code> to the alpha-matched combination (Kotlin 2.0.21, AGP 8.13.2, Compose BOM 2024.10.00).</li>
+              <li><strong>Edits <code>app/build.gradle.kts</code></strong> — inserts the <code>dev.ketoy.compiler</code> plugin, appends the BOM + runtime + annotations + capabilities + Material3 adapters dependencies, and appends the <code>ketoy {'{ }'}</code> configuration block.</li>
+              <li><strong>Edits <code>AndroidManifest.xml</code></strong> — sets <code>android:name=&quot;.MyApplication&quot;</code> on <code>&lt;application&gt;</code> when no Application class exists.</li>
+              <li><strong>Creates <code>MyApplication.kt</code></strong> with the full bootstrap — <code>KetoyConfig</code>, <code>CapabilityRegistry</code>, <code>KetoyRuntime</code>, generated-adapter / constructor registration, <code>KetoyBundleLoader</code>.</li>
+              <li><strong>Wraps <code>MainActivity</code>'s <code>setContent { }</code></strong> with <code>CompositionLocalProvider(LocalKetoyRuntime, LocalKetoyBundleLoader)</code> and a <code>KetoyScreen</code> entry point (use <code>--no-install-screen</code> to skip).</li>
+              <li><strong>Creates <code>HelloKetoyScreen.kt</code></strong> — a sample <code>@KetoyEntryPoint @KetoyComposable</code> to confirm the pipeline works.</li>
+              <li><strong>Creates <code>app/ketoy-capabilities.json</code></strong> (empty registry) and appends <code>**/keys/*-private.key</code> to <code>.gitignore</code>.</li>
+              <li><strong>Saves project state</strong> to <code>.ketoy/state.json</code> so future commands know your layout.</li>
+            </ol>
+
+            <Callout kind="info" title="Hilt is opt-in via ketoy chat">
+              <p>The non-Hilt setup is the default — it works in any Compose project without a DI framework. If you opt in with <code>--hilt</code>, <code>init</code> aborts with a pointer to <code>ketoy chat</code>, where the agent handles Hilt wiring against your existing modules rather than guessing at a stock template.</p>
+            </Callout>
           </div>
 
           {/* STEP 3 */}
-          <div className="step" id="screen">
+          <div className="step" id="auth">
             <span className="step-num">Step 03</span>
-            <h2>Write your first KBC screen and mount it</h2>
-            <p className="intro">Same for both paths. Create the file directly inside your <code>:app</code> module — no separate Gradle module needed. The convention is to group KBC screens under <code>&lt;yourapp&gt;.ketoyscreens</code> to telegraph intent.</p>
+            <h2>Pick a model provider <span style={{ fontSize: '0.6em', color: 'var(--muted)', fontWeight: 400, marginLeft: 8 }}>— optional</span></h2>
+            <p className="intro">This step is <strong>skippable</strong>. If you don't connect an AI provider, <code>ketoy init</code>, <code>build</code>, and <code>analyze</code> still work — they're plain tooling. You just won't have access to the AI features: <code>ketoy chat</code>, <code>ketoy migrate</code>, and <code>ketoy doctor</code> all require a configured provider.</p>
 
-            <CodeWindow file="app/src/main/kotlin/.../ketoyscreens/HelloScreen.kt" tag="@KetoyEntryPoint">{HELLO_SCREEN}</CodeWindow>
+            <p>Ketoy is powered by the <a href="https://sdk.vercel.ai">Vercel AI SDK</a>, so you bring your own key from any major provider. Source code never leaves your machine except as part of the prompts you explicitly send to the provider you chose. No telemetry, no remote logging.</p>
 
-            <p>That&rsquo;s the entire KBC source. Native code in the same module — your existing screens, repositories, navigation graph — compiles to DEX as usual. Only the closure reachable from <code>HelloScreen</code> gets lowered to KBC.</p>
+            <CodeWindow file="terminal · authenticate a provider">{AUTH_PROVIDERS}</CodeWindow>
 
-            <h3>Mount it in your NavHost</h3>
-            <p>Every <code>KetoyScreen</code> call site requires a trailing <code>nativeFallback</code> lambda — the steady-state render when the bundle is absent, still loading, or the entry point can&rsquo;t be found. It should render identically to the KBC screen, so adopting Ketoy can never introduce a regression in any non-active-bundle case.</p>
+            <p>Then pin a default model (or override per-command with <code>--model</code>):</p>
 
-            <CodeWindow file="AppNavGraph.kt">{NAV_GRAPH}</CodeWindow>
+            <CodeWindow file="terminal · pick a model">{PICK_MODEL}</CodeWindow>
+
+            <Callout kind="info" title="Where credentials live">
+              <p>API keys are stored at <code>~/.ketoy-cli/config.json</code> with mode <code>0600</code>. The CLI refuses to print them — <code>ketoy config get apiKeys</code> is intentionally blocked. Use <code>ketoy auth --list</code> for a redacted view.</p>
+            </Callout>
           </div>
 
           {/* STEP 4 */}
-          <div className="step" id="build">
+          <div className="step" id="run">
             <span className="step-num">Step 04</span>
-            <h2>Build, install, and run</h2>
-            <p className="intro">Two Gradle commands. The <code>ketoyBundle</code> task attaches to <code>compileReleaseKotlin</code> and emits the signed <code>.ktx</code> into your assets directory.</p>
+            <h2>Build and run</h2>
+            <p className="intro">After <code>ketoy init</code> finishes, the project is ready to build. The compiler plugin attaches to <code>compileReleaseKotlin</code> and emits a signed <code>.ktx</code> into <code>app/src/main/assets/ketoy/main.ktx</code>.</p>
 
-            <CodeWindow file="terminal">{`# Compile the bundle into app/src/main/assets/ketoy/main.ktx.
-$ ./gradlew :app:ketoyBundle
+            <CodeWindow file="terminal">{RUN_COMMANDS}</CodeWindow>
 
-# Build and install. assembleDebug rebuilds the bundle
-# automatically when the source closure changes.
-$ ./gradlew :app:installDebug`}</CodeWindow>
-
-            <p>You should see a summary line during compilation:</p>
-
-            <CodeWindow file="build output" tag="signed" tagStyle={{ color: '#93f0c0', borderColor: '#1f3a2d' }}>{`KetoyBC: Compilation complete — 4 functions emitted, 1 composables,
-0 view models, 1 entry points. Bundle ID: main. Wrote 1832 bytes to
-app/src/main/assets/ketoy/main.ktx (signed)`}</CodeWindow>
-
-            <p>Launch the app — the KBC version of <code>HelloScreen</code> renders. Delete the <code>.ktx</code>, change the entry point to <code>&quot;DoesNotExist&quot;</code>, or toggle airplane mode — the native fallback renders identically. That&rsquo;s the production contract.</p>
-            <p>You can commit the <code>.ktx</code> alongside source, or gitignore it and rebuild on CI — it&rsquo;s regenerated deterministically.</p>
+            <p>Launch the app — the KBC version of <code>HelloKetoyScreen</code> renders. Delete the <code>.ktx</code>, change the entry point to <code>&quot;DoesNotExist&quot;</code>, or toggle airplane mode — the native fallback renders identically. That's the production contract.</p>
           </div>
 
-          {/* What's next */}
+          {/* COMMAND TOUR */}
+          <div className="step" id="commands">
+            <span className="step-num">Command tour</span>
+            <h2>What else the CLI does</h2>
+            <p className="intro">Once initialized, the agent stays useful for the day-to-day work — writing screens, migrating existing Compose UI, diagnosing build failures, and inspecting bundles.</p>
+
+            <CodeWindow file="terminal">{CHAT_EXAMPLES}</CodeWindow>
+
+            <div className="cmd-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginTop: 24 }}>
+              <div className="card">
+                <h3><code>ketoy chat</code></h3>
+                <p>Open an AI session in the project root. The agent has tools for reading files, proposing surgical edits, running Gradle tasks, and inspecting build output.</p>
+              </div>
+              <div className="card">
+                <h3><code>ketoy migrate</code></h3>
+                <p>AI-driven per-file Compose → KBC migration. Point it at a Compose screen and it produces a <code>@KetoyComposable</code> equivalent, diff-and-confirmed.</p>
+              </div>
+              <div className="card">
+                <h3><code>ketoy doctor</code></h3>
+                <p>Runs a Gradle task and diagnoses any compiler-plugin errors. Useful when <code>:app:ketoyBundle</code> fails and you want the agent to read the failure and propose a fix.</p>
+              </div>
+              <div className="card">
+                <h3><code>ketoy build</code></h3>
+                <p>Equivalent to <code>./gradlew :app:ketoyBundle --rerun-tasks</code>, with variant selection: <code>--variant bundle|debug|release</code>.</p>
+              </div>
+              <div className="card">
+                <h3><code>ketoy analyze</code></h3>
+                <p>Inspect an existing <code>.ktx</code> bundle — view its manifest, extract the string table, or dump the full structure as JSON.</p>
+              </div>
+              <div className="card">
+                <h3><code>ketoy config</code></h3>
+                <p>List, get, or set CLI configuration. Use it to change your default model or inspect (redacted) provider settings.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* SAFETY */}
+          <div className="step" id="safety">
+            <span className="step-num">Trust model</span>
+            <h2>Safety &amp; privacy</h2>
+            <p className="intro">The agent runs in your terminal, against your files, with your keys. The boring safety guarantees that make that workable:</p>
+
+            <ul style={{ paddingLeft: 22, lineHeight: 1.85 }}>
+              <li><strong>No file is rewritten in full.</strong> Edits to <code>build.gradle.kts</code>, <code>AndroidManifest.xml</code>, <code>MainActivity.kt</code>, and your <code>Application</code> class are surgical — single-line additions or block appends at well-identified anchors. Existing dependencies, signing configs, themes, and ProGuard rules are never touched.</li>
+              <li><strong>Diff-and-confirm</strong> on every edit touching a high-risk file. The agent's <code>edit_file</code> tool always shows a unified diff and prompts before applying.</li>
+              <li><strong>Idempotent.</strong> Re-running <code>ketoy init</code> on an already-configured project is a no-op.</li>
+              <li><strong>Allowlisted bash</strong> with hard refusal of compound commands for auto-approval. <code>cat &amp;&amp; rm -rf /</code> looks like <code>cat</code> to a naive checker; the CLI refuses to auto-approve any command containing shell metacharacters (<code>;</code>, <code>&amp;&amp;</code>, <code>||</code>, <code>|</code>, backticks, <code>$(…)</code>, redirects).</li>
+              <li><strong>No telemetry.</strong> No analytics, no usage reporting, no remote logging. The CLI talks directly to the provider you configured.</li>
+            </ul>
+          </div>
+
+          {/* WHAT'S NEXT */}
           <div className="step" id="whats-next">
             <span className="step-num">Roadmap</span>
             <h2>What ships next — cloud delivery</h2>
             <p className="intro">What you just built is the <strong>local-asset</strong> path: the <code>.ktx</code> ships inside the APK at compile time, and updates roll out through the Play Store like any other asset.</p>
             <p><strong>Cloud delivery</strong> — pushing a new <code>.ktx</code> to a CDN where connected devices fetch updates at the next process start (Ed25519-verified, ETag-cached, rolled back on <code>minAppVersion</code> mismatch) — uses <code>KetoyBundleSource.Remote(url)</code>. The wire format, signature verification, ETag cache, and runtime activation order are already implemented. The hosted infrastructure (signing pipeline, signed-URL distribution, telemetry) is under active development and ships shortly.</p>
-            <p>Keep checking this page and the <a href="#">release announcements</a> for the rollout.</p>
           </div>
 
           <h2 style={{ marginTop: 80, marginBottom: 24 }}>Continue reading</h2>
