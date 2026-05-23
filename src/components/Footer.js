@@ -27,10 +27,10 @@ export default function Footer() {
           <div>
             <h4>Docs</h4>
             <ul>
-              <li><Link href="/docs">Documentation</Link></li>
-              <li><Link href="/docs">KBC spec</Link></li>
-              <li><Link href="/docs">Capability registry</Link></li>
-              <li><Link href="/docs">Bundle format</Link></li>
+              <li><Link href="/docs" prefetch={false}>Documentation</Link></li>
+              <li><Link href="/docs" prefetch={false}>KBC spec</Link></li>
+              <li><Link href="/docs" prefetch={false}>Capability registry</Link></li>
+              <li><Link href="/docs" prefetch={false}>Bundle format</Link></li>
             </ul>
           </div>
           <div>

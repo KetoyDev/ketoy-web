@@ -1,0 +1,174 @@
+export const meta = {
+  id: 'ketoy-cli',
+  section: 'platform',
+  title: 'Introducing ketoy — the AI command-line agent for Ketoy',
+  summary:
+    'Scaffold projects, write @KetoyComposable screens, migrate Compose UI to .ktx, and diagnose compiler-plugin errors — all from your terminal, with your own provider key.',
+  chip: 'New',
+  chipClass: 'uchip-new',
+  date: 'May 23, 2026',
+  tag: 'Platform · CLI',
+  metaTag: 'Platform · CLI',
+};
+
+Meet **`ketoy`** — an AI-powered command-line agent for
+[Ketoy](https://ketoy.dev). Scaffold a Ketoy-enabled Android project,
+write `@KetoyComposable` screens, migrate existing Compose UI to `.ktx`
+bytecode bundles, diagnose compiler-plugin errors, and build / inspect
+bundles, all without leaving your terminal.
+
+Powered by the [Vercel AI SDK](https://sdk.vercel.ai) — **bring your
+own API key** from Anthropic, OpenAI, Google Gemini, Mistral, Groq,
+xAI, OpenRouter, or local Ollama. Source code never leaves your machine
+except as part of explicit prompts you send to the provider you chose.
+
+### Get started
+
+<CodeWindow file="terminal">
+{`npm i ketoy-dev
+ketoy auth anthropic     # paste your API key (never logged, stored 0600 in ~/.ketoy-cli)
+ketoy init               # add Ketoy to your Android project (surgical edits)
+ketoy chat               # open an AI session in the project root`}
+</CodeWindow>
+
+> The npm package is **`ketoy-dev`** — the bare `ketoy` name is blocked
+> by npm's similarity heuristic against unrelated existing packages.
+> The installed binary is still `ketoy`.
+
+<ChipRow>
+  <Chip>AI agent</Chip>
+  <Chip>BYOK</Chip>
+  <Chip>8 providers</Chip>
+  <Chip>No telemetry</Chip>
+  <Chip>Surgical edits</Chip>
+</ChipRow>
+
+### Commands
+
+<CodeWindow file="ketoy --help">
+{`ketoy init [--install-screen | --no-install-screen] [--hilt | --no-hilt] [-y] [--dry-run]
+ketoy chat [prompt...]                                    # interactive agent
+ketoy migrate <file>...                                   # AI-driven per-file Compose → KBC migration
+ketoy doctor [task]                                       # run a Gradle task and diagnose any errors
+ketoy build [--variant bundle|debug|release]              # ./gradlew :app:ketoyBundle --rerun-tasks
+ketoy analyze <path.ktx> [--manifest] [--strings] [--json]
+ketoy config list|get|set
+ketoy auth [provider] [--remove] [--list]
+ketoy version`}
+</CodeWindow>
+
+Every command runs in the current working directory. `ketoy init` only
+writes files when invoked from an Android project root (one containing
+`settings.gradle.kts` and `app/build.gradle.kts`).
+
+### Provider setup
+
+<CodeWindow file="terminal">
+{`ketoy auth anthropic              # set ANTHROPIC API key
+ketoy auth openai                 # OpenAI
+ketoy auth google                 # Google Gemini
+ketoy auth mistral
+ketoy auth groq
+ketoy auth xai
+ketoy auth openrouter             # one key, 200+ models
+ketoy auth ollama                 # local — no API key, just a base URL
+ketoy auth --list                 # see what's configured (redacted)`}
+</CodeWindow>
+
+Then pick a default model:
+
+<CodeWindow file="terminal">
+{`ketoy config set model anthropic:claude-sonnet-4-5
+ketoy config set model openai:gpt-4o
+ketoy config set model google:gemini-2.0-flash-exp
+ketoy config set model openrouter:meta-llama/llama-3.1-405b-instruct`}
+</CodeWindow>
+
+Or override per-command with `--model <provider>:<name>`.
+
+Credentials are stored at `~/.ketoy-cli/config.json` (mode `0600`). The
+CLI refuses to print them — `ketoy config get apiKeys` is intentionally
+blocked. Use `ketoy auth --list` for a redacted view.
+
+### Safety guarantees
+
+- **No file is rewritten in full.** Edits to `build.gradle.kts`,
+  `AndroidManifest.xml`, `MainActivity.kt`, and `Application` classes
+  are surgical — single-line additions or block appends at
+  well-identified anchors. Existing dependencies, signing configs,
+  themes, and ProGuard rules are never touched.
+- **Diff-and-confirm** on every edit touching a high-risk file. The
+  agent's `edit_file` tool always shows a unified diff and prompts
+  before applying.
+- **Idempotent** — re-running `ketoy init` on an already-configured
+  project is a no-op.
+- **Allowlisted bash with hard refusal of compound commands** for
+  auto-approval. `cat && rm -rf /` looks like `cat` to a naive checker;
+  the CLI refuses to auto-approve any command containing shell
+  metacharacters (`;`, `&&`, `||`, `|`, backticks, `$(…)`, redirects).
+- **No telemetry.** No analytics, no usage reporting, no remote logging.
+  The CLI talks directly to the provider you configured.
+
+### What `ketoy init` does
+
+1. Detects: `namespace`, `applicationId`, `minSdk`, Hilt usage,
+   existing `Application` class, existing `MainActivity`.
+2. **Hilt opt-in** — non-Hilt setup is the default. If you opt in to
+   Hilt, init aborts with a pointer to `ketoy chat`, where the agent
+   handles Hilt configuration against your existing modules.
+3. **KetoyScreen install opt-in** — `--install-screen` (default for
+   fresh AS projects) wraps `MainActivity`'s `setContent` body with
+   `KetoyScreen { /* native fallback */ }` inside your app theme.
+   `--no-install-screen` leaves `MainActivity.kt` untouched and prints
+   a manual integration snippet.
+4. Plans a list of surgical edits + new file creations; shows the
+   plan, asks to confirm.
+5. Applies the non-Hilt setup:
+   - Inserts `id("dev.ketoy.compiler") version "0.3.4-alpha"` into
+     `app/build.gradle.kts`'s plugins block
+   - Appends `// Ketoy 0.3.4-alpha` dependencies (BOM + runtime +
+     annotations + capabilities-core + capabilities-navigation +
+     adapters-material3)
+   - Appends the `ketoy { exportFromAppModule = true; bundleId = "main"; bundleVariant = "release"; … }`
+     block
+   - Sets `android:name=".MyApplication"` on `<application>` in
+     `AndroidManifest.xml` (only if no existing Application class)
+   - Creates `MyApplication.kt` with the **full bootstrap**:
+     `KetoyConfig` (sig verification, font / drawable / icon
+     resolvers), `CapabilityRegistry`, `KetoyRuntime`,
+     `registerGeneratedAdapters` / `registerGeneratedConstructors`,
+     `KetoyBundleLoader`
+   - Creates / surgically wraps `MainActivity.kt` —
+     `<YourAppTheme> { CompositionLocalProvider(LocalKetoyRuntime / LocalKetoyBundleLoader) { KetoyScreen(entryPoint = "HelloKetoyScreen") { /* native fallback */ } } }`
+   - Creates `HelloKetoyScreen.kt` (sample `@KetoyEntryPoint @KetoyComposable`)
+   - Creates `app/ketoy-capabilities.json` (empty)
+   - Appends `**/keys/*-private.key` to `.gitignore`
+6. Saves project state to `.ketoy/state.json` so future commands know
+   the layout.
+
+Then: `./gradlew :app:assembleDebug`, install, and you have a real KBC
+bundle running inside your APK.
+
+<InfoCard title="Alpha-period version pinning">
+  Ketoy 0.3.x's compiler plugin is built against a specific Kotlin /
+  AGP / Compose BOM combination. `ketoy init` pins your
+  `gradle/libs.versions.toml` to the required versions (Kotlin 2.0.21,
+  AGP 8.13.2, Compose BOM 2024.10.00, plus matched AndroidX libs).
+  These pins are temporary — ADR-0004 (Ketoy ships its own embedded
+  Kotlin compiler) removes them.
+</InfoCard>
+
+### Requirements
+
+<ChipRow>
+  <Chip>Node.js ≥ 20</Chip>
+  <Chip>AGP 8.x</Chip>
+  <Chip>Kotlin 2.0.21</Chip>
+  <Chip>JDK 17</Chip>
+  <Chip>minSdk ≥ 26</Chip>
+</ChipRow>
+
+- **Node.js ≥ 20** (top-level await + modern fetch)
+- **Android Gradle Plugin 8.x** + **Kotlin 2.0.21** + **JDK 17**
+  (auto-pinned during `ketoy init`)
+- **minSdk ≥ 26**

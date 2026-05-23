@@ -3,21 +3,15 @@ import { SDK_VERSION_FULL } from '@/constants';
 
 <span className="eyebrow">Documentation</span>
 <h1 style={{ marginTop: 8 }}>Ketoy Developer Documentation</h1>
-<p style={{ color: 'var(--muted)', fontSize: 19, lineHeight: 1.5, marginTop: 8, marginBottom: 20, maxWidth: 720 }}>
-  Ketoy is a server-driven execution runtime for Android. You write plain Kotlin — Jetpack Compose, coroutines, ViewModels, Navigation, Room, Hilt — with a handful of <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@Ketoy*</code> annotations. The compiler lowers your code into a compact, signed bytecode bundle (<code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code>) that any APK with the Ketoy runtime can execute natively.
-</p>
+<p style={{ color: 'var(--muted)', fontSize: 19, lineHeight: 1.5, marginTop: 8, marginBottom: 20, maxWidth: 720 }}>Ketoy is a server-driven execution runtime for Android. You write plain Kotlin — Jetpack Compose, coroutines, ViewModels, Navigation, Room, Hilt — with a handful of <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@Ketoy*</code> annotations. The compiler lowers your code into a compact, signed bytecode bundle (<code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code>) that any APK with the Ketoy runtime can execute natively.</p>
 
 <blockquote style={{ margin: '24px 0', padding: '14px 18px', borderLeft: '3px solid var(--accent)', background: 'var(--surface)', borderRadius: 8, color: 'var(--ink-2)', fontStyle: 'italic' }}>
   The app is the OS. The server ships programs.
 </blockquote>
 
-<p style={{ color: 'var(--ink-2)', fontSize: 17, lineHeight: 1.65 }}>
-  You can update screens, fix bugs, run A/B tests, and roll out features without going through the Play Store — every bundle is Ed25519-signed, sandboxed by capability, and rendered through real Jetpack Compose on the device.
-</p>
+<p style={{ color: 'var(--ink-2)', fontSize: 17, lineHeight: 1.65 }}>You can update screens, fix bugs, run A/B tests, and roll out features without going through the Play Store — every bundle is Ed25519-signed, sandboxed by capability, and rendered through real Jetpack Compose on the device.</p>
 
-<p style={{ color: 'var(--ink-2)', fontSize: 15, marginBottom: 40 }}>
-  This site is the developer manual for Ketoy {SDK_VERSION_FULL}. Every example is verified against current code — <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>dev.ketoy.vm:*:{SDK_VERSION_FULL}</code> on Maven Central.
-</p>
+<p style={{ color: 'var(--ink-2)', fontSize: 15, marginBottom: 40 }}>This site is the developer manual for Ketoy {SDK_VERSION_FULL}. Every example is verified against current code — <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>dev.ketoy.vm:*:{SDK_VERSION_FULL}</code> on Maven Central.</p>
 
 <div className="cards-grid cols-2" style={{ marginBottom: 56 }}>
   <div className="card">

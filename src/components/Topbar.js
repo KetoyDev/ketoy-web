@@ -10,7 +10,7 @@ const NAV = [
   { href: '/get-started', label: 'Get started' },
   { href: '/features', label: 'Supported features' },
   { href: '/architecture', label: 'Architecture' },
-  { href: '/docs', label: 'Docs' },
+  { href: '/docs', label: 'Docs', prefetch: false },
   { href: '/updates', label: 'What’s new', match: /^\/updates/ },
 ];
 
@@ -57,6 +57,7 @@ export default function Topbar() {
               key={item.href}
               href={item.href}
               className={isActive(item) ? 'active' : undefined}
+              {...(item.prefetch === false ? { prefetch: false } : {})}
             >
               {item.label}
             </Link>
@@ -105,6 +106,7 @@ export default function Topbar() {
             href={item.href}
             className={isActive(item) ? 'active' : undefined}
             onClick={() => setOpen(false)}
+            {...(item.prefetch === false ? { prefetch: false } : {})}
           >
             {item.label}
           </Link>

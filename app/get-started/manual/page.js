@@ -257,7 +257,7 @@ export default function ManualGetStartedPage() {
           </p>
           <div className="hero-actions" style={{ marginTop: 28 }}>
             <Link className="btn btn-primary" href="/get-started">Use the CLI instead</Link>
-            <Link className="btn btn-ghost" href="/docs">Read the docs</Link>
+            <Link className="btn btn-ghost" href="/docs" prefetch={false}>Read the docs</Link>
           </div>
         </div>
       </section>

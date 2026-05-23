@@ -333,7 +333,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="right">
-              <Link className="btn btn-ghost" href="/docs">Read the docs</Link>
+              <Link className="btn btn-ghost" href="/docs" prefetch={false}>Read the docs</Link>
               <Link className="btn btn-primary" href="/get-started">Get started</Link>
             </div>
           </div>

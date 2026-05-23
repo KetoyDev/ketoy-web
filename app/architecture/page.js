@@ -171,7 +171,7 @@ export default function ArchitecturePage() {
               <p>Source is on Maven Central. The docs cover compiler internals, bytecode opcodes, and bundle format with worked examples.</p>
             </div>
             <div className="right">
-              <Link className="btn btn-ghost" href="/docs">Read the docs</Link>
+              <Link className="btn btn-ghost" href="/docs" prefetch={false}>Read the docs</Link>
               <Link className="btn btn-primary" href="/get-started">Get started</Link>
             </div>
           </div>
