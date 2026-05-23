@@ -1,0 +1,346 @@
+The host owns:
+- `@Entity`, `@Dao`, `@Database` — normal Room.
+- Repository — normal singleton.
+- `KBCRoomBridge { ... }` block that registers each DAO operation as a
+  capability.
+
+The KBC bundle owns:
+- `@KetoyCapabilityStub` declarations matching each ID.
+- ViewModel and Composable code that calls them.
+
+This guide walks through the full pattern using a todo list as the
+example.
+
+---
+
+## 1. Host-side Room
+
+```kotlin
+// TodoEntity.kt
+@Entity(tableName = "todos")
+data class TodoEntity(
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
+    val title: String,
+    val completed: Boolean = false,
+    val createdAt: Long = System.currentTimeMillis(),
+)
+
+// TodoDao.kt
+@Dao
+interface TodoDao {
+    @Query("SELECT * FROM todos ORDER BY completed, createdAt DESC")
+    fun observeAll(): Flow<List<TodoEntity>>
+
+    @Query("SELECT * FROM todos WHERE id = :id")
+    suspend fun find(id: Long): TodoEntity?
+
+    @Insert
+    suspend fun insert(entity: TodoEntity): Long
+
+    @Query("UPDATE todos SET completed = :completed WHERE id = :id")
+    suspend fun setCompleted(id: Long, completed: Boolean)
+
+    @Query("UPDATE todos SET title = :title WHERE id = :id")
+    suspend fun updateTitle(id: Long, title: String)
+
+    @Query("DELETE FROM todos WHERE id = :id")
+    suspend fun delete(id: Long)
+}
+
+// TodoDatabase.kt
+@Database(entities = [TodoEntity::class], version = 1, exportSchema = false)
+abstract class TodoDatabase : RoomDatabase() {
+    abstract fun todoDao(): TodoDao
+}
+```
+
+Hilt module:
+
+```kotlin
+@Module @InstallIn(SingletonComponent::class)
+object DbModule {
+    @Provides @Singleton
+    fun provideTodoDatabase(@ApplicationContext ctx: Context): TodoDatabase =
+        Room.databaseBuilder(ctx, TodoDatabase::class.java, "todo.db")
+            .fallbackToDestructiveMigration()
+            .build()
+
+    @Provides @Singleton
+    fun provideTodoDao(db: TodoDatabase): TodoDao = db.todoDao()
+}
+```
+
+---
+
+## 2. Repository (optional but recommended)
+
+```kotlin
+@Singleton
+class TodoRepository @Inject constructor(private val dao: TodoDao) {
+    fun observeAll(): Flow<List<TodoEntity>> = dao.observeAll()
+    suspend fun find(id: Long): TodoEntity? = dao.find(id)
+    suspend fun add(title: String): Long = dao.insert(TodoEntity(title = title))
+    suspend fun setCompleted(id: Long, completed: Boolean) =
+        dao.setCompleted(id, completed)
+    suspend fun updateTitle(id: Long, title: String) = dao.updateTitle(id, title)
+    suspend fun delete(id: Long) = dao.delete(id)
+}
+```
+
+---
+
+## 3. Reserve capability IDs
+
+```kotlin
+// AppCapabilityIds.kt
+import dev.ketoy.capabilities.core.CapabilityIds
+
+@Suppress("MagicNumber")
+object AppCapabilityIds {
+    /** (): Flow<List<TodoEntity>> */
+    const val OBSERVE_TODOS: Short = 0x4000.toShort()
+
+    /** suspend (id: Long): TodoEntity? */
+    const val FIND_TODO: Short = 0x4001.toShort()
+
+    /** suspend (title: String): Long */
+    const val ADD_TODO: Short = 0x4002.toShort()
+
+    /** suspend (id: Long, completed: Boolean): Unit */
+    const val SET_TODO_COMPLETED: Short = 0x4003.toShort()
+
+    /** suspend (id: Long, title: String): Unit */
+    const val UPDATE_TODO_TITLE: Short = 0x4004.toShort()
+
+    /** suspend (id: Long): Unit */
+    const val DELETE_TODO: Short = 0x4005.toShort()
+}
+```
+
+App-specific IDs **must** be in the `0x4000–0x7FFF` range
+(`CapabilityIds.APP_SPECIFIC_START = 0x4000`). The `KBCRoomBridge`
+methods reject lower IDs.
+
+---
+
+## 4. Register via `KBCRoomBridge`
+
+```kotlin
+@Singleton
+class TodoCapabilityProvider @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val preferences: DataStore<Preferences>,
+    private val todoRepository: TodoRepository,
+    private val navigatorHolder: AppNavigatorHolder,
+) : KetoyCapabilityProvider {
+
+    override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+        registerCoreCapabilities(context, preferences)
+        registerNavigationCapabilities(navigatorHolder)
+        registerTodoCapabilities()
+    }
+
+    private fun CapabilityRegistry.registerTodoCapabilities() {
+        KBCRoomBridge(this).apply {
+            observeList(AppCapabilityIds.OBSERVE_TODOS) {
+                todoRepository.observeAll().asAnyListFlow()
+            }
+            findOne(AppCapabilityIds.FIND_TODO) { args ->
+                todoRepository.find(args[0] as Long)
+            }
+            suspendCapability(AppCapabilityIds.ADD_TODO) { args ->
+                todoRepository.add(args[0] as String)
+            }
+            mutate(AppCapabilityIds.SET_TODO_COMPLETED) { args ->
+                todoRepository.setCompleted(args[0] as Long, args[1] as Boolean)
+            }
+            mutate(AppCapabilityIds.UPDATE_TODO_TITLE) { args ->
+                todoRepository.updateTitle(args[0] as Long, args[1] as String)
+            }
+            mutate(AppCapabilityIds.DELETE_TODO) { args ->
+                todoRepository.delete(args[0] as Long)
+            }
+        }
+    }
+
+    private fun <T> Flow<List<T>>.asAnyListFlow(): Flow<List<Any?>> = map { it }
+}
+```
+
+### `KBCRoomBridge` helpers
+
+| Helper | Maps to | Signature |
+|---|---|---|
+| `observeList(id) { args -> flow }` | `registerFlow` | Wraps a `Flow<List<T>>` source. Returns to KBC as `Flow<List<Any?>>`. |
+| `findOne(id) { args -> entity }` | `registerSuspend` | `suspend (args) -> T?` reading a single row. |
+| `mutate(id) { args -> Unit }` | `registerSuspend` | `suspend (args) -> Unit` for inserts / updates / deletes that return no useful value. |
+| `suspendCapability(id) { args -> T }` | `registerSuspend` | Generic suspend; use when the return type is meaningful (e.g. the new row id from an insert). |
+| `flowCapability(id) { args -> flow }` | `registerFlow` | Generic non-list flow. |
+| `syncCapability(id) { args -> T }` | `register` | Sync (rare for Room — most DAO ops are suspend). |
+
+All bridge methods enforce `id >= APP_SPECIFIC_START`. Calling with a
+lower ID throws:
+
+```
+IllegalArgumentException: Room capability id 0x0500 is reserved (must be >= 0x4000)
+```
+
+---
+
+## 5. KBC-side stubs
+
+```kotlin
+// Capabilities.kt
+@KetoyCapabilityStub(id = 0x4000, name = "OBSERVE_TODOS")
+fun observeTodos(): Flow<List<Any?>> = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4001, name = "FIND_TODO")
+suspend fun findTodo(id: Long): List<Any?>? = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4002, name = "ADD_TODO")
+suspend fun addTodo(title: String): Long = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4003, name = "SET_TODO_COMPLETED")
+suspend fun setTodoCompleted(id: Long, completed: Boolean): Unit = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4004, name = "UPDATE_TODO_TITLE")
+suspend fun updateTodoTitle(id: Long, title: String): Unit = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4005, name = "DELETE_TODO")
+suspend fun deleteTodo(id: Long): Unit = error(STUB_MSG)
+
+private const val STUB_MSG = "KetoyVM capability stub — replaced by INVOKE_CAPABILITY at compile time"
+```
+
+Note the return types: the bridge erases entity types to
+`List<Any?>` / `List<Any?>?`. The first element is conventionally the
+ID, then the columns in declaration order — but you can shape it
+however you want host-side. For typed access on the KBC side, build a
+small helper:
+
+```kotlin
+private data class Todo(val id: Long, val title: String, val completed: Boolean)
+
+private fun List<Any?>.toTodo() = Todo(
+    id = this[0] as Long,
+    title = this[1] as String,
+    completed = this[2] as Boolean,
+)
+```
+
+> A future Ketoy release will add typed Room bridge generation. For
+> now, hand-shape these in your bridge: e.g.
+> `todoRepository.observeAll().map { list -> list.map { listOf(it.id, it.title, it.completed) } }`.
+
+---
+
+## 6. Use them in a ViewModel
+
+```kotlin
+@KetoyViewModel
+class TodoListViewModel : KetoyBaseViewModel() {
+
+    override fun init() {
+        setState("todos", emptyList<Any?>())
+
+        viewModelScope.launch {
+            observeTodos().collect { todos ->
+                setState("todos", todos)
+            }
+        }
+    }
+
+    fun addNew(payload: Any?) {
+        val title = (payload as? String) ?: return
+        viewModelScope.launch { addTodo(title) }
+    }
+
+    fun toggle(payload: Any?) {
+        @Suppress("UNCHECKED_CAST")
+        val args = payload as? List<Any?> ?: return
+        viewModelScope.launch {
+            setTodoCompleted(args[0] as Long, args[1] as Boolean)
+        }
+    }
+
+    fun remove(payload: Any?) {
+        val id = (payload as? Long) ?: return
+        viewModelScope.launch { deleteTodo(id) }
+    }
+}
+```
+
+And a composable:
+
+```kotlin
+@KetoyComposable @KetoyEntryPoint
+@Composable
+fun TodoListScreen() {
+    @Suppress("UNCHECKED_CAST")
+    val todos = (vmGetState("todos") as? List<List<Any?>>) ?: emptyList()
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        todos.forEach { row ->
+            val id = row[0] as Long
+            val title = row[1] as String
+            val completed = row[2] as Boolean
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = completed,
+                    onCheckedChange = { checked ->
+                        vmDispatch("toggle", listOf(id, checked))
+                    }
+                )
+                Text(title, modifier = Modifier.weight(1f))
+                IconButton(onClick = { vmDispatch("remove", id) }) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+## 7. Capability JSON entry
+
+Add each ID to `app/ketoy-capabilities.json`:
+
+```json
+{
+  "id": 16384,
+  "name": "OBSERVE_TODOS",
+  "fqName": "com.example.myapp.ketoyscreens.observeTodos",
+  "kind": "FLOW",
+  "parameterTypes": [],
+  "returnType": "kotlinx.coroutines.flow.Flow"
+}
+```
+
+The compiler validates each `@KetoyCapabilityStub`'s ID against this
+file at compile time. Missing entries produce `UnregisteredCapability`
+errors with the exact ID and name in the message.
+
+---
+
+## Migrations
+
+When you migrate the database schema, you migrate **host-side** as
+normal Room. The KBC bundle doesn't care — it only sees `List<Any?>`.
+
+If you change a capability's signature (e.g. `setTodoCompleted` now
+takes an extra `priority: Int`), bump the bundle's `minAppVersion` so
+older APKs reject the new bundle.
+
+---
+
+## What you can't do
+
+| You write | Why it fails |
+|---|---|
+| `dao.observeAll()` directly | `DirectAndroidApiAccess` — Room is `androidx.room.*`, not allowed in KBC. |
+| `@Entity` / `@Dao` in KBC source | Annotations work but Room codegen needs DEX-level reflection that KBC doesn't support. |
+| Constructing `TodoEntity(...)` in KBC | `NonKbcConstructor` — Room entities aren't in the standard ctor adapter set. Either expose a `createTodo(title, ...)` capability, or keep your KBC code working with `List<Any?>`. |
+
+Next: [Hilt →](/docs/hilt)

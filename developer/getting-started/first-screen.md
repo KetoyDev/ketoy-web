@@ -1,0 +1,198 @@
+# Your First Screen
+
+A Ketoy screen is a plain `@Composable` function annotated with
+`@KetoyComposable` and `@KetoyEntryPoint`. The compiler plugin lowers it
+to KBC bytecode; the runtime renders it through real Jetpack Compose on
+the device.
+
+This page walks through writing, building, and viewing a complete
+"Hello, Ketoy" screen.
+
+---
+
+## 1. Create the source file
+
+In your app module, e.g. `app/src/main/kotlin/com/example/myapp/ketoyscreens/HelloKetoyScreen.kt`:
+
+```kotlin
+package com.example.myapp.ketoyscreens
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import dev.ketoy.annotations.KetoyComposable
+import dev.ketoy.annotations.KetoyEntryPoint
+
+@KetoyComposable
+@KetoyEntryPoint
+@Composable
+fun HelloKetoyScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(text = "Hello, Ketoy!")
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "This screen is rendered from a KBC bundle.")
+        Spacer(modifier = Modifier.height(24.dp))
+        Button(onClick = { /* TODO */ }) {
+            Text("Click me")
+        }
+    }
+}
+```
+
+Two annotations matter:
+
+| Annotation | What it does |
+|---|---|
+| `@KetoyComposable` | Marks this function as a KBC composable. The compiler plugin walks its body, validates every call, and lowers it to bytecode. |
+| `@KetoyEntryPoint` | Registers it as a named entry point in the bundle so the runtime can resolve `entryPoint = "HelloKetoyScreen"`. |
+
+Both annotations live in `dev.ketoy.annotations`.
+
+---
+
+## 2. Build the bundle
+
+```bash
+./gradlew :app:ketoyBundle
+```
+
+Output:
+
+```
+> Task :app:ketoyBundle
+KetoyBC: Compilation complete — 7 functions emitted, 1 composables,
+0 view models, 1 entry points. Bundle ID: main. Wrote 1542 bytes to
+.../app/build/tmp/ketoy_compiler_output/main.ktx (signed)
+```
+
+The `KetoyBundleTask` then re-signs and copies the bundle to:
+
+```
+app/src/main/assets/ketoy/main.ktx
+```
+
+This file ships inside your APK as an asset. The runtime loads it via
+`KetoyBundleSource.Asset("ketoy/main.ktx")`.
+
+---
+
+## 3. Render it
+
+`MainActivity` is already wired (from [Installation](installation.md)):
+
+```kotlin
+KetoyScreen(
+    bundleSource = KetoyBundleSource.Asset("ketoy/main.ktx"),
+    entryPoint = "HelloKetoyScreen",
+    nativeFallback = { HelloNativeFallback() }
+)
+```
+
+Build & install:
+
+```bash
+./gradlew :app:installDebug
+```
+
+Launch — you'll see your KBC screen.
+
+---
+
+## 4. Iterate
+
+Edit the source. Re-run `./gradlew :app:ketoyBundle`. Reinstall. Done.
+
+To verify the bundle's contents without installing:
+
+```bash
+ketoy analyze app/src/main/assets/ketoy/main.ktx --manifest
+```
+
+Sample output:
+
+```
+Bundle: main (format v2, runtime v1, 1542 bytes signed)
+Sections: STRING_POOL, ADAPTER_MANIFEST, CONSTRUCTOR_MANIFEST,
+          CAPABILITY_MANIFEST, FUNCTION_TABLE, CODE, ENTRY_POINTS,
+          BUNDLE_METADATA
+Entry points: HelloKetoyScreen → fn[0]
+Composables: 1
+ViewModels: 0
+Adapters: COLUMN(0x0002), TEXT(0x0001), SPACER(0x000B), BUTTON(0x000C)
+```
+
+---
+
+## What the compiler actually did
+
+1. Walked `HelloKetoyScreen`'s body via Kotlin IR.
+2. Recognised `Column`, `Text`, `Spacer`, `Button` against the
+   built-in Material3 adapter catalog.
+3. Resolved `16.dp` / `8.dp` / `24.dp` through the
+   [Compose Token Registry](../reference/compose-tokens.md) — each
+   becomes a single `KBCValue.Dp(16f)` byte tag in the bundle.
+4. Resolved `Modifier.fillMaxSize().padding(16.dp)` through the
+   modifier IR walker — the chain is interned into the bundle's
+   modifier table once and referenced by index.
+5. Emitted one `COMPOSABLE_CALL` opcode per Compose call site with the
+   adapter ID + sparse-encoded parameters.
+6. Wrote everything to the wire format, Brotli-compressed the code
+   section, Ed25519-signed the trailer.
+
+Total size: **~1500 bytes** for a screen that, as Kotlin source, takes
+~30 lines.
+
+---
+
+## Adding interactivity
+
+Add state with `remember { mutableStateOf(...) }`:
+
+```kotlin
+import androidx.compose.runtime.*
+
+@KetoyComposable
+@KetoyEntryPoint
+@Composable
+fun HelloKetoyScreen() {
+    var count by remember { mutableStateOf(0) }
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Text("Count: $count")
+        Button(onClick = { count++ }) {
+            Text("Increment")
+        }
+    }
+}
+```
+
+The `count++` lambda captures `count` from the outer scope — Ketoy
+performs **closure conversion** at compile time, threading the captured
+state through `KBCValue.ClosureRef` at the call site.
+
+For production-grade state that survives rotation, see
+[ViewModel](../guides/viewmodel.md).
+
+---
+
+## Common first-screen mistakes
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `KetoyBC: Direct access to FontWeight.Companion.<get-Bold>` | Token not in seeded registry. | Bold/Medium are seeded — make sure you're on `0.3.4-alpha`. |
+| `KetoyBC: Unregistered composable: com.example.MyWidget` | Calling a `@Composable` that has no adapter. | Either write a [custom adapter](../guides/custom-adapter.md) or wrap it as native UI behind a capability. |
+| `KetoyBC: Direct access to android.util.Log` | Calling `android.*` directly from KBC. | Wrap as a [custom capability](../guides/custom-capability.md), or use the built-in `LOG` capability. |
+| Bundle loads but screen is blank | Native fallback rendered instead. | Check `entryPoint` matches the function name exactly. Check `adb logcat \| grep KetoyBundleLoader` for parse/verify errors. |
+
+Next: [Bundle & Sign for production →](bundle-and-sign.md)

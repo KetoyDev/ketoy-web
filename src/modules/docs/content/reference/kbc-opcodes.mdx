@@ -1,0 +1,253 @@
+This reference is for compiler-plugin authors, tooling builders, and
+anyone debugging a `.ktx` bundle. You don't need to know any of this to
+write `@KetoyComposable` functions.
+
+---
+
+## Encoding overview
+
+- All multi-byte integers in the instruction stream are **big-endian**.
+- Registers are addressed by single-byte index (`u8`, 0–255).
+- The string pool, function table, modifier table are referenced by
+  16-bit indices (`u16`).
+- Adapter IDs / constructor IDs / capability IDs are 16-bit shorts.
+
+---
+
+## Loads & moves (`0x00–0x0A`)
+
+| Hex | Mnemonic | Operands | Effect |
+|---|---|---|---|
+| `0x00` | `NOP` | — | No-op. |
+| `0x01` | `LOAD_INT` | dst:u8, value:i32 | `regs[dst] = value` |
+| `0x02` | `LOAD_LONG` | dst:u8, value:i64 | |
+| `0x03` | `LOAD_FLOAT` | dst:u8, value:f32 | |
+| `0x04` | `LOAD_DOUBLE` | dst:u8, value:f64 | |
+| `0x05` | `LOAD_BOOL_TRUE` | dst:u8 | `regs[dst] = true` |
+| `0x06` | `LOAD_BOOL_FALSE` | dst:u8 | `regs[dst] = false` |
+| `0x07` | `LOAD_NULL` | dst:u8 | `regs[dst] = null` |
+| `0x08` | `LOAD_STRING` | dst:u8, poolIdx:u16 | Loads from the bundle's string pool. |
+| `0x09` | `LOAD_UNIT` | dst:u8 | `regs[dst] = Unit` |
+| `0x0A` | `MOVE` | dst:u8, src:u8 | `regs[dst] = regs[src]` |
+
+## Arithmetic (`0x0B–0x1F`)
+
+Double: `0x0B–0x0E` — `ADD_DOUBLE`, `SUB_DOUBLE`, `MUL_DOUBLE`, `DIV_DOUBLE`.
+Int: `0x10–0x15` — `ADD_INT`, `SUB_INT`, `MUL_INT`, `DIV_INT`, `MOD_INT`, `NEG_INT`.
+Long: `0x16–0x1B` — `ADD_LONG`, `SUB_LONG`, `MUL_LONG`, `DIV_LONG`, `MOD_LONG`, `NEG_LONG`.
+Float: `0x1C–0x1F` — `ADD_FLOAT`, `SUB_FLOAT`, `MUL_FLOAT`, `DIV_FLOAT`.
+
+All three-register form: `dst:u8, lhs:u8, rhs:u8` (NEG: `dst:u8, src:u8`).
+
+**Divide-by-zero** on `DIV_INT` / `MOD_INT` / `DIV_LONG` / `MOD_LONG`
+throws `KBCRuntimeException`. Float / double divide produces
+`Infinity` / `NaN` per IEEE-754. The Tier-1 JIT skips DIV/MOD opcodes
+because the exception-wrap contract is non-trivial in DEX.
+
+## Comparison & nullability (`0x20–0x29`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x20` | `CMP_EQ` | dst:u8, lhs:u8, rhs:u8 — uses `equals` |
+| `0x21` | `CMP_NEQ` | same |
+| `0x22` | `CMP_LT` | same |
+| `0x23` | `CMP_LTE` | same |
+| `0x24` | `CMP_GT` | same |
+| `0x25` | `CMP_GTE` | same |
+| `0x26` | `CMP_REF_EQ` | dst, lhs, rhs — reference equality (`===`) |
+| `0x27` | `IS_NULL` | dst:u8, src:u8 |
+| `0x28` | `IS_NOT_NULL` | dst:u8, src:u8 |
+| `0x29` | `NOT` | dst:u8, src:u8 — Boolean negation |
+
+## Control flow (`0x30–0x38`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x30` | `JUMP` | targetPC:i32 |
+| `0x31` | `JUMP_IF_TRUE` | cond:u8, targetPC:i32 |
+| `0x32` | `JUMP_IF_FALSE` | cond:u8, targetPC:i32 |
+| `0x33` | `JUMP_IF_NULL` | reg:u8, targetPC:i32 |
+| `0x34` | `JUMP_IF_NOT_NULL` | reg:u8, targetPC:i32 |
+| `0x35` | `RETURN` | src:u8 — `0xFF` sentinel returns `Unit` |
+| `0x36` | `THROW` | reg:u8 |
+| `0x37` | `TRY_CATCH` | handlerPC:i32, catchTypeIdx:u16, exDst:u8 |
+| `0x38` | `END_TRY` | — pops handler stack |
+
+Exception handler type-filtering is currently catch-all
+(KNOWN_ISSUES #2): the `catchTypeIdx` is recorded but not matched
+against the thrown value's type, so multi-catch collapses to the first
+handler. Rethrow works correctly.
+
+## Object model (`0x40–0x4B`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x40` | `NEW_INSTANCE` | dst:u8, classNameIdx:u16 |
+| `0x41` | `GET_FIELD` | dst:u8, obj:u8, fieldNameIdx:u16 |
+| `0x42` | `SET_FIELD` | obj:u8, fieldNameIdx:u16, value:u8 |
+| `0x43` | `INVOKE_VIRTUAL` | dst:u8, obj:u8, methodIdx:u16, argc:u8, args:u8\* |
+| `0x44` | `INVOKE_STATIC` | dst:u8, methodIdx:u16, argc:u8, args:u8\* |
+| `0x45` | `INSTANCEOF` | dst:u8, src:u8, typeIdx:u16 |
+| `0x46` | `OR_INT` | dst:u8, lhs:u8, rhs:u8 |
+| `0x47` | `AND_INT` | same |
+| `0x48` | `XOR_INT` | same |
+| `0x49` | `SHL_INT` | same |
+| `0x4A` | `SHR_INT` | same |
+| `0x4B` | `USHR_INT` | same |
+
+Bitwise opcodes were added in 0.3.x to support K2's `$default` /
+`$changed` bitfield merging, which the Compose plugin emits heavily.
+
+## Capability calls (`0x50–0x52`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x50` | `INVOKE_CAPABILITY` | dst:u8, capId:u16, argc:u8, args:u8\* |
+| `0x51` | `INVOKE_CAPABILITY_VOID` | capId:u16, argc:u8, args:u8\* |
+| `0x52` | `INVOKE_CAPABILITY_SUSPEND` | dst:u8, capId:u16, argc:u8, args:u8\* — sets up suspension |
+
+After `INVOKE_CAPABILITY_SUSPEND`, a `SUSPEND_POINT` typically follows.
+
+## Collections (`0x60–0x6A`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x60` | `LIST_NEW` | dst:u8 |
+| `0x61` | `LIST_ADD` | list:u8, value:u8 |
+| `0x62` | `LIST_GET` | dst:u8, list:u8, idx:u8 |
+| `0x63` | `LIST_SIZE` | dst:u8, list:u8 |
+| `0x64` | `LIST_FOR_EACH` | list:u8, elemReg:u8, bodyEndPC:i32 |
+| `0x68` | `MAP_NEW` | dst:u8 |
+| `0x69` | `MAP_PUT` | map:u8, key:u8, value:u8 |
+| `0x6A` | `MAP_GET` | dst:u8, map:u8, key:u8 |
+
+## Coroutines (`0x70–0x79`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x70` | `SUSPEND_POINT` | contId:u16 |
+| `0x71` | `RESUME_VALUE` | dst:u8 |
+| `0x72` | `RESUME_EXCEPTION` | reg:u8 |
+| `0x73` | `LAUNCH` | fnIdx:u16, argc:u8, args:u8\*, scopeReg:u8 |
+| `0x74` | `ASYNC` | dst:u8, fnIdx:u16, argc:u8, args:u8\*, scopeReg:u8 |
+| `0x75` | `AWAIT` | dst:u8, deferred:u8 |
+| `0x76` | `WITH_CONTEXT` | dispatcherCapId:u16, fnIdx:u16, argc:u8, args:u8\*, dst:u8 |
+| `0x77` | `FLOW_EMIT` | flow:u8, value:u8 |
+| `0x78` | `FLOW_COLLECT` | flow:u8, collectorFnIdx:u16, dst:u8 |
+| `0x79` | `COLLECT_AS_STATE` | dst:u8, flow:u8, initial:u8 |
+
+## Compose runtime (`0x80–0x88`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x80` | `COMPOSE_CALL` | (placeholder — `COMPOSABLE_CALL` is the real adapter dispatch at `0xB0`) |
+| `0x81` | `COMPOSE_REMEMBER` | dst, key |
+| `0x82` | `COMPOSE_STATE` | dst, initial |
+| `0x83` | `COMPOSE_DERIVED` | dst, computeFnIdx |
+| `0x84` | `COMPOSE_SIDE_EFFECT` | effectFnIdx |
+| `0x85` | `COMPOSE_LAUNCHED_EFFECT` | keyReg, bodyFnIdx |
+| `0x86` | `COMPOSE_DISPOSABLE_EFFECT` | keyReg, bodyFnIdx |
+| `0x87` | `COMPOSE_AMBIENT_READ` | dst, ambientCapId |
+| `0x88` | `COMPOSE_KEY` | keyReg, bodyFnIdx |
+
+## Strings (`0x90–0x93`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0x90` | `STRING_CONCAT` | dst:u8, count:u8, regs:u8\* |
+| `0x91` | `STRING_LENGTH` | dst:u8, src:u8 |
+| `0x92` | `STRING_SUBSTR` | dst:u8, src:u8, start:u8, end:u8 |
+| `0x93` | `INT_TO_STRING` | dst:u8, src:u8 |
+
+Every `+` / template / multi-arg concat collapses to one
+`STRING_CONCAT` opcode.
+
+## Casts & boxing (`0xA0–0xAB`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0xA0` | `CAST` | dst, src, typeIdx — throws on mismatch |
+| `0xA1` | `SAFE_CAST` | dst, src, typeIdx — null on mismatch |
+| `0xA2` | `UNBOX_INT` | dst, src |
+| `0xA3` | `BOX_INT` | dst, src |
+| `0xA4` | `UNBOX_LONG` | dst, src |
+| `0xA5` | `BOX_LONG` | dst, src |
+| `0xA6` | `UNBOX_FLOAT` | dst, src |
+| `0xA7` | `BOX_FLOAT` | dst, src |
+| `0xA8` | `UNBOX_DOUBLE` | dst, src |
+| `0xA9` | `BOX_DOUBLE` | dst, src |
+| `0xAA` | `UNBOX_BOOLEAN` | dst, src |
+| `0xAB` | `BOX_BOOLEAN` | dst, src |
+
+## Adapter dispatch (`0xB0–0xB1`)
+
+The two opcodes that bridge KBC into Compose / typed object construction.
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0xB0` | `COMPOSABLE_CALL` | adapterId:u16, paramCount:u8, [paramIdx:u8 + KBCValue]\* |
+| `0xB1` | `CONSTRUCT_JVM` | dst:u8, adapterId:u16, paramCount:u8, [paramIdx:u8 + KBCValue]\* |
+
+**Sparse parameter encoding**: only non-default params are encoded.
+Each appears as `(paramIdx: u8, value: KBCValue)` where `KBCValue` is a
+tag-byte-prefixed payload (see [Compose Tokens](/docs/compose-tokens) for
+the tag space). Slots not encoded resolve via the adapter's source
+default or the registered `paramDefault`.
+
+## Debug (`0xF0–0xF1`)
+
+| Hex | Mnemonic | Operands |
+|---|---|---|
+| `0xF0` | `DEBUG_PRINT` | reg:u8 |
+| `0xF1` | `BREAKPOINT` | — |
+
+Only emitted with `debugMode = true` in the Gradle DSL.
+
+---
+
+## Decoding a `.ktx` file
+
+The `ketoy analyze <path>` CLI command dumps the section table; pass
+`--json` for a machine-readable form. Inside Kotlin:
+
+```kotlin
+import dev.ketoy.bundle.KtxReader
+import dev.ketoy.bytecode.KBCInstructionDecoder
+
+val bytes = File("main.ktx").readBytes()
+val bundle = KtxReader(verifySignature = false).read(bytes)
+
+for ((i, fn) in bundle.functions.withIndex()) {
+    println("fn[$i] ${fn.name} — ${fn.code.size} bytes, ${fn.localCount} locals")
+    val decoded = KBCInstructionDecoder.decodeAll(fn.code, bundle.stringPool)
+    decoded.forEach { println("  $it") }
+}
+```
+
+Each `KBCInstruction` sealed-class variant carries typed operand fields.
+
+---
+
+## Operand layout cheatsheet
+
+```
+Register     u8        (0..255 per function)
+String pool  u16 idx   (0..65535)
+Function     u16 idx   (0..65535)
+Adapter id   u16
+Cap id       u16
+PC           i32       (byte offset within function code)
+Int literal  i32
+Long literal i64
+Float lit    f32 (4 bytes)
+Double lit   f64 (8 bytes)
+```
+
+The full opcode list lives in
+[`KBCOpcode.kt`](../../../ketoy-bytecode/src/commonMain/kotlin/dev/ketoy/bytecode/KBCOpcode.kt);
+human-readable descriptors in
+[`KBCOpcodeInfo.kt`](../../../ketoy-bytecode/src/commonMain/kotlin/dev/ketoy/bytecode/KBCOpcodeInfo.kt);
+the typed `data class` variants in
+[`KBCInstruction.kt`](../../../ketoy-bytecode/src/commonMain/kotlin/dev/ketoy/bytecode/KBCInstruction.kt).
+
+Next: [`.ktx` Bundle Format →](/docs/ktx-bundle-format)

@@ -1,0 +1,246 @@
+---
+
+## Built-in HTTP capabilities
+
+`registerCoreCapabilities(context, dataStore, analyticsTracker)`
+auto-registers six HTTP capabilities under
+`dev.ketoy.capabilities.core.CapabilityIds`:
+
+| ID | Name | Signature |
+|---|---|---|
+| `0x0500` | `HTTP_GET` | `suspend (url: String): String` |
+| `0x0501` | `HTTP_POST` | `suspend (url: String, body: String): String` |
+| `0x0502` | `HTTP_PUT` | `suspend (url: String, body: String): String` |
+| `0x0503` | `HTTP_DELETE` | `suspend (url: String): String` |
+| `0x0504` | `HTTP_REQUEST` | `suspend (request: Any): KetoyHttpResponse` (generic) |
+| `0x0505` | `SSE_SUBSCRIBE` | `(url: String): Flow<String>` |
+
+Backed by Ktor's OkHttp engine. 30s request / 10s connect timeouts.
+JSON content negotiation. Exponential-backoff retry on transient errors.
+
+---
+
+## Declare the stubs
+
+In your KBC source (e.g. `Capabilities.kt`):
+
+```kotlin
+@KetoyCapabilityStub(id = 0x0500, name = "HTTP_GET")
+suspend fun httpGet(url: String): String = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x0501, name = "HTTP_POST")
+suspend fun httpPost(url: String, body: String): String = error(STUB_MSG)
+```
+
+> The IDs match `CapabilityIds.HTTP_GET` etc. exactly — you're not
+> registering anything new, you're declaring the **signature** the KBC
+> compiler can resolve. The compile-time validator checks the ID exists
+> in `ketoy-capabilities.json`.
+
+Also add these to `app/ketoy-capabilities.json`:
+
+```json
+{
+  "id": 1280, "name": "HTTP_GET",
+  "fqName": "com.example.myapp.ketoyscreens.httpGet",
+  "kind": "SUSPEND",
+  "parameterTypes": ["kotlin.String"],
+  "returnType": "kotlin.String"
+}
+```
+
+(`0x0500 = 1280` decimal.)
+
+---
+
+## Use them
+
+```kotlin
+@KetoyViewModel
+class UserProfileViewModel : KetoyBaseViewModel() {
+
+    override fun init() { setState("loading", false) }
+
+    fun load(userId: Long) {
+        viewModelScope.launch {
+            setState("loading", true)
+            try {
+                val json = httpGet("https://api.example.com/users/$userId")
+                setState("user", json)
+            } catch (e: Exception) {
+                setState("error", e.message)
+            } finally {
+                setState("loading", false)
+            }
+        }
+    }
+}
+```
+
+The `httpGet` call lowers to `INVOKE_CAPABILITY_SUSPEND 0x0500` with the
+url string. The runtime suspends the coroutine, dispatches to the host's
+registered lambda, resumes with the response body.
+
+---
+
+## SSE (server-sent events)
+
+```kotlin
+@KetoyCapabilityStub(id = 0x0505, name = "SSE_SUBSCRIBE")
+fun sseSubscribe(url: String): Flow<String> = error(STUB_MSG)
+
+@KetoyViewModel
+class StockTickerViewModel : KetoyBaseViewModel() {
+    override fun init() {
+        viewModelScope.launch {
+            sseSubscribe("https://api.example.com/ticker/AAPL")
+                .collect { line -> setState("price", line) }
+        }
+    }
+}
+```
+
+When the screen leaves the back stack, `viewModelScope` cancels and the
+SSE subscription closes.
+
+---
+
+## Generic `HTTP_REQUEST`
+
+For arbitrary headers / methods / response status:
+
+```kotlin
+data class KetoyHttpResponse(
+    val statusCode: Int,
+    val headers: Map<String, String>,
+    val body: String,
+)
+val isSuccess: Boolean get() = statusCode in 200..299
+```
+
+> **Note**: KBC can't construct `KetoyHttpRequest` directly because it's
+> a complex Compose-domain-style type. Use the four typed capabilities
+> (`GET` / `POST` / `PUT` / `DELETE`), or for full control, expose a
+> **custom capability** that takes simple types and constructs the
+> request host-side.
+
+---
+
+## Custom Retrofit-backed capabilities
+
+When you have a real Retrofit service, wrap each endpoint as a capability:
+
+```kotlin
+// 1. Reserve IDs.
+object AppCapabilityIds {
+    const val FETCH_TODOS: Short = 0x4100.toShort()
+    const val FETCH_TODO: Short = 0x4101.toShort()
+    const val CREATE_TODO: Short = 0x4102.toShort()
+}
+
+// 2. Retrofit service.
+interface TodoApi {
+    @GET("todos") suspend fun list(): List<TodoDto>
+    @GET("todos/{id}") suspend fun find(@Path("id") id: Long): TodoDto
+    @POST("todos") suspend fun create(@Body body: CreateTodoBody): TodoDto
+}
+
+// 3. Hilt-injected capability provider registers them.
+@Singleton
+class TodoCapabilityProvider @Inject constructor(
+    @ApplicationContext context: Context,
+    preferences: DataStore<Preferences>,
+    private val todoApi: TodoApi,
+) : KetoyCapabilityProvider {
+    override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+        registerCoreCapabilities(context, preferences)
+
+        registerSuspend(AppCapabilityIds.FETCH_TODOS) { _ ->
+            todoApi.list()
+        }
+        registerSuspend(AppCapabilityIds.FETCH_TODO) { args ->
+            todoApi.find(args[0] as Long)
+        }
+        registerSuspend(AppCapabilityIds.CREATE_TODO) { args ->
+            todoApi.create(CreateTodoBody(title = args[0] as String))
+        }
+    }
+}
+```
+
+```kotlin
+// 4. KBC-side stubs.
+@KetoyCapabilityStub(id = 0x4100, name = "FETCH_TODOS")
+suspend fun fetchTodos(): List<Any?> = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4101, name = "FETCH_TODO")
+suspend fun fetchTodo(id: Long): Any? = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4102, name = "CREATE_TODO")
+suspend fun createTodo(title: String): Any? = error(STUB_MSG)
+```
+
+The host signature returns `List<TodoDto>` — KBC sees `List<Any?>`
+because KBC can't model your DTO type. Cast field-by-field on read.
+
+---
+
+## Error handling
+
+HTTP capabilities throw real exceptions on failure — `IOException`,
+`HttpRequestTimeoutException`, etc. — wrapped through KBC's exception
+machinery as `KetoyException` subtypes. Catch them like normal:
+
+```kotlin
+try {
+    val data = httpGet("https://api.example.com/data")
+    setState("data", data)
+} catch (e: Exception) {
+    setState("error", e.message ?: "Network error")
+}
+```
+
+Remember the multi-catch caveat: catch is currently catch-all, so a
+single `catch (e: Exception)` is the right shape for KBC.
+
+---
+
+## Auth / interceptors
+
+KBC code shouldn't see auth tokens. Inject your token at the host
+boundary:
+
+```kotlin
+@Singleton
+class AuthInterceptor @Inject constructor(
+    private val tokenStore: TokenStore,
+) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val token = runBlocking { tokenStore.token() }
+        val req = chain.request().newBuilder()
+            .header("Authorization", "Bearer $token")
+            .build()
+        return chain.proceed(req)
+    }
+}
+
+// Wire into Retrofit's OkHttpClient, host-side only.
+```
+
+KBC just calls `fetchTodos()` — the Bearer header is added by the
+interceptor.
+
+---
+
+## What you can't do
+
+| You write | Why it fails |
+|---|---|
+| `URL("https://...").openStream()` | `DirectAndroidApiAccess` — `java.net` isn't allowed. |
+| `OkHttpClient().newCall(...)` | `DirectAndroidApiAccess`. |
+| Constructing `Request.Builder()` in KBC | `NonKbcConstructor`. |
+| `withContext(Dispatchers.IO) { File(...).readText() }` | `FileIoUsage`. |
+
+The capability boundary is the **only** way KBC reaches the network.
+
+Next: [DataStore →](/docs/datastore)

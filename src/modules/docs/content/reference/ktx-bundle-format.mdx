@@ -1,0 +1,275 @@
+`.ktx` is the on-wire format for a KBC bundle. **Brotli-compressed,
+Ed25519-signed**, format version `2`. This page documents every byte.
+
+> If you're consuming bundles, use the `KtxReader` class — don't parse
+> by hand. This reference is for tool authors and protocol implementers.
+
+---
+
+## Top-level layout
+
+```
++------------------------+
+| Header (14 bytes)      |
++------------------------+
+| Section 1              |
++------------------------+
+| Section 2              |
++------------------------+
+| ...                    |
++------------------------+
+| Section N              |
++------------------------+
+| Signature (64 bytes)   |
++------------------------+
+```
+
+The signature trailer is always 64 bytes (Ed25519 signature length).
+For unsigned bundles the trailer is 64 zero bytes and the `UNSIGNED`
+flag is set in the header.
+
+---
+
+## Header (14 bytes)
+
+| Offset | Size | Field | Notes |
+|---|---|---|---|
+| 0 | 4 | `magic` | `0x4B 0x54 0x4F 0x59` ("KTOY") |
+| 4 | 2 | `formatVersion` | u16 big-endian. `2` as of 0.3.4-alpha. |
+| 6 | 2 | `minRuntimeVersion` | u16 — minimum `KetoyVersion.CURRENT_RUNTIME_VERSION` required. |
+| 8 | 4 | `flags` | u32 big-endian — see below. |
+| 12 | 2 | `sectionCount` | u16 — number of sections in the body. |
+
+No padding bytes. The header is exactly 14 bytes.
+
+### Header flags
+
+| Bit | Name | Meaning |
+|---|---|---|
+| `0x01` | `DEBUG_INFO_PRESENT` | Writer set `debugMode = true`. |
+| `0x02` | `UNSIGNED` | The 64-byte trailer is zero — signature was not produced. |
+
+Other bits are reserved.
+
+---
+
+## Section envelope (10 bytes per section)
+
+```
++--------+--------+-----------------+-----------------+
+| type:1 | comp:1 | uncompressed:4  | onDisk:4        |
++--------+--------+-----------------+-----------------+
+| payload (onDiskSize bytes — Brotli-compressed if comp != 0)
++----------------------------------------------------+
+```
+
+| Field | Meaning |
+|---|---|
+| `type:u8` | One of the 10 section type bytes (`0x01`–`0x0A`). |
+| `compressed:u8` | `0` = raw, `1` = Brotli. |
+| `uncompressedSize:u32` | Logical payload size after decompression. |
+| `onDiskSize:u32` | Physical payload size on disk. |
+
+Only the CODE, MODIFIER_TABLE, and DEBUG_INFO sections are eligible for
+Brotli compression today. Others stay raw because they're small string
+tables and dense.
+
+---
+
+## Section types (`KtxSectionType`)
+
+| ID | Section | Emission order | Required |
+|---|---|---|---|
+| `0x01` | `STRING_POOL` | 1 | Yes |
+| `0x02` | `ADAPTER_MANIFEST` | 2 | Yes (may be empty) |
+| `0x03` | `CONSTRUCTOR_MANIFEST` | 3 | Yes (may be empty) |
+| `0x04` | `CAPABILITY_MANIFEST` | 4 | Yes (may be empty) |
+| `0x05` | `MODIFIER_TABLE` | 5 | Optional (omitted when empty) |
+| `0x06` | `FUNCTION_TABLE` | 6 | Yes |
+| `0x07` | `CODE` | 7 | Yes |
+| `0x08` | `DEBUG_INFO` | 8 | Optional |
+| `0x09` | `ENTRY_POINTS` | 9 | Yes (may be empty) |
+| `0x0A` | `BUNDLE_METADATA` | 10 | Yes (v2+) |
+
+`KtxReader` validates strict ordering — `STRING_POOL` must come first,
+others follow in the listed order. Unknown section types fail with
+`KetoyBundleMalformedException`.
+
+---
+
+## Section payloads
+
+### `STRING_POOL`
+
+```
+count:i32
+[length:u16 + utf8 bytes]*
+```
+
+Index 0 is the empty string. Pool entries are de-duplicated by the
+writer.
+
+### `ADAPTER_MANIFEST` / `CONSTRUCTOR_MANIFEST` / `CAPABILITY_MANIFEST`
+
+```
+count:u16
+[id:i16 + nameIdx:u16 + required:u8]*
+```
+
+`required` is a forward-compat hint; today the runtime treats all
+manifest entries as strict (every declared ID must be registered).
+
+### `MODIFIER_TABLE`
+
+```
+count:u16
+[length:u16 + opaque bytes]*
+```
+
+Each entry is an opaque `KBCModifierDescriptor` serialised by
+`KBCModifierCodec`. The runtime lazy-decodes on first access via the
+`KBCModifierTable` index. KBC source references modifier table entries
+via `KBCValue.ModifierRef(tableIdx)`.
+
+### `FUNCTION_TABLE`
+
+```
+count:u16
+[nameIdx:u16 + localCount:u8 + parameterCount:u8 + flags:u8 +
+ contTableCount:u16 + [pc:i32 + dst:u8]*
+ handlerCount:u16 + [start:i32 + end:i32 + handler:i32 + typeIdx:u16]*]*
+```
+
+Function flags:
+
+| Bit | Name |
+|---|---|
+| `0x01` | `FN_FLAG_SUSPENDABLE` |
+| `0x02` | `FN_FLAG_COMPOSABLE` |
+
+### `CODE`
+
+```
+[fnIdx:u16 + bytesLength:i32 + bytes:u8*]*
+```
+
+Brotli-compressed in production builds. The reader decompresses
+section-as-whole before decoding individual function code blocks.
+
+### `DEBUG_INFO`
+
+```
+[fnIdx:u16 + lineCount:u16 + [pc:i32 + line:u16]*]*
+```
+
+Optional source-line mapping. Present only when `debugMode = true`.
+
+### `ENTRY_POINTS`
+
+```
+count:u16
+[nameIdx:u16 + fnIdx:u32]*
+```
+
+Maps `@KetoyEntryPoint`-annotated function names to function-table
+indices.
+
+### `BUNDLE_METADATA` (format v2+)
+
+```
+bundleIdIdx:u16
+composableCount:u16
+[functionIdx:i32 + nameIdx:u16 + paramCount:u16 + paramIdx:u16* +
+ hasDefaults:u8 + isNativeCapability:u8 + capabilityId:u16]*
+viewModelCount:u16
+[nameIdx:u16 + initFnIdx:i32 + eventCount:u16 + [keyIdx:u16 + fnIdx:i32]* +
+ stateCount:u16 + stateIdx:u16*]*
+minAppVersion:i32                ← additive trailing field
+```
+
+The trailing `minAppVersion` is read with an `available() >= 4` guard.
+Pre-2.1 bundles without it default to `0` (universally compatible).
+
+---
+
+## Signature
+
+The last 64 bytes are the Ed25519 signature of all preceding bytes
+(header + sections). When `UNSIGNED` flag is set, the trailer is
+64 zero bytes; otherwise it's a real signature computed by
+`Ed25519Signer.sign(payload)` with the build-time private key.
+
+Verification is done by `Ed25519Verifier.verify(bundleBytes, publicKey)`
+**before** any section parsing. A failed verification throws
+`KetoyBundleSignatureException` and the reader doesn't touch the body.
+
+---
+
+## Wire-format invariants
+
+These are guaranteed across all `0.3.x` releases:
+
+- Magic bytes never change.
+- Format version is forward-compatible: minor revisions add fields at
+  end-of-section (with `available()` guards on read) or new section
+  types (added to the strict ordering table).
+- Bundle IDs and entry-point names are pool-indexed UTF-8 strings.
+- Section envelopes always include `uncompressedSize` and `onDiskSize`
+  so readers can skip unknown sections without parsing.
+
+---
+
+## Reading a bundle programmatically
+
+```kotlin
+import dev.ketoy.bundle.KtxReader
+
+val bytes: ByteArray = File("main.ktx").readBytes()
+val reader = KtxReader(
+    publicKey = myPublicKey32Bytes,
+    verifySignature = true,
+)
+val bundle = reader.read(bytes)
+
+println("Bundle: ${bundle.id}")
+println("Format version: ${bundle.formatVersion}")
+println("Functions: ${bundle.functions.size}")
+println("Composables: ${bundle.composables.size}")
+println("Entry points: ${bundle.entryPoints.keys}")
+println("min app version: ${bundle.minAppVersion}")
+```
+
+For unsigned dev bundles, set `verifySignature = false` and skip
+`publicKey`.
+
+---
+
+## Writing a bundle programmatically
+
+```kotlin
+import dev.ketoy.bundle.KtxWriter
+import dev.ketoy.bundle.Ed25519Signer
+
+val signer = Ed25519Signer(privateKeySeed = my32Bytes)
+val writer = KtxWriter(debugMode = false, compress = true)
+val bytes: ByteArray = writer.write(bundle, signer = signer)
+File("main.ktx").writeBytes(bytes)
+```
+
+Pass `signer = null` to produce an unsigned bundle (sets the `UNSIGNED`
+flag).
+
+---
+
+## File-size expectations
+
+| Bundle complexity | Typical size |
+|---|---|
+| Hello-world screen (1 entry point, ~7 functions, ~5 composable calls) | 1.5 KB signed |
+| Mid-size todo list (~22 functions, ~30 composable calls, captures) | 3.5 KB signed |
+| Multi-screen app surface with ViewModels | 8–20 KB signed |
+
+Brotli compression on CODE typically gets 2–3× over raw bytecode.
+Everything else stays raw because the sections are small.
+
+Next: [Capability Registry →](/docs/capability-registry)

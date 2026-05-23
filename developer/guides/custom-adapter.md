@@ -1,0 +1,352 @@
+# Custom Adapter
+
+When you want KBC to render a `@Composable` that isn't in the standard
+Material3 catalog (or a Compose-domain constructor that isn't in the
+standard ctor set), you write an **adapter**.
+
+There are two adapter shapes:
+
+- **`KBCComposableAdapter`** — bridges a `@Composable` function.
+  `COMPOSABLE_CALL` opcode → your adapter → the real Compose call.
+- **`KBCConstructorAdapter`** — bridges a constructor (or factory
+  function) for a complex Compose-domain type like `TextStyle`,
+  `KeyboardOptions`, `RoundedCornerShape`. `CONSTRUCT_JVM` opcode →
+  your adapter → object in a register.
+
+Adapter IDs use the app-specific range **`0x4000–0x7FFF`** in
+`KBCAdapterIds` / `KBCConstructorIds`. Standard adapters use
+`0x0001–0x3FFF`.
+
+---
+
+## Two ways to declare an adapter
+
+1. **Scan-roots file (recommended)** — KSP-generated. You add one line
+   to `adapter-scan-roots.txt`, run `./gradlew :myAdapterModule:kspRelease`,
+   the processor writes a `KBCComposableAdapter` for you.
+2. **Hand-written** — direct `KBCComposableAdapter(...)` registration.
+   Use this when the scan-roots DSL doesn't fit (multi-step composition,
+   unusual param shapes).
+
+Both ship in the same place: a `register*` block called once during
+`KetoyRuntime` startup.
+
+---
+
+## Recipe 1 — Scan-roots-generated composable adapter
+
+Suppose you have a host-side `@Composable LineChart(...)` you want KBC
+to render.
+
+### Step 1 — Create an adapter module
+
+Same structure as `ketoy-adapters-material3`. Easiest setup: an Android
+library module with KSP applied + the catalog dependency.
+
+```kotlin
+// adapters-app/build.gradle.kts
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+}
+android { /* ... */ }
+dependencies {
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.3.4-alpha"))
+    implementation("dev.ketoy.vm:ketoy-runtime")
+    implementation("dev.ketoy.vm:ketoy-adapter-catalog")
+    ksp("dev.ketoy.vm:ketoy-ksp-processor")
+    implementation("com.example.charts:line-chart:1.0.0")   // your charting lib
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
+    implementation("androidx.compose.runtime:runtime")
+}
+```
+
+### Step 2 — Reserve an adapter ID
+
+In your host code (or a small shared module):
+
+```kotlin
+import dev.ketoy.bytecode.KBCAdapterIds
+
+object AppAdapterIds {
+    const val LINE_CHART: Short = (KBCAdapterIds.APP_SPECIFIC_START + 0x00).toShort()
+    // = 0x4000
+}
+```
+
+### Step 3 — Add a scan-roots line
+
+`adapters-app/src/main/resources/adapter-scan-roots.txt`:
+
+```
+composable=com.example.charts.LineChart:0x4000
+```
+
+That's it. KSP resolves `LineChart` against the classpath, picks the
+canonical overload, emits a `KBCComposableAdapter` whose body resolves
+each parameter from the incoming `KBCParamSet` using the typed
+getters (`getString`, `getInt`, `getColor`, `getModifier`, …).
+
+### Step 4 — Use overload disambiguators
+
+If `LineChart` has multiple overloads, list a positional prefix of
+parameter types:
+
+```
+composable=com.example.charts.LineChart(kotlin.collections.List, androidx.compose.ui.Modifier):0x4000
+```
+
+Empty `()` matches the zero-arg overload only.
+
+### Step 5 — Per-param directives
+
+Standard scan-roots directives that compose:
+
+| Directive | Purpose |
+|---|---|
+| `paramDefault=<fq>.<paramName>=<expr>` | Override the default value used when the param slot is `Default`. |
+| `paramHonourDefault=<fq>.<paramName>` | Emit `if (p.isDefaulted(N)) <default> else <read>` instead of always reading. |
+| `paramTransform=<fq>.<paramName>=<expr>` | Wrap the raw read in a `let { value -> <expr> }`. |
+| `paramResolver=<fq>.<paramName>=<getterMethod>` | Override the dispatch — call `p.getterMethod(N)` instead of the classifier-derived getter. |
+
+For example, `Material3.Text`'s `maxLines` slot:
+
+```
+composable=androidx.compose.material3.Text(...):0x0001
+paramDefault=androidx.compose.material3.Text.maxLines=Int.MAX_VALUE
+paramHonourDefault=androidx.compose.material3.Text.maxLines
+paramTransform=androidx.compose.material3.Text.maxLines=value.coerceAtLeast
+```
+
+`paramTransform` composes inside `paramHonourDefault`:
+
+```kotlin
+maxLines = if (p.isDefaulted(N)) Int.MAX_VALUE
+           else p.getInt(N, default = Int.MAX_VALUE).let { value -> value.coerceAtLeast(1) }
+```
+
+### Step 6 — Build and register
+
+```bash
+./gradlew :adapters-app:kspRelease
+```
+
+This generates `GeneratedAdapters.kt` + `GeneratedConstructorAdapters.kt`
++ `META-INF/ketoy/adapter-catalog.bin` inside the module.
+
+In your host app:
+
+```kotlin
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        // ...
+        runtime.adapterRegistry.registerGeneratedAppAdapters(runtime)
+        // (name varies — KSP uses the module name as a suffix.)
+    }
+}
+```
+
+The compiler plugin picks up the catalog binary via the
+`composeAdapterCatalogPath` plugin arg, so KBC source can now call
+`LineChart(...)` without a compile error.
+
+---
+
+## Recipe 2 — Hand-written composable adapter
+
+For cases that don't fit the scan-roots DSL: trailing receiver
+lambdas, multiple content slots with custom iteration, dynamic param
+counts. Write a `KBCComposableAdapter` directly:
+
+```kotlin
+val MyChartAdapter = KBCComposableAdapter(
+    id = AppAdapterIds.LINE_CHART,
+    fqName = "com.example.charts.LineChart",
+    paramCount = 4,
+) { params ->
+    val data = (params.getAnyOrNull(0) as? List<Double>) ?: emptyList()
+    val modifier = params.getModifier(1)
+    val lineColor = params.getColor(2)
+    val animate = params.getBoolean(3, default = true)
+
+    LineChart(
+        data = data,
+        modifier = modifier,
+        lineColor = lineColor,
+        animate = animate,
+    )
+}
+
+// At app start:
+runtime.adapterRegistry.register(MyChartAdapter)
+```
+
+Then a scan-roots file (or hand-written entry in your KBC source's
+adapter manifest) tells the **compiler plugin** the FQ name maps to
+that ID. Without the catalog entry, the compiler emits
+`UnregisteredComposable`.
+
+The `KBCParamSet` typed getters cover every standard type — see
+[KBC params reference](../reference/compose-adapters.md).
+
+---
+
+## Content-slot adapters
+
+A "content slot" is the trailing `@Composable () -> Unit` argument
+common to layout containers. The runtime resolves it through
+`params.getContentSlot(index)`:
+
+```kotlin
+val MyCardAdapter = KBCComposableAdapter(
+    id = AppAdapterIds.MY_CARD,
+    fqName = "com.example.MyCard",
+    paramCount = 3,
+) { params ->
+    val title = params.getString(0)
+    val modifier = params.getModifier(1)
+    val content: @Composable () -> Unit = params.getContentSlot(2)
+        ?: error("Missing content slot")
+
+    MyCard(title = title, modifier = modifier) { content() }
+}
+```
+
+For per-item content (LazyColumn-style):
+
+```kotlin
+val itemSlot: @Composable (Any?) -> Unit = params.getItemContentSlot(2)
+    ?: error("Missing item slot")
+
+LazyColumn(modifier = modifier) {
+    items(data) { item -> itemSlot(item) }
+}
+```
+
+For `Scaffold`-style content lambdas that receive `PaddingValues`:
+
+```kotlin
+val content: @Composable (PaddingValues) -> Unit =
+    params.getPaddingValuesContentSlot(N) ?: error(...)
+```
+
+---
+
+## Constructor adapters
+
+For complex Compose-domain types that aren't simple to encode inline:
+
+```kotlin
+import androidx.compose.foundation.shape.RoundedCornerShape
+
+val MyShapeAdapter = KBCConstructorAdapter(
+    id = AppConstructorIds.MY_SHAPE,
+    fqName = "com.example.MyShape",
+) { params ->
+    val radius = params.getDp(0).value
+    val mode = params.getString(1)
+    MyShape(radius = radius, mode = mode)
+}
+
+runtime.constructorRegistry.register(MyShapeAdapter)
+```
+
+Or use the scan-roots `constructor=` / `factory=` directives:
+
+```
+constructor=com.example.MyShape:0x4000
+factory=androidx.compose.foundation.shape.RoundedCornerShape(androidx.compose.ui.unit.Dp):0x0007
+```
+
+**`constructor=`** matches a class constructor; **`factory=`** matches
+a top-level function that returns the target type (e.g.
+`RoundedCornerShape(corner: Dp)` is a factory function, not a
+constructor).
+
+---
+
+## Resolver overrides — `paramResolver=`
+
+`KBCParamSet`'s default dispatch for a type is determined by
+`ParamKindClassifier`. Some types are intentionally left as
+`UnsupportedFallback` (the param slot is omitted entirely) because
+making them opt-in keeps shipped adapters' semantics stable.
+
+Example: `Painter` for `Image`. Adding `Painter` to the global
+classifier would retroactively change `AsyncImage`'s
+`placeholder/error/fallback: Painter?` semantics. Instead, opt **just
+the `Image` adapter** in:
+
+```
+composable=androidx.compose.foundation.Image(...):0x0024
+paramResolver=androidx.compose.foundation.Image.painter=getPainter
+```
+
+Now `Image`'s `painter` slot calls `params.getPainter(N)` (which goes
+through `KBCDrawableResolver`), while `AsyncImage`'s painter slots stay
+on the fallback path.
+
+---
+
+## Registering adapters with Hilt
+
+Adapter registration runs once at app start — typically in
+`Application.onCreate` or wired through a `KetoyConfigCustomizer`:
+
+```kotlin
+@Singleton
+class AppAdapterRegistrar @Inject constructor(
+    private val runtime: KetoyRuntime,
+) {
+    init {
+        runtime.adapterRegistry.registerGeneratedAdapters(runtime)
+        runtime.constructorRegistry.registerGeneratedConstructors()
+        runtime.adapterRegistry.registerGeneratedAppAdapters(runtime)   // your module
+    }
+}
+```
+
+Then eagerly instantiate it in `Application.onCreate`:
+
+```kotlin
+@HiltAndroidApp
+class MyApplication : Application() {
+    @Inject lateinit var adapterRegistrar: AppAdapterRegistrar
+    override fun onCreate() { super.onCreate(); /* adapterRegistrar is now wired */ }
+}
+```
+
+---
+
+## When NOT to write an adapter
+
+- **For one-off UI** — if you only need to render a custom view once,
+  just write that screen native and use `KetoyScreen` for everything else.
+- **For business logic** — capabilities cover that. Adapters are for UI.
+- **For state-holder objects** (`MyViewModel`, `MyRepository`) —
+  those go through the capability registry.
+
+Write an adapter when:
+- KBC bundles need to reach a host-side `@Composable`.
+- The component is **reused across many bundles** (worth the wiring
+  cost).
+- You can't shape the parameters as plain types — you need typed slot
+  dispatch through `KBCParamSet`.
+
+---
+
+## Limits
+
+- KBC's content-slot dispatch supports plain `() -> Unit`,
+  `(PaddingValues) -> Unit`, and `(Any?) -> Unit` (the
+  `getItemContentSlot` shape). `LazyListScope.() -> Unit` (the
+  receiver-scoped lambda Lazy layouts use) is **not yet supported** —
+  this is why LazyColumn / LazyRow / LazyVerticalGrid / HorizontalPager
+  aren't in the standard catalog yet.
+- Receiver-typed content lambdas (e.g. `RowScope.() -> Unit`) currently
+  resolve as plain content slots. Type-aware `RowScope` / `ColumnScope`
+  dispatch is a roadmap item.
+
+Next: [Kotlin Language →](kotlin-language.md)

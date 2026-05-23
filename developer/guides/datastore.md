@@ -1,0 +1,185 @@
+# DataStore
+
+DataStore-backed key-value storage is exposed to KBC through six
+built-in capabilities. Higher-typed flows (e.g. `Flow<Boolean>` for a
+"dark mode" toggle) go through custom app-specific capabilities.
+
+---
+
+## Built-in `KV_*` capabilities
+
+Registered by `registerCoreCapabilities(context, dataStore, ...)` when
+you pass a non-null `DataStore<Preferences>`:
+
+| ID | Name | Signature |
+|---|---|---|
+| `0x0600` | `KV_GET` | `suspend (key: String): Any?` |
+| `0x0601` | `KV_SET` | `suspend (key: String, value: Any?): Unit` |
+| `0x0602` | `KV_DELETE` | `suspend (key: String): Unit` |
+| `0x0603` | `KV_OBSERVE` | `(key: String): Flow<Any?>` |
+| `0x0604` | `KV_GET_ALL` | `suspend (): Map<String, Any?>` |
+| `0x0605` | `KV_CLEAR` | `suspend (): Unit` |
+
+Supported value types: `String`, `Int`, `Long`, `Float`, `Double`,
+`Boolean`. Anything else throws `KetoyException` on `KV_SET`.
+
+---
+
+## Host setup
+
+```kotlin
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class AppHiltModule {
+    companion object {
+        @Provides @Singleton
+        fun provideDataStore(@ApplicationContext ctx: Context): DataStore<Preferences> =
+            PreferenceDataStoreFactory.create {
+                ctx.preferencesDataStoreFile("app_prefs")
+            }
+    }
+}
+```
+
+Then in your `KetoyCapabilityProvider`:
+
+```kotlin
+override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+    registerCoreCapabilities(
+        context = context,
+        dataStore = preferences,    // ← required to get KV_* registered
+    )
+}
+```
+
+If `dataStore = null`, the `KV_*` capabilities are skipped — calls
+from KBC throw `KetoyMissingCapabilityException` at runtime.
+
+---
+
+## Use from KBC
+
+Declare the stubs:
+
+```kotlin
+@KetoyCapabilityStub(id = 0x0600, name = "KV_GET")
+suspend fun kvGet(key: String): Any? = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x0601, name = "KV_SET")
+suspend fun kvSet(key: String, value: Any?): Unit = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x0603, name = "KV_OBSERVE")
+fun kvObserve(key: String): Flow<Any?> = error(STUB_MSG)
+```
+
+And in your ViewModel:
+
+```kotlin
+@KetoyViewModel
+class PreferencesViewModel : KetoyBaseViewModel() {
+
+    override fun init() {
+        // Restore last-known value into the state map.
+        viewModelScope.launch {
+            kvObserve("user_name").collect { name ->
+                setState("name", name as? String ?: "")
+            }
+        }
+    }
+
+    fun updateName(payload: Any?) {
+        val name = payload as? String ?: return
+        viewModelScope.launch { kvSet("user_name", name) }
+    }
+}
+```
+
+---
+
+## Why use typed flow capabilities instead?
+
+`KV_OBSERVE` returns `Flow<Any?>` — you cast every value at the read
+site, which is brittle. For commonly-observed prefs, register a typed
+flow capability:
+
+```kotlin
+// Host: SettingsRepository wrapping the DataStore.
+class SettingsRepository @Inject constructor(
+    private val store: DataStore<Preferences>
+) {
+    private val DARK_MODE = booleanPreferencesKey("dark_mode")
+    val darkMode: Flow<Boolean> = store.data.map { it[DARK_MODE] ?: false }
+    suspend fun setDarkMode(enabled: Boolean) {
+        store.edit { it[DARK_MODE] = enabled }
+    }
+}
+
+// AppCapabilityIds.kt:
+object AppCapabilityIds {
+    const val OBSERVE_DARK_MODE: Short = 0x4010.toShort()
+    const val SET_DARK_MODE: Short = 0x4011.toShort()
+}
+
+// Provider:
+override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+    registerCoreCapabilities(context, dataStore = preferences)
+
+    registerFlow(AppCapabilityIds.OBSERVE_DARK_MODE) { _ ->
+        settingsRepository.darkMode.map { it as Any? }
+    }
+    registerSuspend(AppCapabilityIds.SET_DARK_MODE) { args ->
+        settingsRepository.setDarkMode(args[0] as Boolean)
+    }
+}
+```
+
+KBC-side:
+
+```kotlin
+@KetoyCapabilityStub(id = 0x4010, name = "OBSERVE_DARK_MODE")
+fun observeDarkMode(): Flow<Boolean> = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4011, name = "SET_DARK_MODE")
+suspend fun setDarkMode(enabled: Boolean): Unit = error(STUB_MSG)
+```
+
+Now your KBC code reads `Flow<Boolean>` directly:
+
+```kotlin
+val dark by observeDarkMode().collectAsState(initial = false)
+```
+
+---
+
+## Persistable types vs Compose state
+
+KBC's `KetoyVirtualViewModel.setState()` persists a filtered subset of
+value types to `SavedStateHandle` (process-death survival). DataStore is
+**stronger** persistence — it survives reinstalls and app data clears,
+and it's queryable from native code on the host side.
+
+When to use which:
+
+| Use case | Tool |
+|---|---|
+| Transient UI state (dialog open, draft text) | `remember { mutableStateOf(...) }` |
+| Screen state that survives rotation/process death | `setState()` |
+| User preferences (settings, last route, theme) | DataStore |
+| User content (todos, messages, drafts) | Room |
+| Large blobs (images, audio) | File-backed capability (custom) |
+
+---
+
+## Limits
+
+- The DataStore proxy uses `PreferenceDataStoreFactory` — value type is
+  `Preferences`, not Protocol Buffers. If you need typed protobufs, wrap
+  them in a custom capability returning `Flow<MyProto>`; KBC sees `Any?`.
+- DataStore writes go to disk async. `KV_SET` returns when the write
+  has been queued, not flushed. For "must be on disk before screen
+  closes" guarantees, expose a custom `flush()` capability.
+- Don't store secrets (auth tokens, refresh tokens) in DataStore from
+  KBC. Keep credential handling host-side; expose only the
+  `Authorization`-decorated HTTP capabilities to KBC.
+
+Next: [Room →](room.md)

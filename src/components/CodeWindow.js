@@ -1,4 +1,5 @@
 import { codeToHtml } from 'shiki';
+import CopyButton from './mdx/CopyButton';
 
 export default async function CodeWindow({
   file,
@@ -22,6 +23,7 @@ export default async function CodeWindow({
         <div className="dots"><i></i><i></i><i></i></div>
         {file && <span className="file">{file}</span>}
         {tag && <span className="tag" style={tagStyle}>{tag}</span>}
+        <CopyButton text={code.replace(/\n$/, '')} />
       </div>
       <div
         className="code-body shiki-body"

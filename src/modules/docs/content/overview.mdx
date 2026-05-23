@@ -2,12 +2,24 @@ import Link from 'next/link';
 import { SDK_VERSION_FULL } from '@/constants';
 
 <span className="eyebrow">Documentation</span>
-<h1 style={{ marginTop: 8 }}>Overview</h1>
-<p style={{ color: 'var(--muted)', fontSize: 19, lineHeight: 1.5, marginTop: 8, marginBottom: 32, maxWidth: 680 }}>
-  Everything you need to ship Kotlin screens over the air — concepts, guides, and full reference for the compiler, bytecode, bundle format, and runtime.
+<h1 style={{ marginTop: 8 }}>Ketoy Developer Documentation</h1>
+<p style={{ color: 'var(--muted)', fontSize: 19, lineHeight: 1.5, marginTop: 8, marginBottom: 20, maxWidth: 720 }}>
+  Ketoy is a server-driven execution runtime for Android. You write plain Kotlin — Jetpack Compose, coroutines, ViewModels, Navigation, Room, Hilt — with a handful of <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@Ketoy*</code> annotations. The compiler lowers your code into a compact, signed bytecode bundle (<code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code>) that any APK with the Ketoy runtime can execute natively.
 </p>
 
-<div className="cards-grid cols-2" style={{ marginBottom: 48 }}>
+<blockquote style={{ margin: '24px 0', padding: '14px 18px', borderLeft: '3px solid var(--accent)', background: 'var(--surface)', borderRadius: 8, color: 'var(--ink-2)', fontStyle: 'italic' }}>
+  The app is the OS. The server ships programs.
+</blockquote>
+
+<p style={{ color: 'var(--ink-2)', fontSize: 17, lineHeight: 1.65 }}>
+  You can update screens, fix bugs, run A/B tests, and roll out features without going through the Play Store — every bundle is Ed25519-signed, sandboxed by capability, and rendered through real Jetpack Compose on the device.
+</p>
+
+<p style={{ color: 'var(--ink-2)', fontSize: 15, marginBottom: 40 }}>
+  This site is the developer manual for Ketoy {SDK_VERSION_FULL}. Every example is verified against current code — <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>dev.ketoy.vm:*:{SDK_VERSION_FULL}</code> on Maven Central.
+</p>
+
+<div className="cards-grid cols-2" style={{ marginBottom: 56 }}>
   <div className="card">
     <div className="icon">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -15,8 +27,8 @@ import { SDK_VERSION_FULL } from '@/constants';
       </svg>
     </div>
     <h3>Start here</h3>
-    <p>Install Ketoy, write your first <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@KetoyEntryPoint</code>, and ship a bundle in under fifteen minutes.</p>
-    <Link className="link" href="/get-started">Get started</Link>
+    <p>Install Ketoy, write your first <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@KetoyEntryPoint</code>, and ship a signed bundle in fifteen minutes.</p>
+    <Link className="link" href="/docs/getting-started/installation">Installation</Link>
   </div>
   <div className="card">
     <div className="icon">
@@ -25,9 +37,9 @@ import { SDK_VERSION_FULL } from '@/constants';
         <path d="M3 9h18M9 21V9" />
       </svg>
     </div>
-    <h3>How it works</h3>
-    <p>The five-layer pipeline — source, compiler, bundle, interpreter, renderer — and the guarantees at each layer.</p>
-    <Link className="link" href="/architecture">Architecture</Link>
+    <h3>Your first screen</h3>
+    <p>Write a <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>@KetoyComposable</code>, wire it to the runtime, and watch it render from a <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code>.</p>
+    <Link className="link" href="/docs/getting-started/first-screen">First screen</Link>
   </div>
   <div className="card">
     <div className="icon">
@@ -36,9 +48,9 @@ import { SDK_VERSION_FULL } from '@/constants';
         <path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18" />
       </svg>
     </div>
-    <h3>What’s supported</h3>
-    <p>35 Material3 adapters, 67 capabilities, 88 Compose tokens, and the full coroutine surface area.</p>
-    <Link className="link" href="/features">Supported features</Link>
+    <h3>Guides</h3>
+    <p>Compose UI, ViewModels, coroutines, navigation, networking, storage, custom capabilities, custom adapters.</p>
+    <Link className="link" href="/docs/guides/compose-ui">Read the guides</Link>
   </div>
   <div className="card">
     <div className="icon">
@@ -49,38 +61,51 @@ import { SDK_VERSION_FULL } from '@/constants';
       </svg>
     </div>
     <h3>Reference</h3>
-    <p>KBC opcodes, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code> wire format, capability registry, compile-time error catalog.</p>
-    <a className="link" href="#">All reference</a>
+    <p>KBC opcodes, <code style={{ fontFamily: 'var(--font-mono)', fontSize: 13 }}>.ktx</code> wire format, capability registry, adapters, compile errors.</p>
+    <Link className="link" href="/docs/reference/kbc-opcodes">All reference</Link>
   </div>
 </div>
 
-## Concepts at a glance
+## How to read this site
 
-<div className="placeholder"><b>Placeholder — concept primer</b>Short conceptual explainers for: KBC bytecode, the two-layer parameter system, the capability registry, the compile-time sandbox, structured concurrency in KBC, the dev overlay.</div>
+| If you want to… | Read |
+|---|---|
+| Install Ketoy in a new or existing Android project | [Getting Started → Installation](/docs/getting-started/installation) |
+| Write your first KBC screen | [Getting Started → First Screen](/docs/getting-started/first-screen) |
+| Sign and ship a `.ktx` to your users | [Getting Started → Bundle & Sign](/docs/getting-started/bundle-and-sign) |
+| Build UI with Compose, icons, fonts, images | [Guides → Compose UI & State](/docs/guides/compose-ui) |
+| Persist state across rotation / process death | [Guides → ViewModel](/docs/guides/viewmodel) |
+| Use coroutines, Flow, StateFlow | [Guides → Coroutines & Flow](/docs/guides/coroutines-flow) |
+| Navigate between screens | [Guides → Navigation](/docs/guides/navigation) |
+| Make HTTP calls | [Guides → Networking](/docs/guides/networking) |
+| Read/write preferences | [Guides → DataStore](/docs/guides/datastore) |
+| Use Room DAOs from KBC | [Guides → Room](/docs/guides/room) |
+| Wire everything through Hilt | [Guides → Hilt](/docs/guides/hilt) |
+| Bridge a custom Android API into KBC | [Guides → Custom Capability](/docs/guides/custom-capability) |
+| Render a custom `@Composable` not in the catalog | [Guides → Custom Adapter](/docs/guides/custom-adapter) |
+| Understand which Kotlin features are supported | [Guides → Kotlin Language](/docs/guides/kotlin-language) |
+| Look up an opcode, capability ID, or compile error | [Reference](/docs/reference/kbc-opcodes) |
 
-## Guides
+## Hard non-goals
 
-<div className="placeholder"><b>Placeholder — guides index</b>Linkable cards for each guide topic: ViewModels & state, Coroutines & Flow, Navigation, Networking, Storage (KV/Room), Custom capabilities, Custom adapters.</div>
+Some things Ketoy will **never** support — by design:
 
-## Reference
+- No downloadable DEX / JVM bytecode (KBC only).
+- No reflection inside KBC.
+- No direct `android.*` / `androidx.*` API access from KBC source — every Android touchpoint is mediated by the capability registry.
+- No `GlobalScope`, `runBlocking`, or unstructured concurrency.
+- No raw I/O — file, network, prefs all go through capabilities.
+- No skipping signature verification in production builds.
 
-<div className="placeholder"><b>Placeholder — reference index</b>Linkable cards for each reference topic: KBC opcodes (104), .ktx bundle format, capability registry (67 IDs), composable adapters (35), constructor adapters (17), Compose tokens (88), compile-time error catalog.</div>
+If you need any of those things, they belong in **native Kotlin** in your host APK. Ketoy is for the parts you want to ship over-the-air.
 
-## Operations
-
-<div className="placeholder"><b>Placeholder — ops topics</b>CDN delivery patterns, ETag and 304 cache behavior, Ed25519 signing key management & rotation, staged rollouts, A/B per cohort, telemetry & error aggregation.</div>
-
-## Release
-
-<div className="placeholder" style={{ marginBottom: 48 }}><b>Placeholder — release notes</b>{SDK_VERSION_FULL} highlights, migration notes from 0.2.x, and the public roadmap (Tier-2 JIT, streaming bundles, ketoy.dev Developer Console).</div>
-
-<div className="cta-banner">
+<div className="cta-banner" style={{ marginTop: 64 }}>
   <div>
     <h2>Have a question?</h2>
     <p>Join the Ketoy community on Discord or open an issue on GitHub.</p>
   </div>
   <div className="right">
-    <a className="btn btn-ghost" href="#">GitHub</a>
+    <a className="btn btn-ghost" href="https://github.com/anthropics/claude-code/issues">GitHub</a>
     <a className="btn btn-primary" href="#">Discord</a>
   </div>
 </div>

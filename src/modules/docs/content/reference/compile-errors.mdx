@@ -1,0 +1,291 @@
+These messages are emitted via the standard `MessageCollector` path, so
+they appear inline in your IDE on the offending line.
+
+---
+
+## `DirectAndroidApiAccess`
+
+```
+KetoyBC: Direct access to 'android.util.Log.d' is not allowed in KBC programs.
+
+  Android APIs are not available in the KBC execution sandbox. KBC bundles
+  run inside KetoyRuntime which provides a controlled capability interface.
+
+  Fix: Register a capability in your KetoyCapabilityProvider:
+    registry.register(AppCapabilityIds.MY_CAPABILITY) { _ ->
+        /* call android.util.Log.d here */
+    }
+  Then call it from KBC:
+    invokeCapability(AppCapabilityIds.MY_CAPABILITY)
+
+  Docs: https://ketoy.dev/docs/capabilities/android-apis
+```
+
+**Triggers**: any call to `android.*` or `androidx.*` FQ names that
+aren't catalogued composables / constructors. **Fix**: wrap as a
+[Custom Capability](/docs/guides/custom-capability).
+
+---
+
+## `ReflectionUsage`
+
+```
+KetoyBC: Reflection ('kotlin.reflect.typeOf') is not allowed in KBC programs.
+
+  KBC bundles execute in a sandboxed environment without class metadata.
+  Reflection cannot be used because the KBC runtime does not load class
+  definitions — it interprets instructions and resolves types through
+  the capability and adapter registries.
+
+  Fix: Replace reflection with direct capability or adapter calls, or
+  use sealed classes and when expressions for type dispatch.
+
+  Docs: https://ketoy.dev/docs/security/sandbox-constraints
+```
+
+**Triggers**: `kotlin.reflect.*`, `java.lang.Class.get*`,
+`java.lang.reflect.*`. **Fix**: use sealed classes + `when` for type
+dispatch.
+
+---
+
+## `FileIoUsage`
+
+```
+KetoyBC: File I/O ('java.io.File.<init>') is not allowed in KBC programs.
+
+  The KBC sandbox does not expose the filesystem. Use KetoyStorage capabilities
+  for persistence:
+    CAP_KV_GET / CAP_KV_SET   — key-value storage (DataStore)
+    CAP_DB_*                  — database operations (Room)
+
+  Fix: Register a storage capability in your KetoyCapabilityProvider
+  and call it from KBC instead of touching java.io directly.
+
+  Docs: https://ketoy.dev/docs/capabilities/storage
+```
+
+**Triggers**: `java.io.*`, `java.nio.*`, `kotlin.io.*`. **Fix**: use
+DataStore or Room via capabilities — see
+[DataStore](/docs/guides/datastore), [Room](/docs/guides/room).
+
+---
+
+## `GlobalScopeUsage`
+
+```
+KetoyBC: 'kotlinx.coroutines.GlobalScope.launch' is not allowed in KBC programs.
+
+  KBC programs must use structured concurrency scoped to the ViewModel lifecycle.
+  Unstructured coroutines cannot be cancelled when the screen is destroyed and
+  will leak across navigation events.
+
+  Fix: Use viewModelScope or a capability for background work:
+    // In @KetoyViewModel:
+    viewModelScope.launch { fetchProducts() }
+
+    // For one-shot background work:
+    withContext(Dispatchers.IO) { blockingOperation() }
+
+  Docs: https://ketoy.dev/docs/coroutines/structured-concurrency
+```
+
+**Triggers**: `GlobalScope.*`, raw `CoroutineScope()` factory,
+`runBlocking`. **Fix**: use `viewModelScope.launch { ... }` inside a
+`@KetoyViewModel`, or `withContext(Dispatchers.IO) { ... }` for one-off
+heavy work.
+
+---
+
+## `UnregisteredCall`
+
+```
+KetoyBC: 'com.example.helper.doSomething' is not a registered capability.
+
+  Did you mean one of these registered capabilities?
+    - com.example.helper.doSomethingSimilar
+    - com.example.helper.doOther
+
+  Options:
+  1. Register this API as a capability in your host app's CapabilityRegistry
+  2. Move this call into a pre-compiled capability (host app code)
+  3. Check that ketoy-capabilities.json is up to date
+
+  Docs: https://ketoy.dev/docs/capabilities#custom
+```
+
+**Triggers**: any call that isn't a KBC function, registered capability,
+catalogued composable, allowed stdlib FQ, or `@KetoyCapabilityStub`.
+The fuzzy-match suggestions come from the closest names in the registry
+schema. **Fix**: register the capability, fix the typo, or add to the
+`allowedStdlibFqNames` list.
+
+---
+
+## `UnregisteredCapability`
+
+```
+KetoyBC: Capability 'MY_CAP' (id=0x4042) is not registered.
+
+  The bundle declares a dependency on this capability, but the host app's
+  capability registry schema does not include it. The bundle will fail at
+  runtime when loaded on a host app that hasn't registered this capability.
+
+  Fix: Register it in your KetoyCapabilityProvider.buildRegistry():
+    registry.register(AppCapabilityIds.MY_CAP) { args ->
+        // your implementation
+    }
+
+  If this capability is intentionally app-specific, ensure:
+    1. The ID is in the app-specific range (0x4000–0x7FFF)
+    2. It is registered before any KetoyScreen attempts to load this bundle
+
+  Docs: https://ketoy.dev/docs/capabilities/registration
+```
+
+**Triggers**: a `@KetoyCapabilityStub(id = X)` whose ID isn't in
+`ketoy-capabilities.json`. **Fix**: add the JSON entry; ensure the
+host's `KetoyCapabilityProvider` registers it.
+
+---
+
+## `NonKbcConstructor`
+
+```
+KetoyBC: Cannot construct 'androidx.compose.material3.NavigationDrawerItemColors' inside a KBC bundle.
+
+  KBC bundles can only construct types that have a registered constructor adapter.
+  'androidx.compose.material3.NavigationDrawerItemColors' is not in the standard
+  constructor adapter set and has not been registered as a custom constructor adapter.
+
+  Standard constructable types include: TextStyle, KeyboardOptions,
+  KeyboardActions, RoundedCornerShape, Shadow, Offset, TextFieldValue,
+  and all types in KBCConstructorIds.
+
+  Fix: Either use a type that has a constructor adapter, or register a custom one:
+    val MyNavigationDrawerItemColorsAdapter = KBCConstructorAdapter(
+        id = AppConstructorIds.MY_TYPE,
+        fqName = "androidx.compose.material3.NavigationDrawerItemColors",
+    ) { params -> NavigationDrawerItemColors(/* resolve params */) }
+    constructorRegistry.register(MyNavigationDrawerItemColorsAdapter)
+
+  Docs: https://ketoy.dev/docs/adapters/custom-constructor-adapters
+```
+
+**Triggers**: constructor calls on Compose-domain types not in
+`KBCConstructorIds`. **Fix**: register a constructor adapter (see
+[Custom Adapter](/docs/guides/custom-adapter)).
+
+> Note: this error does **NOT** fire for user-defined classes
+> (`data class Todo(...)`) or primitive types — those go through the
+> normal heap path, not `CONSTRUCT_JVM`.
+
+---
+
+## `UnregisteredComposable`
+
+```
+KetoyBC: Cannot call '@Composable com.example.charts.LineChart' from a KBC bundle.
+
+  KBC bundles call Compose functions through the adapter registry.
+  'com.example.charts.LineChart' is not in the standard Material3 adapter set
+  and has not been registered as a custom composable adapter.
+
+  If this is a Material3 component that should be in the standard set:
+    Check that ketoy-adapters-material3 is up to date:
+    ./gradlew :app:kspRelease
+
+  If this is a custom composable in your host app:
+    Register a KBCComposableAdapter with a stable app-specific ID:
+    val LineChartAdapter = KBCComposableAdapter(
+        id = AppAdapterIds.LINECHART,
+        fqName = "com.example.charts.LineChart",
+        paramCount = N,
+    ) { params -> LineChart(/* resolve params */) }
+    adapterRegistry.register(LineChartAdapter)
+
+  Docs: https://ketoy.dev/docs/adapters/custom-composable-adapters
+```
+
+**Triggers**: a `@Composable` call whose FQ name isn't in the standard
+adapter catalog and isn't a KBC function in the current compilation
+unit. **Fix**: write a custom composable adapter (see
+[Custom Adapter](/docs/guides/custom-adapter)).
+
+---
+
+## `MisusedAnnotation`
+
+```
+KetoyBC: @KetoyViewModel is misused.
+
+  Applied to: object MyObject
+```
+
+**Triggers**: applying `@KetoyComposable` to a non-`@Composable`
+function, `@KetoyViewModel` to a non-class, `@KetoyEntryPoint` to
+something that isn't a top-level composable, etc. **Fix**: read the
+"Applied to:" line — it tells you what's wrong.
+
+---
+
+## Call-chain breadcrumbs
+
+When a violation occurs in a helper function (reached transitively from
+a `@KetoyComposable` / `@KetoyEntryPoint` / `@KetoyViewModel` root), the
+error includes a `Reached via:` line:
+
+```
+KetoyBC: Direct access to 'android.util.Log.d' is not allowed in KBC programs.
+
+  Reached via: TodoListScreen → renderHeader → logHelper
+
+  Android APIs are not available in the KBC execution sandbox.
+  ...
+```
+
+This is the breadcrumb from the entry-point root to the offending
+helper. The chain follows `root → helper1 → helper2 → ...`; the offending
+call itself is already named in the headline. Shared helpers between
+two roots produce one diagnostic per root.
+
+---
+
+## Errors emitted by the runtime (not the compiler)
+
+These don't appear at build time — they fail the bundle load or first
+call:
+
+| Exception | When |
+|---|---|
+| `KetoyBundleSignatureException` | Ed25519 verification fails. |
+| `KetoyBundleFormatException` | Wrong magic, format version too new, malformed sections. |
+| `KetoyBundleMalformedException` | Brotli decode fails, unknown section type. |
+| `KetoyBundleVersionException` | `minRuntimeVersion > runtime`. |
+| `KetoyMissingCapabilityException` | Bundle declares an ID the host's registry doesn't provide. |
+| `KetoyMissingAdapterException` | Bundle declares a composable adapter ID not registered. |
+| `KetoyMissingConstructorAdapterException` | Bundle declares a constructor adapter ID not registered. |
+| `KBCRuntimeException` | Generic runtime failure (e.g. divide-by-zero). |
+| `KBCIllegalOpcodeException` | Unknown opcode (corrupted bundle). |
+
+All extend `KetoyException`.
+
+---
+
+## Suppressing / opting in
+
+Three opt-in markers control compiler behaviour at the API level
+(declared in `ketoy-annotations`):
+
+| Annotation | Effect |
+|---|---|
+| `@KetoyStableApi` | Marks a Ketoy API as stable. |
+| `@KetoyInternalApi` | `ERROR`-severity opt-in — touching this fails compilation unless you `@OptIn`. |
+| `@KetoyExperimentalApi` | `WARNING`-severity opt-in — touching this warns. |
+
+There are **no** flags to suppress the hard-non-goal errors above
+(Android API access, reflection, file I/O, etc.). Those are
+intentionally hard — if you need to do one of those things, do it
+host-side and bridge through a capability.
+
+Next: [FAQ →](/docs/faq)

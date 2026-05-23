@@ -1,0 +1,247 @@
+Two pieces talk to each other:
+
+- **`KetoyVirtualViewModel`** — the Android `ViewModel` subclass owned
+  by `KetoyScreen` (you don't write this; the runtime instantiates it).
+- **`KetoyBaseViewModel`** — the **base class your `@KetoyViewModel`
+  classes extend**. It exposes `viewModelScope`, `getState`, `setState`,
+  `observeState` as `lateinit var`s the runtime binds at construction.
+
+---
+
+## Anatomy of a `@KetoyViewModel`
+
+```kotlin
+package com.example.myapp.ketoyscreens
+
+import dev.ketoy.annotations.KetoyViewModel
+import dev.ketoy.runtime.lifecycle.KetoyBaseViewModel
+import kotlinx.coroutines.launch
+
+@KetoyViewModel
+class CounterViewModel : KetoyBaseViewModel() {
+
+    override fun init() {
+        setState("count", 0)
+        setState("status", "ready")
+    }
+
+    fun increment() {
+        val current = (getState("count") as? Int) ?: 0
+        setState("count", current + 1)
+    }
+
+    fun reset() {
+        setState("count", 0)
+    }
+
+    fun fetchAsync() {
+        viewModelScope.launch {
+            setState("status", "loading")
+            val value = fetchRemoteCount()           // suspend capability
+            setState("count", value)
+            setState("status", "ready")
+        }
+    }
+}
+```
+
+### What you get from the base class
+
+| Member | Type | Bound when |
+|---|---|---|
+| `viewModelScope` | `CoroutineScope` | Before `init()` runs |
+| `getState` | `(String) -> Any?` | Before `init()` runs |
+| `setState` | `(String, Any?) -> Unit` | Before `init()` runs |
+| `observeState` | `(String) -> Flow<Any?>` | Before `init()` runs |
+| `init()` | `open fun` | Runtime calls once, after binding |
+
+All four are `internal set` — the runtime sets them, your code reads
+them. Accessing any of them from a secondary constructor / init block
+that runs **before** the runtime binds them throws
+`UninitializedPropertyAccessException`. Use the `init()` override
+instead.
+
+---
+
+## Reading state in a `@KetoyComposable`
+
+```kotlin
+@KetoyComposable @KetoyEntryPoint
+@Composable
+fun CounterScreen() {
+    val count by observeVmStateAsState("count", initial = 0)
+    val status by observeVmStateAsState("status", initial = "ready")
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Count: $count ($status)")
+        Button(onClick = { vmDispatch("increment") }) { Text("+") }
+        Button(onClick = { vmDispatch("reset") }) { Text("Reset") }
+    }
+}
+```
+
+`observeVmStateAsState` and `vmDispatch` are sugar over two standard
+capabilities defined in `dev.ketoy.capabilities.core.CapabilityIds`:
+
+| Capability | ID | Signature |
+|---|---|---|
+| `VM_GET_STATE` | `0x0A00` | `(key: String): Any?` |
+| `VM_SET_STATE` | `0x0A01` | `(key: String, value: Any?): Unit` |
+| `VM_OBSERVE_STATE` | `0x0A02` | `(key: String): Flow<Any?>` |
+| `VM_DISPATCH` | `0x0A03` | `(eventName: String, payload: Any?): Unit` |
+
+You declare matching `@KetoyCapabilityStub`s in your KBC source so the
+compiler can resolve them (see [Custom Capability](/docs/custom-capability)
+for the stub pattern — the four `VM_*` IDs follow the same shape).
+
+---
+
+## State persistence
+
+`KetoyVirtualViewModel.state: StateFlow<Map<String, Any?>>` is the full
+state map. Values whose type matches the persistable allowlist are
+mirrored to `SavedStateHandle`; everything else stays in memory only.
+
+Persistable types:
+
+- Primitives: `String`, `Int`, `Long`, `Float`, `Double`, `Boolean`
+- Their primitive arrays: `IntArray`, `LongArray`, `FloatArray`,
+  `DoubleArray`, `BooleanArray`
+- `Array<*>` (must be Parcelable element-wise per Android)
+
+**Not persistable**: `Map`, `List`, custom data classes, `Flow`,
+`StateFlow`, deferred. These survive rotation (the `ViewModel` itself
+survives) but **not** process death.
+
+### Restore order
+
+When the runtime constructs `KetoyVirtualViewModel`, it picks the first
+non-empty source:
+
+1. `savedStateHandle["ketoy_vm_state_v1"]` — if non-null, restores from
+   here.
+2. `initialExtras` — navigation arguments passed via
+   `KetoyScreen(extras = ...)`.
+3. Empty map — `init()` is the only source of values.
+
+This means **process-death restore wins over navigation extras**. If
+your screen reads `productId` from extras on first creation, then the
+user backgrounds the app, then the system kills the process, then the
+user returns — the restored map contains the latest `setState`
+mutations, not the original extras.
+
+---
+
+## Event dispatch
+
+`vmDispatch(eventName, payload)` calls the KBC function index registered
+under `eventName` in the bundle's `KBCViewModelDescriptor.eventHandlers`
+map. Annotate handler methods:
+
+```kotlin
+@KetoyViewModel
+class CartViewModel : KetoyBaseViewModel() {
+    override fun init() { setState("items", emptyList<String>()) }
+
+    fun addItem(payload: Any?) {
+        val item = payload as? String ?: return
+        @Suppress("UNCHECKED_CAST")
+        val current = (getState("items") as? List<String>) ?: emptyList()
+        setState("items", current + item)
+    }
+}
+```
+
+Then from KBC:
+
+```kotlin
+Button(onClick = { vmDispatch("addItem", "Apple") }) { Text("Add") }
+```
+
+Unknown event names are no-ops with a warning log. Handler exceptions
+are caught and logged — they don't crash the screen.
+
+---
+
+## Capabilities and DI
+
+A `@KetoyViewModel` constructor's parameters resolve through the host's
+`KetoyCapabilityProvider`. If you write:
+
+```kotlin
+@KetoyViewModel
+class ProductViewModel(
+    private val productRepo: ProductRepository
+) : KetoyBaseViewModel() {
+    // ...
+}
+```
+
+`ProductRepository` is **not** what you might expect — the runtime can't
+inject a Hilt graph type into a KBC class. Instead, declare what you
+need as `@KetoyCapabilityStub`s and have the host wire them:
+
+```kotlin
+// Capabilities.kt — KBC-side stubs
+@KetoyCapabilityStub(id = 0x4000, name = "OBSERVE_PRODUCTS")
+fun observeProducts(): Flow<List<Any?>> = error(STUB_MSG)
+
+@KetoyCapabilityStub(id = 0x4001, name = "FIND_PRODUCT")
+suspend fun findProduct(id: Long): List<Any?>? = error(STUB_MSG)
+
+// ProductViewModel.kt — KBC-side
+@KetoyViewModel
+class ProductViewModel : KetoyBaseViewModel() {
+    override fun init() {
+        viewModelScope.launch {
+            observeProducts().collect { setState("products", it) }
+        }
+    }
+
+    fun load(id: Long) {
+        viewModelScope.launch {
+            setState("currentProduct", findProduct(id))
+        }
+    }
+}
+```
+
+The host's `TodoCapabilityProvider` registers each ID against a real
+DAO/Repository. See [Room guide](/docs/room).
+
+---
+
+## When to use a ViewModel vs `remember`
+
+Use a `@KetoyViewModel` when:
+
+- State must survive rotation **or** process death.
+- Multiple `@KetoyComposable`s need to share state.
+- You need to scope coroutines to the screen lifecycle.
+- You're consuming `Flow`s from a Room DAO or DataStore.
+
+Use `remember { mutableStateOf(...) }` when:
+
+- State is purely local to the composition (e.g. dialog open/closed,
+  text field's draft value before commit).
+- The screen is read-only.
+
+For tiny apps, a single `@KetoyViewModel` per screen + `remember` for
+in-composition transients is the standard shape.
+
+---
+
+## What KBC ViewModels **cannot** do
+
+- **Inject Hilt-graph types directly.** All host dependencies route
+  through `KetoyCapabilityProvider`. Constructor params are resolved
+  as capability lookups.
+- **Hold non-persistable state across process death.** Anything outside
+  the `isPersistable` allowlist drops on save.
+- **Override `onCleared()`.** Lifecycle is owned by the `KetoyVirtualViewModel`
+  wrapper. Use `viewModelScope` for resource cleanup — child coroutines
+  cancel automatically when the screen leaves the back stack.
+- **Hold a `LiveData`** — not supported. Use `Flow` + `COLLECT_AS_STATE`
+  (which is what `observeVmStateAsState` does under the hood).
+
+Next: [Coroutines & Flow →](/docs/coroutines-flow)

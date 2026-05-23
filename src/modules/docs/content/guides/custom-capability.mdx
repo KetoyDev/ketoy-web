@@ -1,0 +1,273 @@
+This guide walks through the full pattern, end-to-end.
+
+---
+
+## The three pieces
+
+A capability is three artifacts that must agree:
+
+1. **A stable `Short` ID** in the app-specific range `0x4000–0x7FFF`.
+2. **A KBC-side `@KetoyCapabilityStub`** function — the stub the
+   compiler resolves into `INVOKE_CAPABILITY` opcodes.
+3. **A host-side `register*` call** that supplies the actual
+   implementation.
+
+Plus one piece of metadata so the compiler can validate at build time:
+
+4. An entry in `app/ketoy-capabilities.json` matching the ID, FQ name,
+   kind, and signature.
+
+---
+
+## Worked example: device vibration
+
+We'll add a `vibrate(durationMs)` capability backed by `Vibrator` (an
+Android system service).
+
+### Step 1 — Reserve an ID
+
+```kotlin
+// AppCapabilityIds.kt
+object AppCapabilityIds {
+    /** sync (durationMs: Long): Unit — vibrate the device for N ms. */
+    const val VIBRATE: Short = 0x4200.toShort()
+}
+```
+
+> Built-in capabilities already include `VIBRATE` at `0x0904` (from
+> `registerPlatformCapabilities`). This example uses `0x4200` for
+> illustration — in real code, prefer the built-in unless you need
+> different semantics.
+
+### Step 2 — Write the KBC-side stub
+
+```kotlin
+// Capabilities.kt (your KBC source)
+@file:Suppress("UnusedParameter")
+
+package com.example.myapp.ketoyscreens
+
+import dev.ketoy.annotations.KetoyCapabilityStub
+
+private const val STUB_MSG =
+    "KetoyVM capability stub — replaced by INVOKE_CAPABILITY at compile time"
+
+@KetoyCapabilityStub(id = 0x4200, name = "VIBRATE")
+fun vibrate(durationMs: Long): Unit = error(STUB_MSG)
+```
+
+Notes:
+- The function is `public` (the default — annotations work on any
+  visibility, but the validator's closure walk treats `public` and
+  `private` the same).
+- Body is `= error(STUB_MSG)` — concise + crashes loudly if the
+  compiler plugin ever fails to replace it.
+- The annotation's `id` matches `AppCapabilityIds.VIBRATE` exactly.
+- The annotation's `name` is human-readable, used in error messages.
+
+For suspend capabilities:
+
+```kotlin
+@KetoyCapabilityStub(id = 0x4201, name = "FETCH_USER")
+suspend fun fetchUser(id: Long): Map<String, Any?>? = error(STUB_MSG)
+```
+
+For flow:
+
+```kotlin
+@KetoyCapabilityStub(id = 0x4202, name = "OBSERVE_BATTERY")
+fun observeBattery(): Flow<Int> = error(STUB_MSG)
+```
+
+### Step 3 — Register the implementation
+
+```kotlin
+@Singleton
+class AppCapabilityProvider @Inject constructor(
+    @ApplicationContext private val context: Context,
+) : KetoyCapabilityProvider {
+
+    override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+        registerCoreCapabilities(context)
+
+        register(AppCapabilityIds.VIBRATE) { args ->
+            val durationMs = args[0] as Long
+            val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(durationMs)
+            }
+        }
+    }
+}
+```
+
+The four registration shapes on `CapabilityRegistry`:
+
+| Method | KBC stub kind | Lambda type |
+|---|---|---|
+| `register(id) { args -> T }` | sync | `(List<Any?>) -> T` |
+| `registerSuspend(id) { args -> T }` | suspend | `suspend (List<Any?>) -> T` |
+| `registerFlow(id) { args -> Flow<T> }` | flow | `(List<Any?>) -> Flow<T>` |
+| `registerComposable(id) { args -> @Composable Unit }` | composable | `@Composable (List<Any?>) -> Unit` |
+
+> Most app capabilities are `register` (sync) or `registerSuspend`
+> (background work). `registerFlow` is for observable streams.
+> `registerComposable` is rare — it lets you bridge a host-side
+> `@Composable` into KBC without an adapter. Adapters are still
+> preferred for first-class UI components.
+
+### Step 4 — Add the JSON entry
+
+`app/ketoy-capabilities.json`:
+
+```json
+{
+  "id": 16896,
+  "name": "VIBRATE",
+  "fqName": "com.example.myapp.ketoyscreens.vibrate",
+  "kind": "SYNC",
+  "parameterTypes": ["kotlin.Long"],
+  "returnType": "kotlin.Unit"
+}
+```
+
+(`0x4200 = 16896`. `kind` is `SYNC`, `SUSPEND`, `FLOW`, or `COMPOSABLE`.)
+
+The compiler reads this file at build time, validates each
+`@KetoyCapabilityStub` ID exists, fuzzy-matches names for typos.
+
+### Step 5 — Use it
+
+```kotlin
+@KetoyComposable @KetoyEntryPoint
+@Composable
+fun HapticDemo() {
+    Button(onClick = { vibrate(50L) }) {
+        Text("Tap me")
+    }
+}
+```
+
+Build:
+
+```bash
+./gradlew :app:ketoyBundle
+```
+
+The compiler-plugin emits an `INVOKE_CAPABILITY 0x4200` opcode at the
+`vibrate(50L)` call site, with `50L` as the argument.
+
+---
+
+## Argument marshaling
+
+KBC passes args as `List<Any?>`. Inside your `register { args -> ... }`
+lambda, cast each element to the expected type:
+
+```kotlin
+register(AppCapabilityIds.MY_CAP) { args ->
+    val title = args[0] as String
+    val count = args[1] as Int
+    val maybe = args[2] as? Long      // nullable
+    doWork(title, count, maybe)
+}
+```
+
+**Be defensive on nullables**: cast with `as?` for nullable params. The
+compiler validates the type list against `parameterTypes` in
+`ketoy-capabilities.json`, but the runtime trusts your stub's declared
+types.
+
+---
+
+## Composing capabilities
+
+A capability can call another:
+
+```kotlin
+register(AppCapabilityIds.OPEN_PROFILE) { args ->
+    val userId = args[0] as Long
+    // Internally fetch + show
+    runBlocking {
+        val user = userRepo.fetch(userId)
+        navigator.push("profile/${user.id}")
+    }
+}
+```
+
+Or **avoid `runBlocking`** by using a suspend capability:
+
+```kotlin
+registerSuspend(AppCapabilityIds.OPEN_PROFILE) { args ->
+    val userId = args[0] as Long
+    val user = userRepo.fetch(userId)
+    navigator.push("profile/${user.id}")
+}
+```
+
+---
+
+## Capability lifecycle
+
+- **Registration**: when `KetoyHiltModule` constructs the `CapabilityRegistry`
+  (singleton — runs once at app start).
+- **Invocation**: every KBC call site.
+- **Cancellation**: suspend / flow capabilities respect coroutine
+  cancellation. If the KBC `viewModelScope` cancels, in-flight
+  capability calls are cancelled too (provided the host implementation
+  is cooperative).
+
+The registry is **not** thread-safe for registration — register all
+capabilities once in `buildRegistry()`, don't add more after. Lookups
+are thread-safe by construction (the map is immutable after build).
+
+---
+
+## Strict-mode validation
+
+`KetoyConfig.validateManifest = true` (the default) — every capability
+ID a bundle declares **must** exist in the host's registry, even those
+marked `required = false`. Missing IDs throw
+`KetoyMissingCapabilityException` at bundle parse time:
+
+```
+dev.ketoy.runtime.KetoyMissingCapabilityException: Missing capability 0x4200
+```
+
+If you intentionally ship "optional" capabilities (e.g. an iOS-only
+feature shipped in the bundle but unused on Android), gate them at the
+call site:
+
+```kotlin
+// In KBC, branch on host-side feature flag passed via VM_GET_STATE.
+val hasFeature = vmGetState("featureFlag.fancyMode") as? Boolean ?: false
+if (hasFeature) { vibrate(50L) }
+```
+
+And register a no-op stub on platforms that don't support the
+capability.
+
+---
+
+## Best practices
+
+- **Reserve IDs in a single shared `object`**. Treat IDs like database
+  schema — never reassign.
+- **Document the signature in KDoc on the ID constant**. KBC code looks
+  at the stub's signature; host code looks at the registry. They must
+  agree, but the canonical statement lives on the ID.
+- **Don't expose secrets through capabilities**. Auth tokens, refresh
+  tokens, encryption keys — keep them host-side. Expose only the
+  decorated operations (e.g. a `getAuthenticatedUserId(): String?`
+  capability, not a `getAuthToken()`).
+- **Prefer suspend over sync** for anything that can block. The
+  interpreter runs sync capabilities on the calling thread.
+- **Return primitive types or `Map<String, Any?>`** rather than custom
+  classes. KBC casts on read; complex types add coupling.
+- **Test capability registration in isolation**. The `ketoy-test` AAR's
+  `FakeCapabilityRegistry` makes this trivial — see [Testing](#).
+
+Next: [Custom Adapter →](/docs/custom-adapter)

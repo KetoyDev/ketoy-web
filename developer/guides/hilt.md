@@ -1,0 +1,278 @@
+# Hilt
+
+The `dev.ketoy.vm:ketoy-hilt` AAR wires Ketoy into Hilt's
+`SingletonComponent`. Once you've added the dependency and bound a
+`KetoyCapabilityProvider`, the runtime is available to inject anywhere.
+
+---
+
+## What `ketoy-hilt` provides
+
+`KetoyHiltModule` is `@InstallIn(SingletonComponent::class)` and
+exposes:
+
+| Provided type | Lifetime | Source |
+|---|---|---|
+| `CapabilityRegistry` | Singleton | Calls `provider.buildRegistry()` on your bound `KetoyCapabilityProvider`. |
+| `KetoyRuntime` | Singleton | Built with `dexCacheDir = context.codeCacheDir`, `enableDevOverlay` auto-set from `FLAG_DEBUGGABLE`, optionally customised by `KetoyConfigCustomizer`. |
+| `KetoyBundleLoader` | Singleton | Reads remote / asset / raw / preloaded bundles. |
+| `KetoyViewModelFactoryBuilder` | Not a singleton | Builds a per-bundle `ViewModelProvider.Factory`. |
+
+It does **not** auto-publish the registry into a `CompositionLocal` —
+your `MainActivity` is responsible for that (one line; see step 3).
+
+---
+
+## 1. Add the dependency
+
+```kotlin
+// app/build.gradle.kts
+plugins {
+    id("dagger.hilt.android.plugin")
+    id("kotlin-kapt")
+}
+
+dependencies {
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.3.4-alpha"))
+    implementation("dev.ketoy.vm:ketoy-hilt")
+    // also: runtime, annotations, capabilities-core, adapters-material3 as needed
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-compiler:2.50")
+}
+```
+
+Mark your `Application`:
+
+```kotlin
+@HiltAndroidApp
+class MyApplication : Application()
+```
+
+And your activity:
+
+```kotlin
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() { /* ... */ }
+```
+
+---
+
+## 2. Bind `KetoyCapabilityProvider`
+
+This is the **only required binding** from the host side. Without it,
+Hilt fails at compile time with a missing-binding error.
+
+```kotlin
+// di/AppHiltModule.kt
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class AppHiltModule {
+
+    @Binds @Singleton
+    abstract fun bindCapabilityProvider(
+        impl: TodoCapabilityProvider
+    ): KetoyCapabilityProvider
+
+    companion object {
+        @Provides @Singleton
+        fun provideDataStore(@ApplicationContext ctx: Context): DataStore<Preferences> =
+            PreferenceDataStoreFactory.create {
+                ctx.preferencesDataStoreFile("app_prefs")
+            }
+    }
+}
+```
+
+And the implementation:
+
+```kotlin
+@Singleton
+class TodoCapabilityProvider @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val preferences: DataStore<Preferences>,
+    private val todoRepository: TodoRepository,
+) : KetoyCapabilityProvider {
+
+    override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
+        registerCoreCapabilities(context, preferences)
+        // … see Room / Networking / DataStore guides
+    }
+}
+```
+
+---
+
+## 3. Wire `MainActivity`
+
+```kotlin
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var capabilityRegistry: CapabilityRegistry
+    @Inject lateinit var factoryBuilder: KetoyViewModelFactoryBuilder
+    @Inject lateinit var bundleLoader: KetoyBundleLoader
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MyAppTheme {
+                CompositionLocalProvider(
+                    LocalKetoyCapabilityRegistry provides capabilityRegistry,
+                ) {
+                    KetoyHiltProvider(
+                        factoryBuilder = factoryBuilder,
+                        bundleLoader = bundleLoader,
+                    ) {
+                        AppNavGraph()
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+`KetoyHiltProvider` publishes two more `CompositionLocal`s:
+`LocalKetoyViewModelFactoryBuilder` and `LocalKetoyBundleLoader`.
+`KetoyScreen` reads them as fallbacks when you don't pass them
+explicitly.
+
+---
+
+## 4. Optional — customise `KetoyConfig`
+
+Provide a `KetoyConfigCustomizer`:
+
+```kotlin
+@Provides @Singleton
+fun provideKetoyConfigCustomizer(
+    @ApplicationContext context: Context,
+    materialIconsResolver: MaterialIconsResolver,
+    materialFontFamilyResolver: MaterialFontFamilyResolver,
+    materialDrawableResolver: MaterialDrawableResolver,
+): KetoyConfigCustomizer = KetoyConfigCustomizer { default ->
+    val publicKey = KetoyKeystore.loadFromAsset(context, "ketoy/keys/main-public.key")
+    default.copy(
+        enableSignatureVerification = true,
+        publicKey = publicKey,
+        imageVectorResolver = materialIconsResolver,
+        fontFamilyResolver = materialFontFamilyResolver,
+        drawableResolver = materialDrawableResolver,
+    )
+}
+```
+
+The customizer is bound as `@BindsOptionalOf` — if you don't provide
+one, the runtime uses the library default (sig verification off, no
+resolvers). That default is fine for tests; production needs the
+customizer.
+
+---
+
+## 5. From a non-injected context
+
+For Services, BroadcastReceivers, custom Views, JNI callbacks — anywhere
+you can't `@AndroidEntryPoint`:
+
+```kotlin
+class MyForegroundService : Service() {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val ketoy = KetoyHiltEntryPoint.get(applicationContext)
+        val loader = ketoy.ketoyBundleLoader
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val bundle = loader.load(KetoyBundleSource.Asset("ketoy/main.ktx"))
+            // … execute headless
+        }
+        return START_STICKY
+    }
+}
+```
+
+`KetoyHiltEntryPoint.get(context)` calls
+`EntryPointAccessors.fromApplication`, returns the entry point with
+`ketoyRuntime`, `ketoyBundleLoader`, `viewModelFactoryBuilder`.
+
+---
+
+## 6. Resolver bindings (icons, fonts, drawables)
+
+```kotlin
+@Provides @Singleton
+fun provideMaterialIconsResolver(): MaterialIconsResolver =
+    materialIconsResolver {
+        registerFilled("Settings", Icons.Filled.Settings)
+        registerFilled("Home", Icons.Filled.Home)
+        // ...
+    }
+
+@Provides @Singleton
+fun provideMaterialFontFamilyResolver(): MaterialFontFamilyResolver =
+    materialFontFamilyResolver {
+        register("courgette_regular", FontFamily(Font(R.font.courgette_regular)))
+    }
+
+@Provides @Singleton
+fun provideMaterialDrawableResolver(): MaterialDrawableResolver =
+    materialDrawableResolver {
+        register("banner", R.drawable.banner)
+    }
+```
+
+Each `register*` call holds a direct compile-time reference to the icon
+/ font / drawable — R8 sees the reference, keeps the resource alive.
+No `-keep` rules required.
+
+---
+
+## 7. Multi-module Hilt setup
+
+If your app has `:feature-cart`, `:feature-search`, etc., each with its
+own KBC bundles:
+
+- **One `KetoyCapabilityProvider`** per host APK, not per feature. The
+  registry is shared by every `KetoyRuntime` in the app process.
+- Capability IDs are global — `:feature-cart` and `:feature-search` must
+  agree on which IDs they use. Treat `AppCapabilityIds` as a shared
+  contract.
+- For per-feature bundles, point each `KetoyScreen` at a different
+  `KetoyBundleSource.Asset("ketoy/<feature>.ktx")` or distinct remote
+  URL. Multiple bundle modules in the same project is on the roadmap.
+
+---
+
+## 8. Testing with Hilt
+
+For unit tests, the test rule replaces production bindings:
+
+```kotlin
+@HiltAndroidTest
+@UninstallModules(AppHiltModule::class)
+class TodoScreenTest {
+
+    @get:Rule val hiltRule = HiltAndroidRule(this)
+
+    @BindValue val capabilityProvider: KetoyCapabilityProvider =
+        KetoyCapabilityProvider { fakeRegistry() }
+
+    @Test fun loadsBundle() { /* ... */ }
+}
+```
+
+For composable / integration tests, see [Testing](#) — the
+`ketoy-test` AAR ships `FakeAdapterRegistry`, `FakeConstructorRegistry`,
+`KBCBuilder`, and `KetoyTestRuntime` so you can build small bundles in
+Kotlin and execute them without `kapt`/KSP.
+
+---
+
+## Common Hilt errors
+
+| Error | Cause |
+|---|---|
+| `[Dagger/MissingBinding] KetoyCapabilityProvider cannot be provided` | You haven't `@Binds`-bound your concrete provider. |
+| `Lateinit property capabilityRegistry has not been initialized` | `MainActivity` is missing `@AndroidEntryPoint`. |
+| `KetoyMissingCapabilityException` at runtime | Your provider returned a registry that doesn't include an ID your bundle declares. Re-check `ketoy-capabilities.json` vs your provider. |
+| `KetoyBundleSignatureException` | `enableSignatureVerification = true` (production default with the customizer) but the bundle was signed by a different key. |
+
+Next: [Custom Capability →](custom-capability.md)

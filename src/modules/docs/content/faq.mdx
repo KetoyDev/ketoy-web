@@ -1,0 +1,278 @@
+<FaqList>
+
+<FaqItem question="What problem does Ketoy actually solve?">
+
+You ship an Android app and want to update screens — fix bugs, run A/B
+tests, roll out features — without going through Play Store review.
+Web tech (WebView, React Native via Hermes bytecode) gives you OTA
+updates at the cost of native look-and-feel, performance, and access to
+the Android platform.
+
+Ketoy gives you OTA updates while keeping the rest:
+
+- **Real Jetpack Compose** rendering — not a wrapper.
+- **Real coroutines** and Flow.
+- **Real Hilt** / Room / DataStore / Retrofit on the host side, exposed
+  to KBC bundles through a capability registry.
+- **Signed binary bundles** — Ed25519, sandboxed by capability, no
+  remote code execution outside the sandbox.
+
+Compose Hot Reload is for development; **Ketoy is for production OTA**.
+
+</FaqItem>
+
+<FaqItem question="Is Ketoy production-ready?">
+
+`0.3.4-alpha` is **alpha**. The wire format, opcode set, and adapter
+catalog are stable enough that bundles built today will load on future
+0.3.x runtimes. But:
+
+- Some Material3 components aren't catalogued yet (LazyColumn,
+  OutlinedTextField, FAB, etc. — see
+  [Compose Adapters](/docs/reference/compose-adapters)).
+- Multi-catch isn't filtered by type yet.
+- Runtime enforcement of `minAppVersion` (rollback + callback) lands
+  in a future patch — the field round-trips today but isn't actively
+  enforced.
+
+Plan accordingly. Use it for parts of your app that benefit most from
+OTA — settings screens, marketing surfaces, A/B-tested flows — while
+keeping safety-critical paths (auth, payment, crash-recovery) native.
+
+</FaqItem>
+
+<FaqItem question="Where do KBC bundles run?">
+
+- **Android only** today. Compose Multiplatform support is on the
+  roadmap; KMP-iOS execution isn't.
+- **API 26+** required for the JIT (`enableJIT = true` + a
+  `dexCacheDir`). Below 26 the interpreter runs everything.
+- **JDK 17** to build (the compiler plugin runs in the Kotlin compiler,
+  which needs JDK 17).
+
+</FaqItem>
+
+<FaqItem question="How big are bundles?">
+
+| Screen complexity | Typical signed `.ktx` size |
+|---|---|
+| Hello-world | 1.5 KB |
+| Mid-size todo screen with ViewModel + Room | 3.5 KB |
+| Multi-screen surface | 8–20 KB |
+
+Brotli compression on the code section gets 2–3× over raw bytecode.
+
+</FaqItem>
+
+<FaqItem question="How fast is the interpreter?">
+
+The microbenchmark suite (`:ketoy-benchmark`) verifies:
+
+- COMPOSABLE_CALL adapter dispatch overhead: **< 0.5 ms** per call.
+- Bundle parse + validate: **< 50 ms** for typical screens.
+- Tier-1 JIT speedup over interpreter on pure-logic functions:
+  **≥ 1.5×**.
+
+In practice, most screens have negligible KBC overhead — recomposition
+and layout dominate.
+
+</FaqItem>
+
+<FaqItem question="Can KBC use Compose Hot Reload?">
+
+Not yet directly. The dev flow today is:
+
+1. Edit `@KetoyComposable` source.
+2. `./gradlew :app:ketoyBundle :app:installDebug`.
+3. Relaunch the screen.
+
+A future tooling pass will support **bundle hot-swap** via remote
+delivery (push the new `.ktx` to a dev server; the runtime swaps it
+without restarting the app).
+
+</FaqItem>
+
+<FaqItem question="Why Ed25519 and not RSA / ECDSA?">
+
+Ed25519:
+- 64-byte signatures (fixed-size).
+- Fast verification (~50 µs on modern phones).
+- No randomness during signing — deterministic, reproducible builds.
+- Cryptographically modern (Curve25519 family).
+
+RSA is too large (256+ byte signatures) and slow to verify. ECDSA
+requires a CSPRNG at signing time. Ed25519 is the right primitive for
+this workload.
+
+</FaqItem>
+
+<FaqItem question="Do bundles work offline?">
+
+Yes. The runtime caches remote bundles at
+`context.cacheDir/ketoy_bundles/<sha256(url)>.ktx`. On network failure,
+it falls back to the cached copy. For bundles shipped in the APK
+(`KetoyBundleSource.Asset(...)`), there's never a network call.
+
+</FaqItem>
+
+<FaqItem question="How do I update a bundle for some users but not others?">
+
+Two options:
+
+1. **Server-side**: serve different `.ktx` files based on user
+   segmentation (device ID, region, A/B cohort). Standard CDN /
+   feature-flag service patterns.
+2. **`minAppVersion`**: gate bundle activation against
+   `PackageInfo.longVersionCode`. Newer bundles ignored by older APKs.
+
+A/B testing is typically server-side delivery (cohort A gets URL A,
+cohort B gets URL B).
+
+</FaqItem>
+
+<FaqItem question="Can a KBC bundle access user files / SAF?">
+
+Not directly. Wrap Storage Access Framework calls as
+[Custom Capabilities](/docs/guides/custom-capability):
+
+```kotlin
+registerSuspend(AppCapabilityIds.PICK_DOCUMENT) { _ ->
+    saf.pickAndReadDocument()       // host-side, real ContentResolver
+}
+```
+
+The KBC bundle calls `pickDocument(): String`, gets back the file
+contents. The file picker UI runs native.
+
+</FaqItem>
+
+<FaqItem question="Can KBC bundles include native code (NDK / JNI)?">
+
+No. KBC is interpreted bytecode + a Tier-1 DEX JIT for pure-logic
+functions. No `.so` / `.aar` shipping inside the bundle. Native code
+ships in the host APK; KBC reaches it via capabilities.
+
+</FaqItem>
+
+<FaqItem question="Does Ketoy replace Hilt / Room / Retrofit?">
+
+No. It bridges them. The host APK uses Hilt / Room / Retrofit normally;
+the KBC bundle declares `@KetoyCapabilityStub` functions that the
+compiler resolves to `INVOKE_CAPABILITY` opcodes. The runtime then
+dispatches to the host-side `KetoyCapabilityProvider`-registered
+lambda.
+
+See [Hilt](/docs/guides/hilt), [Room](/docs/guides/room),
+[Networking](/docs/guides/networking).
+
+</FaqItem>
+
+<FaqItem question="How do I debug a KBC bundle on-device?">
+
+Three approaches:
+
+1. **Dev overlay** — `KetoyConfig.enableDevOverlay = true` (auto-set
+   in debug builds via Hilt). Render
+   `KetoyDevOverlay(devEvents = vm.devEvents)` on top of your KBC
+   screen. Shows last 5 `COMPOSABLE_CALL`, `CONSTRUCT_JVM`, and
+   `CAPABILITY` dispatches with names + timing.
+2. **`ketoy analyze`** — dump the bundle's manifest, strings, and
+   opcode listing.
+3. **`adb logcat`** — the runtime logs `KetoyVM`, `KetoyBundleLoader`,
+   `KetoyBC` tags.
+
+Source-level breakpoints in KBC source are not yet supported (the IDE
+plugin is roadmap).
+
+</FaqItem>
+
+<FaqItem question="Why does my screen render the native fallback instead of the KBC bundle?">
+
+`KetoyScreen` renders `nativeFallback` whenever loading or executing
+the bundle fails. Common causes:
+
+- The bundle asset is missing or empty.
+- Signature verification failed (wrong public key, modified bundle).
+- The entry-point name doesn't match.
+- A capability the bundle declares isn't registered host-side.
+- The runtime threw during interpretation (e.g. cast failure, missing
+  resolver).
+
+Check `adb logcat` for the actual exception. The fallback exists so a
+broken bundle never crashes your app — it's a graceful degradation
+path, not a sign of misconfiguration to ignore.
+
+</FaqItem>
+
+<FaqItem question="My `.ktx` size keeps growing. What's eating bytes?">
+
+Roughly:
+
+- **String pool** — every distinct literal in your KBC source (text,
+  FQ names, capability names, modifier test tags).
+- **Function table** — one entry per KBC function (your composables +
+  helpers + lambdas + closure-converted captures).
+- **Code** — Brotli-compressed bytecode.
+- **Modifier table** — one entry per unique modifier chain.
+
+To shrink:
+- Hoist repeated strings into top-level `const val`s — they pool once.
+- Reuse modifier chains — `val rowMod = Modifier.fillMaxWidth().padding(8.dp); Row(modifier = rowMod) { … }`.
+- Avoid huge `when` arms in a single function — split into helpers.
+
+Use `ketoy analyze --strings` to dump the pool.
+
+</FaqItem>
+
+<FaqItem question="Can I write KBC code in a separate module from the host APK?">
+
+Yes, but it's optional. Two patterns:
+
+1. **In-tree** (default for `0.3.x`) — KBC source lives in the host
+   `:app` module under a subpackage. `ketoy { exportFromAppModule =
+   true }` attaches the compiler plugin to one variant. This is what
+   the CLI's `ketoy init` sets up.
+2. **Separate KBC module** — a Kotlin/Android library module with
+   `id("dev.ketoy.compiler")` applied. The plugin emits `.ktx` to
+   `build/ketoy-bundles/`; the host module copies (or downloads) it
+   into assets.
+
+Pattern 1 is faster to iterate. Pattern 2 is cleaner for multi-feature
+apps.
+
+</FaqItem>
+
+<FaqItem question="What's the relationship between Ketoy and Compose Multiplatform?">
+
+Ketoy targets Android Compose today. Compose Multiplatform is
+JetBrains' own multi-target Compose runtime. They aren't the same thing
+— Ketoy is an OTA delivery + sandbox layer for Compose on Android;
+Compose Multiplatform is a multi-platform UI toolkit.
+
+Future work might bring Ketoy bundles to iOS via Compose Multiplatform,
+but it's not in `0.3.x`.
+
+</FaqItem>
+
+<FaqItem question="Where do I file bugs / feature requests?">
+
+- **File Issue and Request Feature Request**: https://ketoy.dev/issue
+  (use the Bug Report / Feature Request).
+- **Crashes**: include `adb logcat` output, the bundle (or
+  `ketoy analyze --json` output), and minimum repro steps.
+
+</FaqItem>
+
+<FaqItem question="I'm stuck. Where else can I look?">
+
+- [Supported features](/features) — the canonical
+  what-works catalog.
+- [Architecture](/architecture) — the deeper
+  internals.
+- `ketoy chat` — open an AI agent session inside the project. It has
+  read access to your codebase and can answer "why doesn't X compile?"
+  with concrete references to your source.
+
+</FaqItem>
+
+</FaqList>

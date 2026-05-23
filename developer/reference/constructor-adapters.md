@@ -1,0 +1,148 @@
+# Constructor Adapters
+
+Complex Compose-domain types (`TextStyle`, `KeyboardOptions`,
+`RoundedCornerShape`, etc.) aren't encoded inline. Instead, the
+compiler emits a `CONSTRUCT_JVM` opcode that builds the object on the
+interpreter thread and stores it in a register. The receiving
+`COMPOSABLE_CALL` reads it via `KBCValue.Register(n)`.
+
+IDs come from `dev.ketoy.bytecode.KBCConstructorIds`. Standard IDs are
+`0x0001`–`0x3FFF`; app-specific are `0x4000+`
+(`KBCConstructorIds.APP_SPECIFIC_START`).
+
+For the **how-to** (writing a new constructor adapter, scan-roots
+directives), see [Custom Adapter](../guides/custom-adapter.md).
+
+---
+
+## Catalogued
+
+| ID | FQ Name | Kind | Source |
+|---|---|---|---|
+| `0x0004` | `androidx.compose.foundation.text.KeyboardOptions` | constructor | scan-roots `constructor=` |
+| `0x0005` | `androidx.compose.foundation.text.KeyboardActions` | constructor | scan-roots `constructor=` |
+| `0x0007` | `androidx.compose.foundation.shape.RoundedCornerShape(Dp)` | factory | scan-roots `factory=` |
+| `0x0021` | `androidx.compose.foundation.shape.RoundedCornerShape(Int)` (percent) | factory | scan-roots `factory=` |
+| `0x0022` | `androidx.compose.foundation.shape.RoundedCornerShape(Dp×4)` (per-corner) | factory | scan-roots `factory=` |
+| `0x0023` | `androidx.compose.foundation.shape.RoundedCornerShape(Int×4)` (per-corner percent) | factory | scan-roots `factory=` |
+| `0x0012` | `androidx.compose.material3.CardDefaults.cardColors(Color×4)` | @Composable object factory | scan-roots `objectFactory=` |
+| `0x0013` | `androidx.compose.material3.CardDefaults.cardElevation(Dp×6)` | @Composable object factory | scan-roots `objectFactory=` |
+| `0x0014` | `androidx.compose.material3.ButtonDefaults.buttonColors(Color×4)` | @Composable object factory | scan-roots `objectFactory=` |
+| `0x0015` | `androidx.compose.material3.ButtonDefaults.buttonElevation(Dp×5)` | @Composable object factory | scan-roots `objectFactory=` |
+| `0x0020` | `androidx.compose.material3.TopAppBarDefaults.topAppBarColors(Color×5)` | @Composable object factory | scan-roots `objectFactory=` |
+
+### Three flavours of constructor entry
+
+| Directive | Lambda type | Use case |
+|---|---|---|
+| `constructor=<Fq>:0xNNNN` | `(params) -> T` runs on the interpreter thread | Plain classes — `KeyboardOptions`, `KeyboardActions`, `Offset`, `Shadow`. |
+| `factory=<Fq>(<types>):0xNNNN` | `(params) -> T` runs on the interpreter thread | Top-level factory functions — `RoundedCornerShape(...)`. |
+| `objectFactory=<Fq>(<types>):0xNNNN` | `@Composable (params) -> T` runs inside composition | Material3 `*Defaults.foo(...)` factories that read MaterialTheme tokens. |
+
+`objectFactory=` is required for any factory that touches
+`MaterialTheme` / `LocalContentColor` / other composition-locals —
+constructing them outside composition would crash.
+
+---
+
+## Reserved but unused IDs
+
+The following constructor IDs are reserved in `KBCConstructorIds` but
+have no scan-roots entry yet:
+
+| ID | Type | Notes |
+|---|---|---|
+| `0x0001` | `TextStyle` | **Deferred**. Multiple overloads share an 8-param prefix; the classifier doesn't yet model `FontSynthesis` / `BaselineShift` / `TextGeometricTransform` / `LocaleList` / `Shadow` / `TextDirection` / `TextIndent`. |
+| `0x0002` | `SpanStyle` | Same blocker as TextStyle. |
+| `0x0003` | `ParagraphStyle` | Same blocker. |
+| `0x0006` | `TextFieldValue` | Open to PR. |
+| `0x0008` | `CutCornerShape` | Open to PR. |
+| `0x0009` | `Shadow` | Open to PR. |
+| `0x000A` | `Offset` | Open to PR. |
+| `0x000B` | `BorderStroke` | Open to PR. |
+| `0x000C` | `AnnotatedString` | Multi-builder, complex shape. |
+| `0x000D` | `TextFieldColors` (filled) | Material3 `TextFieldDefaults.colors`. |
+| `0x000E` | `OutlinedTextFieldColors` | Same. |
+| `0x000F` | `PasswordVisualTransformation` | Class with no args. |
+| `0x0010` | `TextSelectionColors` | Open to PR. |
+| `0x0011` | `MutableInteractionSource` | Factory. |
+| `0x0016–0x001F` | Other Material3 `*Defaults` color/elevation factories | All reserved as a contiguous block. |
+
+To enable any of these, follow the
+[Custom Adapter](../guides/custom-adapter.md) recipe.
+
+---
+
+## What gets a constructor adapter vs encoded inline
+
+A value gets a **`CONSTRUCT_JVM` opcode + constructor adapter** when:
+- It's a class, not a singleton.
+- It has multiple constructor arguments (more than the encoder can
+  inline as a single `KBCValue.*`).
+- It's a Compose-domain type the runtime knows by FQ name.
+
+A value gets **inline `KBCValue` encoding** (no constructor opcode)
+when:
+- It's a singleton / property-getter token (`Color.Red`,
+  `FontWeight.Bold`, `Arrangement.Center`) — see
+  [Compose Tokens](compose-tokens.md).
+- It's a primitive (`16.dp`, `"Hello"`, `42`).
+- It's a `Color(0xFFAA00FF)` literal — special-cased to inline the ARGB
+  directly via the encoder's `colorArgFromConstructor` helper.
+
+---
+
+## `CONSTRUCT_JVM` wire format
+
+```
+opcode:0xB1
+dst:u8                    register to store the result in
+adapterId:u16             constructor adapter ID
+paramCount:u8             number of non-default param entries
+[paramIdx:u8 + KBCValue]*  sparse param encoding
+```
+
+The `KBCValue` payload uses the same tag-byte encoding as
+`COMPOSABLE_CALL` — `Default`, `IntVal`, `StringLiteral`, `Register`, etc.
+
+When the receiving `COMPOSABLE_CALL` later passes the constructed
+object as a param, it encodes it as `KBCValue.Register(n)`. The
+`KBCParamSet`'s typed getter resolves `Register(n)` by reading
+`regs[n]` and casting.
+
+---
+
+## How a `KeyboardOptions(...)` call lowers
+
+KBC source:
+```kotlin
+TextField(
+    value = email,
+    onValueChange = { email = it },
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Email,
+        imeAction = ImeAction.Done,
+    ),
+)
+```
+
+Lowered to (pseudo-asm):
+```
+CONSTRUCT_JVM r5, 0x0004, paramCount=2, [(0, KeyboardTypeId(EMAIL)), (1, ImeActionId(DONE))]
+COMPOSABLE_CALL 0x0012, paramCount=3, [(0, Register(r_email)), (1, FunctionRef(...)), (15, Register(r5))]
+```
+
+The runtime:
+1. `CONSTRUCT_JVM r5, 0x0004, ...` → calls the registered
+   `KeyboardOptions` constructor adapter with a `KBCParamSet`
+   containing the two non-default slots; stores the resulting
+   `KeyboardOptions` object in `regs[5]`.
+2. `COMPOSABLE_CALL 0x0012, ...` → builds a `KBCParamSet` for
+   `TextField`; slot 15 (`keyboardOptions`) reads `Register(r5)`,
+   pulling out the object built in step 1.
+
+This is why Compose-domain construction in KBC adds zero round-trips at
+the call site — everything resolves on the interpreter thread before
+recomposition.
+
+Next: [Compose Tokens →](compose-tokens.md)
