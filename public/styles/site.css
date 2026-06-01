@@ -928,6 +928,18 @@ footer.site-footer {
   padding: 64px 0 120px;
 }
 
+.license-text {
+  white-space: pre-wrap;
+  font-family: var(--font-mono);
+  font-size: 14.5px;
+  line-height: 1.7;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  color: var(--ink);
+}
+
 /* docs layout */
 .docs-layout {
   display: grid;

@@ -1,0 +1,84 @@
+KETOY PLUGIN — END-USER LICENSE AGREEMENT (EULA)
+
+Copyright (c) 2026 Ketoy. All rights reserved.
+
+This End-User License Agreement ("Agreement") is a legal agreement between you
+(an individual or a single entity, "You") and Ketoy ("Ketoy", "we", "us")
+governing your use of the Ketoy plugin for JetBrains IDEs, including Android
+Studio and IntelliJ IDEA, together with its documentation and any updates
+(collectively, the "Software").
+
+By installing, copying, or otherwise using the Software, you agree to be bound by
+this Agreement. If you do not agree, do not install or use the Software.
+
+1. LICENSE GRANT
+   Ketoy grants you a free of charge, worldwide, non-exclusive, non-transferable,
+   non-sublicensable, revocable license to install and use the Software, for both
+   personal and commercial purposes, subject to the terms below. The Software is
+   provided to all users globally at no cost.
+
+2. RESERVATION OF RIGHTS; CLOSED SOURCE
+   The Software is licensed, not sold. It is proprietary and closed-source. Ketoy
+   and its licensors retain all right, title, and interest in and to the Software,
+   including all intellectual property rights. No rights are granted except as
+   expressly set out in this Agreement.
+
+3. RESTRICTIONS
+   Except to the extent this restriction is prohibited by applicable mandatory law,
+   you shall NOT:
+   (a) sell, rent, lease, sublicense, distribute, publish, or otherwise make the
+       Software available to any third party as a standalone product;
+   (b) modify, adapt, translate, or create derivative works of the Software;
+   (c) reverse engineer, decompile, disassemble, or otherwise attempt to derive
+       the source code of the Software, except, and only to the extent that,
+       applicable law expressly permits such activity notwithstanding this
+       limitation;
+   (d) remove, alter, or obscure any proprietary notices on or in the Software;
+   (e) use Ketoy's names, logos, or trademarks except as necessary to identify the
+       Software in accordance with fair-use principles.
+
+4. PRIVACY
+   The Software runs entirely on your machine. It does not collect, transmit, or
+   store your data, and it makes no network calls. It reads bundles in a read-only
+   fashion and does not modify them.
+
+5. THIRD-PARTY COMPONENTS
+   The Software is distributed with certain third-party open-source components,
+   each of which is licensed to you under its own license terms. Those terms govern
+   your use of the corresponding components and are not superseded by this
+   Agreement. Such components remain the property of their respective owners.
+
+6. UPDATES
+   Ketoy may, but is not obligated to, provide updates to the Software. Any update
+   is governed by this Agreement unless accompanied by separate terms.
+
+7. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT WARRANTY OF ANY
+   KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+   YOU USE THE SOFTWARE AT YOUR OWN RISK.
+
+8. LIMITATION OF LIABILITY
+   TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL KETOY BE
+   LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE
+   DAMAGES, OR ANY LOSS OF PROFITS, DATA, OR GOODWILL, ARISING OUT OF OR RELATED TO
+   YOUR USE OF OR INABILITY TO USE THE SOFTWARE, WHETHER BASED ON WARRANTY,
+   CONTRACT, TORT, OR ANY OTHER LEGAL THEORY, EVEN IF KETOY HAS BEEN ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGES.
+
+9. TERMINATION
+   This Agreement is effective until terminated. It terminates automatically if you
+   breach any of its terms. Upon termination, you must cease all use of the Software
+   and uninstall all copies. Sections 2, 3, 7, 8, and 10 survive termination.
+
+10. GOVERNING LAW
+   This Agreement is governed by and construed in accordance with the laws of India,
+   without regard to its conflict-of-laws principles. The courts located in India
+   shall have exclusive jurisdiction over any dispute arising out of or relating to
+   this Agreement.
+
+11. CONTACT
+   Ketoy — https://ketoy.dev
+   Support:                 support@ketoy.dev
+   Security vulnerabilities: security@ketoy.dev
+   Issues / feature requests: https://ketoy.dev/issue
