@@ -1,0 +1,75 @@
+import Link from 'next/link';
+import { SDK_VERSION_FULL } from '@/constants';
+
+export const meta = {
+  id: 'ketoy-0-4-0-alpha',
+  section: 'platform',
+  title: 'Ketoy 0.4.0-alpha is here',
+  summary:
+    'The version-decoupling release — your Kotlin, AGP, Gradle and Compose versions are no longer pinned to KetoyVM. Bump freely.',
+  chip: 'New',
+  chipClass: 'uchip-new',
+  date: 'Jun 12, 2026',
+  tag: `Platform · ${SDK_VERSION_FULL}`,
+  metaTag: `Platform · ${SDK_VERSION_FULL}`,
+};
+
+We're shipping **0.4.0-alpha** — the release that lifts the toolchain pin. Until
+now, KetoyVM forced your app onto its exact Kotlin / AGP / Compose combination.
+That's gone. **0.4.0 decouples your project from KetoyVM's pinned toolchain on
+two independent axes.**
+
+### Coordinates
+
+<CodeWindow file="build.gradle.kts">
+{`dependencies {
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.4.0-alpha"))
+    implementation("dev.ketoy.vm:ketoy-runtime")
+    implementation("dev.ketoy.vm:ketoy-hilt")            // optional
+    implementation("dev.ketoy.vm:ketoy-adapters-material3")
+}`}
+</CodeWindow>
+
+If you're already on 0.3.x, this is a drop-in upgrade — no breaking API changes.
+The headline difference is what you're now *allowed* to do: move your Kotlin,
+AGP, Gradle and Compose versions without matching KetoyVM's.
+
+### What landed
+
+<ChipRow>
+  <Chip>Embedded compiler (ADR-0004)</Chip>
+  <Chip>Name-based param remap (ADR-0005)</Chip>
+  <Chip>Kotlin / AGP / Gradle free</Chip>
+  <Chip>Compose-version free</Chip>
+  <Chip>Build-time advisories</Chip>
+</ChipRow>
+
+- **Kotlin / AGP / Gradle fully decoupled.** A Gradle worker now drives a pinned
+  `K2JVMCompiler` in a classloader isolated from your build. Your Kotlin compiler
+  never loads KetoyVM compiler code; KetoyVM's pinned Kotlin never sees your
+  toolchain. Verified on `Devices` at **Kotlin 2.2.10 / AGP 9.1.1 / Gradle
+  9.3.1** — a full AGP major ahead of KetoyVM's 8.13.
+- **Compose version decoupled for the supported surface.** Parameters are now
+  keyed by **name**, not position, so a newer Compose that adds, reorders, or
+  removes a param no longer shifts your arguments into the wrong slot. The
+  Material3 1.4.0 `Text.autoSize` insertion that used to silently break custom
+  fonts now renders correctly — verified on a physical Pixel.
+- **Build-time advisories.** When your Compose diverges from the catalog, the
+  compiler reports exactly what it dropped (unknown param, type-mismatch) plus a
+  per-bundle coverage summary — a visible advisory instead of a silent wrong
+  render.
+
+<InfoCard title="Read the full compatibility matrix">
+  <p>
+    The SDK update <strong>&ldquo;Version compatibility: Kotlin, AGP, Gradle
+    &amp; Compose decoupled&rdquo;</strong> walks through the impact of every
+    newer/older version in both directions, and the three paths for pulling in
+    features KetoyVM doesn't ship yet (capabilities, custom composable adapters,
+    custom constructor adapters).
+  </p>
+  <p>
+    <Link href="/updates/sdk?update=version-compatibility">
+      Read the compatibility update →
+    </Link>
+  </p>
+</InfoCard>

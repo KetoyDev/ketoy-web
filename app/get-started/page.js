@@ -110,8 +110,9 @@ export default function GetStartedPage() {
             </div>
           </div>
 
-          <Callout kind="warn" title="Kotlin version is pinned during alpha">
-            <p>The Compose compiler plugin and the Ketoy compiler plugin are both pinned to <code>2.0.21</code> for the alpha. <code>ketoy init</code> pins your <code>gradle/libs.versions.toml</code> automatically to the matched Kotlin / AGP / Compose BOM combination. These pins are temporary - they go away once Ketoy ships its own embedded Kotlin compiler.</p>
+          <Callout kind="info" title="“Kotlin 2.0.21+ and AGP 8.x” means a known-good default, not a hard requirement">
+            <p>As of <code>{SDK_VERSION_FULL}</code> the Ketoy compiler ships its own <strong>embedded Kotlin 2.0.21</strong> in an isolated worker, so your project&rsquo;s Kotlin / AGP / Gradle / Compose versions are decoupled from Ketoy&rsquo;s - you can bump them freely. <code>ketoy init</code> still writes a matched combination into your <code>gradle/libs.versions.toml</code> as a convenience starting point, which is why these rows read <em>auto-pinned</em>.</p>
+            <p>Already on a newer Kotlin or Compose? It just works - the Compose surface is reconciled by name, not by version. See the <Link href="/updates/sdk?update=version-compatibility">version compatibility update</Link> for what newer/older versions mean in both directions.</p>
           </Callout>
 
           {/* STEP 1 */}

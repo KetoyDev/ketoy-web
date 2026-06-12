@@ -19,11 +19,11 @@ export const manualSubnavItems = [
 
 export const requirements = [
   ['Node.js', '20+'],
-  ['Kotlin', '2.0.21 (auto-pinned)'],
-  ['Android Gradle Plugin', '8.x (auto-pinned)'],
+  ['Kotlin', '2.0.21+'],
+  ['Android Gradle Plugin', '8.x +'],
   ['JDK', '17'],
   ['min SDK', '26'],
-  ['Jetpack Compose', 'BOM 2024.10.00 (auto-pinned)'],
+  ['Jetpack Compose', 'BOM 2024.10.00 +'],
 ];
 
 export const manualRequirements = [

@@ -107,6 +107,19 @@ export default function FeaturesPage() {
                 other Gradle modules are loaded via <code>composeAdapterCatalogPath</code>.
               </p>
             </Callout>
+
+            <Callout title="Compose-version decoupled - since 0.4.0-alpha">
+              <p>
+                Every parameter on these adapters is keyed by <strong>name</strong>, not position.
+                The emitter maps each argument&rsquo;s param name to the catalog&rsquo;s{' '}
+                <code>sourceIndex</code> and encodes in catalog space, so a newer Compose that{' '}
+                <em>adds</em>, <em>reorders</em>, or <em>removes</em> a param no longer shifts your
+                arguments into the wrong slot. A param the catalog doesn&rsquo;t know is dropped to
+                the Compose default with a build-time advisory - never a silent wrong render. Bump
+                your Compose BOM freely; see the{' '}
+                <Link href="/updates/sdk?update=version-compatibility">version compatibility update</Link>.
+              </p>
+            </Callout>
           </div>
 
           {/* CONSTRUCTORS */}
