@@ -2,8 +2,9 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/guides/custom-capability.mdx';
 
 export const metadata = {
-  title: 'Custom Capability · Ketoy Docs',
-  description: 'Capabilities are the **only** way KBC reaches host code. Anything you want KBC to do that isn\'t already built-in — proprietary SDK, custom SDK call, hardware sensor, third-party API — wraps as a capability.',
+  alternates: { canonical: '/docs/guides/custom-capability' },
+  title: 'Custom Capability',
+  description: 'Capabilities are the **only** way KBC reaches host code. Anything you want KBC to do that isn\'t already built-in, proprietary SDK, custom SDK call, hardware sensor, third-party API, wraps as a capability.',
 };
 
 export default function Page() {

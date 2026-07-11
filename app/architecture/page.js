@@ -8,12 +8,14 @@ import {
   capabilityFamilies,
   moduleRows,
 } from '@/modules/architecture/data';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Architecture · Ketoy',
+export const metadata = pageMetadata({
+  title: 'Architecture - how Kotlin Compose compiles to OTA bundles',
   description:
-    'A long-form walkthrough of how Ketoy compiles plain Kotlin + Compose into a signed bytecode bundle and runs it on-device at native speed.',
-};
+    'How Ketoy compiles real Jetpack Compose in Kotlin to signed Ketoy Bytecode (KBC) and renders it natively on device, the engine behind Kotlin-native server-driven UI (SDUI) and over-the-air (OTA) updates on Android.',
+  path: '/architecture',
+});
 
 export default function ArchitecturePage() {
   return (
@@ -373,7 +375,7 @@ Column { Text(title) }`}</pre></div>
                 <pre>
 {`composable("checkout") {
     KetoyScreen(entryPoint = "CheckoutScreen") {
-        CheckoutScreenNative()   // native fallback — required trailing lambda
+        CheckoutScreenNative()   // native fallback, required trailing lambda
     }
 }`}
                 </pre>

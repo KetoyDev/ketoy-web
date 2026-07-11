@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/reference/capability-registry.mdx';
 
 export const metadata = {
-  title: 'Capability Registry · Ketoy Docs',
+  alternates: { canonical: '/docs/reference/capability-registry' },
+  title: 'Capability Registry',
   description: 'The full table of standard library `CapabilityIds` plus the app-specific range. Every ID below is from',
 };
 

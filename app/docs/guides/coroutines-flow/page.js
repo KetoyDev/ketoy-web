@@ -2,8 +2,9 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/guides/coroutines-flow.mdx';
 
 export const metadata = {
-  title: 'Coroutines & Flow · Ketoy Docs',
-  description: 'KBC has a full coroutine runtime — `suspend` functions, structured concurrency, `withContext`, `async` / `await`, `Flow` operators, and',
+  alternates: { canonical: '/docs/guides/coroutines-flow' },
+  title: 'Coroutines & Flow',
+  description: 'KBC has a full coroutine runtime, `suspend` functions, structured concurrency, `withContext`, `async` / `await`, `Flow` operators, and',
 };
 
 export default function Page() {

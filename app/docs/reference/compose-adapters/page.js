@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/reference/compose-adapters.mdx';
 
 export const metadata = {
-  title: 'Compose Adapters · Ketoy Docs',
+  alternates: { canonical: '/docs/reference/compose-adapters' },
+  title: 'Compose Adapters',
   description: 'The catalogued composables KBC can render today. IDs come from',
 };
 

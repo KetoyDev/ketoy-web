@@ -4,12 +4,14 @@ import Subnav from '@/components/Subnav';
 import CodeWindow from '@/components/CodeWindow';
 import Callout from '@/modules/features/components/Callout';
 import { subnavItems, requirements, continueCards } from '@/modules/get-started/data';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Get started · Ketoy',
+export const metadata = pageMetadata({
+  title: 'Get started - install the Kotlin SDUI & OTA SDK',
   description:
-    'From an empty Android project to a working KBC screen in three commands with the Ketoy AI CLI.',
-};
+    'Install Ketoy from Maven Central with Gradle and ship your first over-the-air (OTA), server-driven UI screen on Android. Works with Kotlin, Jetpack Compose, and Hilt.',
+  path: '/get-started',
+});
 
 const AUTH_PROVIDERS = `$ ketoy auth anthropic         # Anthropic Claude
 $ ketoy auth openai            # OpenAI

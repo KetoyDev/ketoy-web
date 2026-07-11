@@ -18,7 +18,7 @@ exposes:
 | `KetoyBundleLoader` | Singleton | Reads remote / asset / raw / preloaded bundles. |
 | `KetoyViewModelFactoryBuilder` | Not a singleton | Builds a per-bundle `ViewModelProvider.Factory`. |
 
-It does **not** auto-publish the registry into a `CompositionLocal` —
+It does **not** auto-publish the registry into a `CompositionLocal`,
 your `MainActivity` is responsible for that (one line; see step 3).
 
 ---
@@ -139,7 +139,7 @@ explicitly.
 
 ---
 
-## 4. Optional — customise `KetoyConfig`
+## 4. Optional, customise `KetoyConfig`
 
 Provide a `KetoyConfigCustomizer`:
 
@@ -162,7 +162,7 @@ fun provideKetoyConfigCustomizer(
 }
 ```
 
-The customizer is bound as `@BindsOptionalOf` — if you don't provide
+The customizer is bound as `@BindsOptionalOf`, if you don't provide
 one, the runtime uses the library default (sig verification off, no
 resolvers). That default is fine for tests; production needs the
 customizer.
@@ -171,7 +171,7 @@ customizer.
 
 ## 5. From a non-injected context
 
-For Services, BroadcastReceivers, custom Views, JNI callbacks — anywhere
+For Services, BroadcastReceivers, custom Views, JNI callbacks, anywhere
 you can't `@AndroidEntryPoint`:
 
 ```kotlin
@@ -220,7 +220,7 @@ fun provideMaterialDrawableResolver(): MaterialDrawableResolver =
 ```
 
 Each `register*` call holds a direct compile-time reference to the icon
-/ font / drawable — R8 sees the reference, keeps the resource alive.
+/ font / drawable, R8 sees the reference, keeps the resource alive.
 No `-keep` rules required.
 
 ---
@@ -232,7 +232,7 @@ own KBC bundles:
 
 - **One `KetoyCapabilityProvider`** per host APK, not per feature. The
   registry is shared by every `KetoyRuntime` in the app process.
-- Capability IDs are global — `:feature-cart` and `:feature-search` must
+- Capability IDs are global, `:feature-cart` and `:feature-search` must
   agree on which IDs they use. Treat `AppCapabilityIds` as a shared
   contract.
 - For per-feature bundles, point each `KetoyScreen` at a different
@@ -259,7 +259,7 @@ class TodoScreenTest {
 }
 ```
 
-For composable / integration tests, see [Testing](#) — the
+For composable / integration tests, see [Testing](#), the
 `ketoy-test` AAR ships `FakeAdapterRegistry`, `FakeConstructorRegistry`,
 `KBCBuilder`, and `KetoyTestRuntime` so you can build small bundles in
 Kotlin and execute them without `kapt`/KSP.

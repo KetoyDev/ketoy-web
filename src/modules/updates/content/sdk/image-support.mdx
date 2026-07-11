@@ -1,16 +1,15 @@
-import { SDK_VERSION_FULL } from '@/constants';
 
 export const meta = {
   id: 'image-support',
   section: 'sdk',
   title: 'Drawables: Image(painterResource(R.drawable.X), …)',
   summary:
-    'Render drawables straight from KBC source — vectors, PNGs, WebPs — through the new IMAGE adapter, R8-safe by construction.',
+    'Render drawables straight from KBC source, vectors, PNGs, WebPs, through the new IMAGE adapter, R8-safe by construction.',
   chip: 'Alpha',
   chipClass: 'uchip-beta',
   date: 'May 19, 2026',
-  tag: `SDK · ${SDK_VERSION_FULL}`,
-  metaTag: `SDK · ${SDK_VERSION_FULL}`,
+  tag: 'SDK · 0.3.4-alpha',
+  metaTag: 'SDK · 0.3.4-alpha',
 };
 
 Same shape, same R8-safe pattern, applied to drawables.
@@ -32,14 +31,14 @@ fun ProductCard() {
 }`}
 </CodeWindow>
 
-Vector drawables, PNGs, WebPs — anything `painterResource` already
+Vector drawables, PNGs, WebPs, anything `painterResource` already
 handles in your existing Compose code. The compiler plugin collapses
 `painterResource(R.drawable.X)` into a string literal carrying just
 the resource name; the new `IMAGE` adapter (ID `0x0024`) calls
 `getPainter(...)` at render time and the host resolver hands back the
 right `Painter`.
 
-### Wiring it on the host — with Hilt
+### Wiring it on the host, with Hilt
 
 <CodeWindow file="KetoyModule.kt">
 {`@Provides
@@ -59,7 +58,7 @@ fun provideKetoyConfigCustomizer(
 }`}
 </CodeWindow>
 
-### Wiring it on the host — without Hilt
+### Wiring it on the host, without Hilt
 
 <CodeWindow file="MyApplication.kt">
 {`override fun onCreate() {
@@ -81,7 +80,7 @@ fun provideKetoyConfigCustomizer(
 }`}
 </CodeWindow>
 
-The `R.drawable.X` reference is a compile-time field read — R8 keeps
+The `R.drawable.X` reference is a compile-time field read, R8 keeps
 the drawable alive in release builds automatically.
 
 ### Combine with fonts, icons, and the rest
@@ -97,7 +96,7 @@ three resource resolvers together:
 )`}
 </CodeWindow>
 
-Each one is independent — register only what your KBC source uses.
+Each one is independent, register only what your KBC source uses.
 
 <ChipRow>
   <Chip>painterResource()</Chip>

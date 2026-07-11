@@ -1,7 +1,7 @@
 # Installation
 
 This page walks you through adding Ketoy `0.3.4-alpha` to an Android
-project — either via the **`ketoy` CLI** (fastest path, recommended for
+project, either via the **`ketoy` CLI** (fastest path, recommended for
 new projects) or by editing Gradle files yourself.
 
 ---
@@ -19,16 +19,16 @@ new projects) or by editing Gradle files yourself.
 
 Ketoy 0.3.x's compiler plugin is pinned to this specific Kotlin / AGP /
 Compose combination. (ADR-0004 will ship Ketoy's own embedded Kotlin
-compiler so the version pin can be lifted — until then, match the table
+compiler so the version pin can be lifted, until then, match the table
 above.)
 
 ---
 
-## Path 1 — `ketoy` CLI (recommended)
+## Path 1, `ketoy` CLI (recommended)
 
 The CLI scaffolds everything for you with diff-and-confirm on every file
 edit. It's an AI-powered agent, but the `init` command runs deterministic
-template edits — no LLM in the loop.
+template edits, no LLM in the loop.
 
 ### Install
 
@@ -71,8 +71,8 @@ then:
 5. Wraps `MainActivity`'s `setContent { … }` body with a
    `KetoyScreen { /* native fallback */ }` (you can opt out with
    `--no-install-screen`).
-6. Creates `HelloKetoyScreen.kt` — a starter `@KetoyEntryPoint @KetoyComposable`.
-7. Creates `app/ketoy-capabilities.json` (empty — fill in as you add
+6. Creates `HelloKetoyScreen.kt`, a starter `@KetoyEntryPoint @KetoyComposable`.
+7. Creates `app/ketoy-capabilities.json` (empty, fill in as you add
    custom capabilities).
 8. Appends `**/keys/*-private.key` to `.gitignore`.
 
@@ -100,7 +100,7 @@ ketoy version
 
 ---
 
-## Path 2 — Manual setup
+## Path 2, Manual setup
 
 If you'd rather wire Ketoy by hand, here's the full setup.
 
@@ -165,7 +165,7 @@ dependencies {
     implementation("dev.ketoy.vm:ketoy-capabilities-navigation")
     implementation("dev.ketoy.vm:ketoy-adapters-material3")
 
-    // Optional — Hilt integration
+    // Optional, Hilt integration
     implementation("dev.ketoy.vm:ketoy-hilt")
 
     // Standard Compose deps
@@ -215,7 +215,7 @@ Then add to `.gitignore`:
 
 ### 4. `app/ketoy-capabilities.json`
 
-Start empty — populate as you wire custom capabilities (see
+Start empty, populate as you wire custom capabilities (see
 [Custom Capability](../guides/custom-capability.md)):
 
 ```json
@@ -256,7 +256,7 @@ class MyApplication : Application() {
         )
 
         val capabilities = CapabilityRegistry()
-        // capabilities.registerCoreCapabilities(this) — see Networking / DataStore guides
+        // capabilities.registerCoreCapabilities(this), see Networking / DataStore guides
 
         runtime = KetoyRuntime(
             capabilityRegistry = capabilities,
@@ -309,7 +309,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun HelloNativeFallback() {
-    Surface { Text("Ketoy bundle not available — using native fallback.") }
+    Surface { Text("Ketoy bundle not available, using native fallback.") }
 }
 ```
 
@@ -324,7 +324,7 @@ private fun HelloNativeFallback() {
 ```
 
 You should see the `HelloKetoyScreen` content on launch. If you instead
-see the native fallback, the bundle didn't load — check `adb logcat` for
+see the native fallback, the bundle didn't load, check `adb logcat` for
 `KetoyVM` / `KetoyBundleLoader` log lines.
 
 Next: [Write your first screen →](first-screen.md)

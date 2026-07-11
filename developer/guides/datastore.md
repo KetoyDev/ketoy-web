@@ -52,7 +52,7 @@ override fun buildRegistry(): CapabilityRegistry = CapabilityRegistry().apply {
 }
 ```
 
-If `dataStore = null`, the `KV_*` capabilities are skipped — calls
+If `dataStore = null`, the `KV_*` capabilities are skipped, calls
 from KBC throw `KetoyMissingCapabilityException` at runtime.
 
 ---
@@ -76,19 +76,20 @@ And in your ViewModel:
 
 ```kotlin
 @KetoyViewModel
-class PreferencesViewModel : KetoyBaseViewModel() {
+class PreferencesViewModel : ViewModel() {
+    private val _name = MutableStateFlow("")
+    val name: StateFlow<String> = _name.asStateFlow()
 
-    override fun init() {
-        // Restore last-known value into the state map.
+    init {
+        // Restore last-known value into the flow.
         viewModelScope.launch {
-            kvObserve("user_name").collect { name ->
-                setState("name", name as? String ?: "")
+            kvObserve("user_name").collect { value ->
+                _name.value = value as? String ?: ""
             }
         }
     }
 
-    fun updateName(payload: Any?) {
-        val name = payload as? String ?: return
+    fun updateName(name: String) {
         viewModelScope.launch { kvSet("user_name", name) }
     }
 }
@@ -98,7 +99,7 @@ class PreferencesViewModel : KetoyBaseViewModel() {
 
 ## Why use typed flow capabilities instead?
 
-`KV_OBSERVE` returns `Flow<Any?>` — you cast every value at the read
+`KV_OBSERVE` returns `Flow<Any?>`, you cast every value at the read
 site, which is brittle. For commonly-observed prefs, register a typed
 flow capability:
 
@@ -153,17 +154,20 @@ val dark by observeDarkMode().collectAsState(initial = false)
 
 ## Persistable types vs Compose state
 
-KBC's `KetoyVirtualViewModel.setState()` persists a filtered subset of
-value types to `SavedStateHandle` (process-death survival). DataStore is
-**stronger** persistence — it survives reinstalls and app data clears,
-and it's queryable from native code on the host side.
+A typed `ketoyViewModel<T>()` holds its `StateFlow` in the
+`ViewModelStore`, so state survives **rotation**. For **process-death**
+survival, the [state-map model](viewmodel.md#alternative-the-state-map-model)
+mirrors a filtered subset of value types to `SavedStateHandle`. DataStore
+is **stronger** persistence than either, it survives reinstalls and app
+data clears, and it's queryable from native code on the host side.
 
 When to use which:
 
 | Use case | Tool |
 |---|---|
 | Transient UI state (dialog open, draft text) | `remember { mutableStateOf(...) }` |
-| Screen state that survives rotation/process death | `setState()` |
+| Screen state that survives rotation | `ketoyViewModel<T>()` + `StateFlow` |
+| Screen state that must survive process death | state-map `setState()` + `SavedStateHandle` |
 | User preferences (settings, last route, theme) | DataStore |
 | User content (todos, messages, drafts) | Room |
 | Large blobs (images, audio) | File-backed capability (custom) |
@@ -172,7 +176,7 @@ When to use which:
 
 ## Limits
 
-- The DataStore proxy uses `PreferenceDataStoreFactory` — value type is
+- The DataStore proxy uses `PreferenceDataStoreFactory`, value type is
   `Preferences`, not Protocol Buffers. If you need typed protobufs, wrap
   them in a custom capability returning `Flow<MyProto>`; KBC sees `Any?`.
 - DataStore writes go to disk async. `KV_SET` returns when the write

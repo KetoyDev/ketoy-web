@@ -7,19 +7,19 @@ work with it.
 
 ## What problem does Ketoy actually solve?
 
-You ship an Android app and want to update screens — fix bugs, run A/B
-tests, roll out features — without going through Play Store review.
+You ship an Android app and want to update screens, fix bugs, run A/B
+tests, roll out features, without going through Play Store review.
 Web tech (WebView, React Native via Hermes bytecode) gives you OTA
 updates at the cost of native look-and-feel, performance, and access to
 the Android platform.
 
 Ketoy gives you OTA updates while keeping the rest:
 
-- **Real Jetpack Compose** rendering — not a wrapper.
+- **Real Jetpack Compose** rendering, not a wrapper.
 - **Real coroutines** and Flow.
 - **Real Hilt** / Room / DataStore / Retrofit on the host side, exposed
   to KBC bundles through a capability registry.
-- **Signed binary bundles** — Ed25519, sandboxed by capability, no
+- **Signed binary bundles**, Ed25519, sandboxed by capability, no
   remote code execution outside the sandbox.
 
 Compose Hot Reload is for development; **Ketoy is for production OTA**.
@@ -33,15 +33,15 @@ catalog are stable enough that bundles built today will load on future
 0.3.x runtimes. But:
 
 - Some Material3 components aren't catalogued yet (LazyColumn,
-  OutlinedTextField, FAB, etc. — see
+  OutlinedTextField, FAB, etc., see
   [Compose Adapters](reference/compose-adapters.md)).
 - Multi-catch isn't filtered by type yet.
 - Runtime enforcement of `minAppVersion` (rollback + callback) lands
-  in a future patch — the field round-trips today but isn't actively
+  in a future patch, the field round-trips today but isn't actively
   enforced.
 
 Plan accordingly. Use it for parts of your app that benefit most from
-OTA — settings screens, marketing surfaces, A/B-tested flows — while
+OTA, settings screens, marketing surfaces, A/B-tested flows, while
 keeping safety-critical paths (auth, payment, crash-recovery) native.
 
 ---
@@ -78,7 +78,7 @@ The microbenchmark suite (`:ketoy-benchmark`) verifies:
 - Tier-1 JIT speedup over interpreter on pure-logic functions:
   **≥ 1.5×**.
 
-In practice, most screens have negligible KBC overhead — recomposition
+In practice, most screens have negligible KBC overhead, recomposition
 and layout dominate.
 
 ---
@@ -102,7 +102,7 @@ without restarting the app).
 Ed25519:
 - 64-byte signatures (fixed-size).
 - Fast verification (~50 µs on modern phones).
-- No randomness during signing — deterministic, reproducible builds.
+- No randomness during signing, deterministic, reproducible builds.
 - Cryptographically modern (Curve25519 family).
 
 RSA is too large (256+ byte signatures) and slow to verify. ECDSA
@@ -176,14 +176,14 @@ See [Hilt](guides/hilt.md), [Room](guides/room.md),
 
 Three approaches:
 
-1. **Dev overlay** — `KetoyConfig.enableDevOverlay = true` (auto-set
+1. **Dev overlay**, `KetoyConfig.enableDevOverlay = true` (auto-set
    in debug builds via Hilt). Render
    `KetoyDevOverlay(devEvents = vm.devEvents)` on top of your KBC
    screen. Shows last 5 `COMPOSABLE_CALL`, `CONSTRUCT_JVM`, and
    `CAPABILITY` dispatches with names + timing.
-2. **`ketoy analyze`** — dump the bundle's manifest, strings, and
+2. **`ketoy analyze`**, dump the bundle's manifest, strings, and
    opcode listing.
-3. **`adb logcat`** — the runtime logs `KetoyVM`, `KetoyBundleLoader`,
+3. **`adb logcat`**, the runtime logs `KetoyVM`, `KetoyBundleLoader`,
    `KetoyBC` tags.
 
 Source-level breakpoints in KBC source are not yet supported (the IDE
@@ -204,7 +204,7 @@ the bundle fails. Common causes:
   resolver).
 
 Check `adb logcat` for the actual exception. The fallback exists so a
-broken bundle never crashes your app — it's a graceful degradation
+broken bundle never crashes your app, it's a graceful degradation
 path, not a sign of misconfiguration to ignore.
 
 ---
@@ -213,17 +213,17 @@ path, not a sign of misconfiguration to ignore.
 
 Roughly:
 
-- **String pool** — every distinct literal in your KBC source (text,
+- **String pool**, every distinct literal in your KBC source (text,
   FQ names, capability names, modifier test tags).
-- **Function table** — one entry per KBC function (your composables +
+- **Function table**, one entry per KBC function (your composables +
   helpers + lambdas + closure-converted captures).
-- **Code** — Brotli-compressed bytecode.
-- **Modifier table** — one entry per unique modifier chain.
+- **Code**, Brotli-compressed bytecode.
+- **Modifier table**, one entry per unique modifier chain.
 
 To shrink:
-- Hoist repeated strings into top-level `const val`s — they pool once.
-- Reuse modifier chains — `val rowMod = Modifier.fillMaxWidth().padding(8.dp); Row(modifier = rowMod) { … }`.
-- Avoid huge `when` arms in a single function — split into helpers.
+- Hoist repeated strings into top-level `const val`s, they pool once.
+- Reuse modifier chains, `val rowMod = Modifier.fillMaxWidth().padding(8.dp); Row(modifier = rowMod) { … }`.
+- Avoid huge `when` arms in a single function, split into helpers.
 
 Use `ketoy analyze --strings` to dump the pool.
 
@@ -233,11 +233,11 @@ Use `ketoy analyze --strings` to dump the pool.
 
 Yes, but it's optional. Two patterns:
 
-1. **In-tree** (default for `0.3.x`) — KBC source lives in the host
+1. **In-tree** (default for `0.3.x`), KBC source lives in the host
    `:app` module under a subpackage. `ketoy { exportFromAppModule =
    true }` attaches the compiler plugin to one variant. This is what
    the CLI's `ketoy init` sets up.
-2. **Separate KBC module** — a Kotlin/Android library module with
+2. **Separate KBC module**, a Kotlin/Android library module with
    `id("dev.ketoy.compiler")` applied. The plugin emits `.ktx` to
    `build/ketoy-bundles/`; the host module copies (or downloads) it
    into assets.
@@ -250,8 +250,8 @@ apps.
 ## What's the relationship between Ketoy and Compose Multiplatform?
 
 Ketoy targets Android Compose today. Compose Multiplatform is
-JetBrains' own multi-target Compose runtime. They aren't the same thing
-— Ketoy is an OTA delivery + sandbox layer for Compose on Android;
+JetBrains' own multi-target Compose runtime. They aren't the same thing.
+Ketoy is an OTA delivery + sandbox layer for Compose on Android;
 Compose Multiplatform is a multi-platform UI toolkit.
 
 Future work might bring Ketoy bundles to iOS via Compose Multiplatform,
@@ -270,12 +270,12 @@ but it's not in `0.3.x`.
 
 ## I'm stuck. Where else can I look?
 
-- [`SUPPORTED_FEATURES.md`](../../SUPPORTED_FEATURES.md) — the canonical
+- [`SUPPORTED_FEATURES.md`](../../SUPPORTED_FEATURES.md), the canonical
   what-works catalog.
-- [Architecture docs](../architecture/overview.md) — the deeper
+- [Architecture docs](../architecture/overview.md), the deeper
   internals.
-- [`KNOWN_ISSUES.md`](../../KNOWN_ISSUES.md) — known limitations with
+- [`KNOWN_ISSUES.md`](../../KNOWN_ISSUES.md), known limitations with
   fix plans.
-- `ketoy chat` — open an AI agent session inside the project. It has
+- `ketoy chat`, open an AI agent session inside the project. It has
   read access to your codebase and can answer "why doesn't X compile?"
   with concrete references to your source.

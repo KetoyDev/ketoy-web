@@ -2,18 +2,52 @@ import '../public/styles/home.css';
 import Link from 'next/link';
 import { SDK_VERSION_FULL, SDK_VERSION_SHORT } from '@/constants';
 import CodeWindow from '@/components/CodeWindow';
-import Calculator from '@/modules/home/components/Calculator';
+import OtaMotion from '@/modules/home/components/OtaMotion';
 import SupportTrigger from '@/modules/home/components/SupportTrigger';
+import ScrollReveal from '@/components/ScrollReveal';
+import JsonLd from '@/components/JsonLd';
+import { faqSchema, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_URL } from '@/lib/seo';
 import {
-  heroStats, aiFeatures, supportCards, nopeItems,
+  heroStats, supportCards,
   whatIsCards, securityCards, legalCards,
 } from '@/modules/home/data';
 
+const TITLE = 'Ketoy - Kotlin-native Server-Driven UI (SDUI) & OTA for Android';
+
 export const metadata = {
-  title: 'Ketoy - AI-native app updates for Android',
-  description:
-    'AI-native Android update infrastructure. Ship UI changes, features, fixes and experiments in under 60 seconds - fully within Play Store policies.',
+  title: { absolute: TITLE },
+  description: SITE_DESCRIPTION,
+  keywords: SITE_KEYWORDS,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    title: TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: { card: 'summary_large_image', title: TITLE, description: SITE_DESCRIPTION },
 };
+
+// Answers the exact questions people (and LLMs) ask. Doubles as an on-page
+// FAQ signal and a JSON-LD FAQPage for rich results / AI citation.
+const HOME_FAQ = [
+  {
+    q: 'What is Ketoy?',
+    a: 'Ketoy is a Kotlin-native server-driven UI (SDUI) framework for Android. You write real Jetpack Compose in Kotlin, compile it to a tiny signed .ktx bytecode bundle, and push UI changes over-the-air (OTA) to installed apps in seconds - no Play Store release and no JSON DSL.',
+  },
+  {
+    q: 'How is Ketoy different from JSON-based server-driven UI?',
+    a: 'Instead of a JSON schema and a parallel component model, Ketoy uses ordinary Kotlin and Jetpack Compose compiled to Ketoy Bytecode (KBC). Bundles are roughly 20x smaller than equivalent JSON SDUI, Ed25519-signed, and rendered as native Compose on device.',
+  },
+  {
+    q: 'Does Ketoy allow over-the-air (OTA) updates on Android within Play Store policy?',
+    a: 'Yes. Ketoy delivers UI and logic changes over-the-air without shipping a new APK/AAB. Bundles execute in a sandbox and render native Compose, which keeps updates within Play Store policies.',
+  },
+  {
+    q: 'What does a developer have to learn to use Ketoy?',
+    a: 'Almost nothing new. If it is Jetpack Compose, it is Ketoy. One annotation plus one Gradle task turns an in-APK screen into an OTA-updatable screen. Kotlin, Coroutines, Flow, ViewModel, and Hilt all work as usual.',
+  },
+];
 
 const CHECKOUT_KT = `@KetoyEntryPoint @Composable
 fun CheckoutScreen() {
@@ -45,7 +79,7 @@ dependencies {
   ksp("dev.ketoy.vm:ketoy-ksp-processor")
 }`;
 
-const QUICK_HOME = `// Look familiar? It should.
+const QUICK_HOME = `// The same Compose you already write.
 @KetoyEntryPoint
 @Composable
 fun HomeScreen() {
@@ -73,27 +107,35 @@ $ ./gradlew :ketoy-screens:ketoyBundle
 $ aws s3 cp build/ketoy-bundles/ s3://cdn/ketoy/ \\
     --recursive --content-encoding br
 
-# Total review time: 0 days. (You're welcome.)`;
+# Live on every device in ~60s.`;
 
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
       <section className="hero">
+        <div className="hero-aurora" aria-hidden="true">
+          <span className="a1"></span>
+          <span className="a2"></span>
+          <span className="a3"></span>
+        </div>
         <div className="container">
           <div className="hero-grid">
             <div>
               <div className="hero-tag">
                 <span className="pill">v{SDK_VERSION_SHORT}</span>
-                <span>is live</span>
+                <span>Kotlin OTA</span>
+                <span className="live-dot" aria-hidden="true"></span>
               </div>
-              <h1>AI-native app updates for <strong>Android</strong>.</h1>
+              <h1>
+                Ship <strong>Compose UI</strong> over the air.
+              </h1>
               <p className="lede">
-                Make your Android apps update <em style={{ fontStyle: 'normal', color: '#fff', fontWeight: 500 }}>themselves</em> in under 60 seconds - UI changes, features, fixes, experiments. Fully within Play Store policies. Plus AI workflows that let you ship most changes by prompt instead of spinning up a release train for every tiny edit.
+                Write real Jetpack Compose. Push updates to every device in seconds.
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/get-started">
-                  Install Ketoy
+                  Get started
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M5 12h14M13 5l7 7-7 7" />
                   </svg>
@@ -104,7 +146,10 @@ export default function HomePage() {
             <CodeWindow file="CheckoutScreen.kt" tag="@KetoyEntryPoint">{CHECKOUT_KT}</CodeWindow>
           </div>
 
-          <div className="hero-stats">
+          {/* Over-the-air delivery motion (design-import slot) */}
+          <OtaMotion />
+
+          <div className="hero-stats" data-reveal>
             {heroStats.map((s, i) => (
               <div className="hero-stat" key={i}>
                 <div className="v">{s.v}</div>
@@ -115,83 +160,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Wait Cost Calculator */}
-      <section id="calc">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">The Play Store math · brace yourself</span>
-            <h2>How many days has your team spent <em style={{ fontStyle: 'normal', background: 'linear-gradient(98deg,#4285F4 0%,#1a66cc 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>waiting</em> for review this year?</h2>
-            <p>
-              Update tested. Tagged. Signed. Uploaded. Now you wait. The marketing team waits. The PM refreshes the dashboard. Customer support copy-pastes &ldquo;fix is coming soon.&rdquo; Drag the sliders - be honest - and find out exactly how much of your life Play Store review has eaten.
-            </p>
-          </div>
-          <Calculator />
-        </div>
-      </section>
-
-      {/* AI-native */}
+      {/* Why Ketoy */}
       <section className="surface">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">AI-native, by design</span>
-            <h2>Ship most updates by <em style={{ fontStyle: 'normal', background: 'linear-gradient(135deg,#3DDC84 0%,#4285F4 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>prompt</em>. Skip the release train for every tiny edit.</h2>
+          <div className="section-head" data-reveal>
+            <span className="eyebrow">Why Ketoy</span>
+            <h2>Update without a release.</h2>
             <p>
-              Ketoy isn’t just a runtime - it’s an update <em style={{ fontStyle: 'normal' }}>infrastructure</em>. Most product changes (copy tweaks, layout shuffles, A/B variants, hotfixes) don’t need a four-person standup. Describe them. Ketoy plans the change, generates the bundle, signs it, and stages it for review - one workflow, no separate dev / release / ops coordination.
-            </p>
-          </div>
-
-          <div className="ai-grid">
-            <div className="ai-cards">
-              {aiFeatures.map((f) => (
-                <div className="ai-feat" key={f.h}>
-                  <div className="ai-icon" aria-hidden="true">{f.icon}</div>
-                  <div>
-                    <h3>{f.h}</h3>
-                    <p>{f.p}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="prompt-mock" aria-hidden="true">
-              <div className="head">
-                <span className="star">✦</span>
-                <span>ketoy · ai workflow</span>
-              </div>
-              <div className="bubble user">
-                On Checkout, swap the &ldquo;Apply coupon&rdquo; link for a button. Roll it to 10% of India users for 48 hours.
-              </div>
-              <div className="bubble ai">
-                Planning change on <code>CheckoutScreen.kt</code> →
-                <div className="ai-steps">
-                  <div><b>✓</b> Diff resolved: 1 file, 8 lines, no breaking params</div>
-                  <div><b>✓</b> Compiled <code>checkout.ktx</code> · 3.6&nbsp;KB · Ed25519 signed</div>
-                  <div><b>✓</b> Cohort: <code>country=IN</code>, 10%, TTL 48h</div>
-                  <div>· · · waiting on your approval to publish</div>
-                </div>
-              </div>
-              <div className="input">
-                <span>Try: &ldquo;Revert yesterday’s onboarding change for paying users&rdquo;</span>
-                <span className="caret"></span>
-                <span className="send" aria-hidden="true">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12h14M13 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* What is Ketoy */}
-      <section className="surface">
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Ketoy in one paragraph</span>
-            <h2>Your app, but it can update itself. Like a website. But still your Android app.</h2>
-            <p>
-              You add one annotation to a screen. You run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>./gradlew ketoyBundle</code>. You upload a tiny <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>.ktx</code> file to your CDN. Every user gets the change within 60 seconds. The app on their phone doesn’t update. The flow inside it does.
+              Add one annotation. Run one Gradle task. Every device gets the change in seconds.
             </p>
           </div>
 
@@ -209,43 +185,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* We hate migrations */}
-      <section>
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">We hate heavy migrations at Ketoy</span>
-            <h2>Things you <em style={{ fontStyle: 'normal', textDecoration: 'line-through', textDecorationColor: '#ef5350', textDecorationThickness: 2 }}>have to learn</em> don’t exist.</h2>
-            <p>
-              Server-driven UI tools love giving you homework. New DSLs. New schemas. New component libraries that look like Compose but aren’t. Ketoy has none of that. Here’s the list of things you don’t have to do, in order of how much we don’t want you to do them:
-            </p>
-          </div>
-
-          <div className="nope-grid">
-            {nopeItems.map((n, i) => (
-              <div className="nope" key={i}>
-                <span className="x" aria-hidden="true">✕</span>
-                <div>{n.h}<small>{n.s}</small></div>
-              </div>
-            ))}
-          </div>
-
-          <div className="yep-row">
-            <span className="y" aria-hidden="true">✓</span>
-            <div>
-              The diff between an in-APK screen and a Ketoy screen is <b style={{ fontWeight: 600 }}>one annotation</b> and <b style={{ fontWeight: 600 }}>one Gradle task</b>. That’s it. We checked twice.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Support grid */}
+      {/* What's supported */}
       <section className="surface">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">What works · what’s in the box</span>
-            <h2>If it’s in Jetpack Compose, it’s probably in Ketoy.</h2>
+          <div className="section-head" data-reveal>
+            <span className="eyebrow">What’s supported</span>
+            <h2>If it’s Compose, it’s Ketoy.</h2>
             <p>
-              Ketoy isn’t a curated subset of &ldquo;the easy parts of Compose.&rdquo; It’s a code generator that walks your Compose classpath and writes adapters for everything it finds. When Compose adds a parameter, you run one command. Done.
+              Ketoy supports the full Compose toolkit, not a curated subset. When Compose adds a parameter, one command picks it up.
             </p>
           </div>
 
@@ -262,9 +209,13 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div style={{ marginTop: 24, textAlign: 'center' }}>
-            <Link className="link" href="/features" style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 15, color: 'var(--accent-ink)', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-              See the full supported-features matrix →
+          {/* Positive one-line takeaway */}
+          <div className="diff-strip" data-reveal>
+            <p className="diff-line">
+              <b style={{ fontWeight: 600, color: 'var(--ink)' }}>One annotation and one Gradle task.</b> That is the whole difference.
+            </p>
+            <Link className="link" href="/features" style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 15, color: 'var(--accent-ink)', whiteSpace: 'nowrap' }}>
+              See everything Ketoy supports
             </Link>
           </div>
         </div>
@@ -273,11 +224,11 @@ export default function HomePage() {
       {/* Security */}
       <section className="ink" id="security">
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow" style={{ color: '#4AE389' }}>Security · the bit you’ll have to defend to your CTO</span>
-            <h2>Three things, plus a footnote for Play Store policy.</h2>
+          <div className="section-head" data-reveal>
+            <span className="eyebrow" style={{ color: '#4AE389' }}>Security</span>
+            <h2>Secure and compliant.</h2>
             <p>
-              Server-driven UI gets the security question approximately once per conversation. Here is the answer, in three parts. You can copy-paste this into Slack.
+              Ketoy verifies every bundle before it runs. Here is how, in three parts.
             </p>
           </div>
 
@@ -291,7 +242,7 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div className="legal-row">
+          <div className="legal-row legal-row--single">
             {legalCards.map((c) => (
               <div className="card dark" key={c.quote}>
                 <div className="icon">{c.icon}</div>
@@ -306,11 +257,11 @@ export default function HomePage() {
       {/* Quick start */}
       <section>
         <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Quick start · the whole tutorial fits on a screen</span>
-            <h2>Three blocks. One Gradle task. One CDN upload.</h2>
+          <div className="section-head" data-reveal>
+            <span className="eyebrow">Quick start</span>
+            <h2>Three blocks. One Gradle task.</h2>
             <p>
-              Add the plugin to your app module. Write your screen the way you’d write any other Compose screen. Run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>ketoyBundle</code>. Upload. Look up at the clock - yep, that fast.
+              Add the plugin. Write your Compose screen. Run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>ketoyBundle</code> and upload.
             </p>
           </div>
 
@@ -327,9 +278,9 @@ export default function HomePage() {
         <div className="container">
           <div className="cta-banner">
             <div>
-              <h2>Write Kotlin. Ship the screen. Reclaim your week.</h2>
+              <h2>Write Kotlin. Ship the screen.</h2>
               <p>
-                Available now on Maven Central. Hilt integration, dev overlay, and the full Material3 adapter catalog included. No credit card, no waitlist, no sales call - it’s a Gradle plugin.
+                Available now on Maven Central. Hilt, dev tools, and the full Material 3 catalog are included.
               </p>
             </div>
             <div className="right">
@@ -341,6 +292,9 @@ export default function HomePage() {
           <SupportTrigger />
         </div>
       </section>
+
+      <ScrollReveal />
+      <JsonLd data={faqSchema(HOME_FAQ)} />
     </>
   );
 }

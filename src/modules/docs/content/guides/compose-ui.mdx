@@ -1,4 +1,4 @@
-`dev.ketoy.vm:ketoy-adapters-material3:0.4.0-alpha`.
+`dev.ketoy.vm:ketoy-adapters-material3:0.4.13-alpha`.
 
 For the canonical list of supported composables / constructors /
 tokens (with adapter IDs, signatures, and notes), see
@@ -47,14 +47,14 @@ private fun Body() { Text("Body") }
 
 Helper functions that aren't `@KetoyComposable` but are reachable from
 one are auto-included by the compiler's closure walk (see
-[Kotlin Language guide](/docs/kotlin-language)).
+[Kotlin Language guide](/docs/guides/kotlin-language)).
 
 ---
 
 ## Built-in composables
 
 The standard adapter catalog covers layout, text, buttons, inputs,
-images, navigation, and feedback. **Adapter IDs are stable** —
+images, navigation, and feedback. **Adapter IDs are stable**,
 `COLUMN = 0x0002`, `BUTTON = 0x000C`, etc.
 
 | Category | Components |
@@ -70,13 +70,16 @@ compiler-plugin picks the **canonical overload** (e.g. for `Text`, the
 17-param String overload with `minLines`; for `Surface`, the
 non-clickable overload; for `Card`, the 6-param non-clickable overload).
 
-> **What isn't catalogued yet?** `LazyColumn`, `LazyRow`, `OutlinedButton`,
-> `TextButton`, `FAB`, `ExtendedFAB`, `OutlinedTextField`, `RadioButton`,
-> `Slider`, `Divider`, `CircularProgressIndicator`, `LinearProgressIndicator`,
-> `NavigationBar`, `TabRow`, `AlertDialog`, `BottomSheet`,
-> `LazyVerticalGrid`, `HorizontalPager`. Their IDs are reserved in
-> `KBCAdapterIds`; calling them today produces `UnregisteredComposable`.
-> To add one, see [Custom Adapter](/docs/custom-adapter).
+`Canvas`, `LazyColumn`, `LazyRow`, `HorizontalDivider`, and
+`VerticalDivider` are catalogued as of `0.4.13-alpha`.
+
+> **What isn't catalogued yet?** `OutlinedButton`, `TextButton`, `FAB`,
+> `ExtendedFAB`, `OutlinedTextField`, `RadioButton`, `Slider`,
+> `CircularProgressIndicator`, `LinearProgressIndicator`, `NavigationBar`,
+> `TabRow`, `AlertDialog`, `BottomSheet`, `LazyVerticalGrid`,
+> `HorizontalPager`. Their IDs are reserved in `KBCAdapterIds`; calling
+> them today produces `UnregisteredComposable`. To add one, see
+> [Custom Adapter](/docs/guides/custom-adapter).
 
 ---
 
@@ -104,17 +107,36 @@ records which outer locals it reads, lowers them to KBC function
 parameters, and emits a `KBCValue.ClosureRef(fnIdx, capturedRegs)` at
 the construction site that eagerly snapshots the parent register file.
 
+### Local state factories
+
+Beyond `mutableStateOf`, the typed factories and `rememberSaveable`
+compile as of `0.4.13-alpha`:
+
+```kotlin
+var count  by remember { mutableIntStateOf(0) }
+var ratio  by remember { mutableFloatStateOf(1f) }
+var total  by remember { mutableLongStateOf(0L) }
+var factor by remember { mutableDoubleStateOf(1.0) }
+
+// Survives recomposition AND configuration change:
+var name by rememberSaveable { mutableStateOf("") }
+```
+
+Read and write are both supported (`count++`, `total += n`). State read
+inside a `Scaffold` slot or a content lambda that captures the variable
+recomposes correctly.
+
 ### Hoisting state to a ViewModel
 
 For state that must survive rotation or process death, use
-`@KetoyViewModel`. See [ViewModel guide](/docs/viewmodel).
+`@KetoyViewModel`. See [ViewModel guide](/docs/guides/viewmodel).
 
 ---
 
 ## Modifiers
 
 Modifier chains are recognised at IR time and pooled into the bundle's
-modifier table — one entry per unique chain, referenced by index.
+modifier table, one entry per unique chain, referenced by index.
 Supported operations:
 
 ```
@@ -156,7 +178,92 @@ closure-conversion mechanism as composable arguments.
 
 ---
 
-## Colors, dimensions, font weights — the token system
+## Layout additions
+
+New in `0.4.13-alpha`, these bring the common Compose layout ergonomics
+into KBC.
+
+### Scroll
+
+```kotlin
+Column(modifier = Modifier.verticalScroll(rememberScrollState())) { /* ... */ }
+Row(modifier = Modifier.horizontalScroll(rememberScrollState())) { /* ... */ }
+```
+
+### `Arrangement.spacedBy`
+
+All three overloads, on `Column` / `Row` / `LazyColumn` / `LazyRow`:
+
+```kotlin
+Column(verticalArrangement = Arrangement.spacedBy(12.dp)) { /* ... */ }
+Column(verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top)) { /* ... */ }
+```
+
+### Per-corner rounded shapes
+
+Works as a `shape =` argument **and** inside
+`Modifier.clip` / `background` / `border` / `shadow`:
+
+```kotlin
+Box(
+    modifier = Modifier
+        .clip(RoundedCornerShape(topStart = 16.dp, bottomEnd = 16.dp))
+        .background(Color.LightGray),
+)
+```
+
+### Dividers and theme colours
+
+`HorizontalDivider` and `VerticalDivider` are now first-class adapters,
+and `themeColor("name")` lets a single bundle render correctly in light
+**and** dark mode:
+
+```kotlin
+Surface(color = themeColor("backgroundColor")) {
+    Column {
+        Text("About", color = themeColor("textColor"))
+        HorizontalDivider(color = themeColor("dividerColor"))
+    }
+}
+```
+
+---
+
+## Lists with `forEach`
+
+Iterate a list and emit a composable per item. This works over literal
+lists **and** lists returned by a host capability, so the host can own
+the collection and add an item without republishing the bundle:
+
+```kotlin
+@KetoyComposable
+fun VehicleList(options: List<VehicleOption>) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        options.forEach { option ->
+            VehicleRow(option = option)     // a reusable component per item
+        }
+    }
+}
+
+// forEachIndexed works too:
+items.forEachIndexed { index, item ->
+    Text("${index + 1}. $item")
+}
+```
+
+Per-item captures are correct: a `clickable { selected = it }` inside the
+loop body re-snapshots the current element on each iteration. See
+[Reusable components](/docs/guides/reusable-components) for the row
+component pattern.
+
+> **`forEach` vs `LazyColumn`.** `forEach` eagerly emits every row (best
+> for short, known lists). For long or scrolling lists use
+> `LazyColumn { items(list) { ... } }`, which is virtualized. Both are
+> available.
+
+---
+
+## Colors, dimensions, font weights, the token system
 
 Compose property reads like `Color.Red`, `16.dp`, `FontWeight.Bold` are
 resolved at compile time into compact byte-tagged literals via the
@@ -184,7 +291,7 @@ doesn't know about, the compiler emits:
 KetoyBC: Direct access to FontWeight.Companion.<get-W250> is not allowed
 ```
 
-— meaning the token isn't seeded. Workaround: use `FontWeight(250)`
+This means the token isn't seeded. Workaround: use `FontWeight(250)`
 (constructor call), which is a `CONSTRUCT_JVM` path.
 
 ---
@@ -231,12 +338,12 @@ default.copy(imageVectorResolver = materialIconsResolver)
 ### Why register icons manually?
 
 R8 strips unused icon classes from your release APK. Each `register*`
-call takes a **direct compile-time reference** to the icon — R8's
+call takes a **direct compile-time reference** to the icon, R8's
 reachability analysis sees the field read and keeps it alive. No `-keep`
 rules required.
 
 Icons referenced from KBC source but **not registered** by the host
-render as a 24×24 transparent placeholder (`PlaceholderImageVector`) —
+render as a 24×24 transparent placeholder (`PlaceholderImageVector`),
 visibly broken in QA, not a runtime crash.
 
 ---
@@ -246,7 +353,7 @@ visibly broken in QA, not a runtime crash.
 ### Generic families
 
 `FontFamily.Default`, `SansSerif`, `Serif`, `Monospace`, `Cursive` are
-inline tokens — no host registration needed.
+inline tokens, no host registration needed.
 
 ```kotlin
 Text(text = "Mono", fontFamily = FontFamily.Monospace)
@@ -269,7 +376,7 @@ private fun Title() {
 ```
 
 The encoder atomically collapses `FontFamily(Font(R.font.X))` into
-`KBCValue.StringLiteral("courgette_regular")` — the resource **name**,
+`KBCValue.StringLiteral("courgette_regular")`, the resource **name**,
 not the Int ID. (Resource IDs can be renumbered by R8; names are
 immutable.)
 
@@ -303,7 +410,7 @@ register("inter_italic", inter)
 
 ## Images
 
-### Coil — `AsyncImage` (URL / remote)
+### Coil, `AsyncImage` (URL / remote)
 
 ```kotlin
 import coil.compose.AsyncImage
@@ -322,7 +429,7 @@ private fun Avatar() {
 Coil must be on the host APK's classpath (`io.coil-kt:coil-compose`).
 The KBC bundle calls into it via the standard adapter.
 
-### Local drawables — `Image` + `painterResource`
+### Local drawables, `Image` + `painterResource`
 
 ```kotlin
 import androidx.compose.foundation.Image
@@ -374,7 +481,7 @@ fun TodoScreen() {
             )
         },
         floatingActionButton = {
-            // FAB adapter not yet catalogued — use IconButton or write a custom adapter.
+            // FAB adapter not yet catalogued, use IconButton or write a custom adapter.
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
@@ -390,11 +497,11 @@ The `content: (PaddingValues) -> Unit` slot is recognised by the
 
 > **Note** on `@OptIn(ExperimentalMaterial3Api::class)`: `TopAppBar` is
 > still experimental in Material3. The compiler plugin honours opt-in
-> markers — your KBC source must declare it.
+> markers, your KBC source must declare it.
 
 ---
 
-## Input — `TextField` with state
+## Input, `TextField` with state
 
 ```kotlin
 @KetoyComposable @KetoyEntryPoint
@@ -418,7 +525,7 @@ fun EmailField() {
 ```
 
 `KeyboardOptions(...)` is built via the registered constructor adapter
-(`KBCConstructorIds.KEYBOARD_OPTIONS = 0x0004`) — the compiler emits a
+(`KBCConstructorIds.KEYBOARD_OPTIONS = 0x0004`), the compiler emits a
 `CONSTRUCT_JVM` opcode that builds the object on the interpreter thread
 and stores it in a register before passing it to `TextField`.
 
@@ -450,7 +557,7 @@ fun ItemList() {
 }
 ```
 
-The `onClick` lambda captures `index` and `items` from the outer scope —
+The `onClick` lambda captures `index` and `items` from the outer scope,
 again, closure conversion handles it.
 
 > `forEachIndexed` is a stdlib extension. The compiler-plugin allowlist
@@ -468,10 +575,10 @@ again, closure conversion handles it.
 | `MyClass::class.java` | `ReflectionUsage` |
 | `GlobalScope.launch { ... }` | `GlobalScopeUsage` |
 | `MyCustomComposable()` (no adapter) | `UnregisteredComposable` |
-| `Color(redInt, greenInt, blueInt)` literal positional | OK — `CONSTRUCT_JVM` |
+| `Color(redInt, greenInt, blueInt)` literal positional | OK, `CONSTRUCT_JVM` |
 | Custom view-class constructor | `NonKbcConstructor` |
 
 See [Compile Errors](/docs/reference/compile-errors) for the full list
 with sample messages.
 
-Next: [ViewModel →](/docs/viewmodel)
+Next: [ViewModel →](/docs/guides/viewmodel)

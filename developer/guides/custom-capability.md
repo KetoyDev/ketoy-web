@@ -1,8 +1,8 @@
 # Custom Capability
 
 Capabilities are the **only** way KBC reaches host code. Anything you
-want KBC to do that isn't already built-in — proprietary SDK, custom
-SDK call, hardware sensor, third-party API — wraps as a capability.
+want KBC to do that isn't already built-in, proprietary SDK, custom
+SDK call, hardware sensor, third-party API, wraps as a capability.
 
 This guide walks through the full pattern, end-to-end.
 
@@ -13,7 +13,7 @@ This guide walks through the full pattern, end-to-end.
 A capability is three artifacts that must agree:
 
 1. **A stable `Short` ID** in the app-specific range `0x4000–0x7FFF`.
-2. **A KBC-side `@KetoyCapabilityStub`** function — the stub the
+2. **A KBC-side `@KetoyCapabilityStub`** function, the stub the
    compiler resolves into `INVOKE_CAPABILITY` opcodes.
 3. **A host-side `register*` call** that supplies the actual
    implementation.
@@ -30,22 +30,22 @@ Plus one piece of metadata so the compiler can validate at build time:
 We'll add a `vibrate(durationMs)` capability backed by `Vibrator` (an
 Android system service).
 
-### Step 1 — Reserve an ID
+### Step 1, Reserve an ID
 
 ```kotlin
 // AppCapabilityIds.kt
 object AppCapabilityIds {
-    /** sync (durationMs: Long): Unit — vibrate the device for N ms. */
+    /** sync (durationMs: Long): Unit, vibrate the device for N ms. */
     const val VIBRATE: Short = 0x4200.toShort()
 }
 ```
 
 > Built-in capabilities already include `VIBRATE` at `0x0904` (from
 > `registerPlatformCapabilities`). This example uses `0x4200` for
-> illustration — in real code, prefer the built-in unless you need
+> illustration, in real code, prefer the built-in unless you need
 > different semantics.
 
-### Step 2 — Write the KBC-side stub
+### Step 2, Write the KBC-side stub
 
 ```kotlin
 // Capabilities.kt (your KBC source)
@@ -56,17 +56,17 @@ package com.example.myapp.ketoyscreens
 import dev.ketoy.annotations.KetoyCapabilityStub
 
 private const val STUB_MSG =
-    "KetoyVM capability stub — replaced by INVOKE_CAPABILITY at compile time"
+    "KetoyVM capability stub, replaced by INVOKE_CAPABILITY at compile time"
 
 @KetoyCapabilityStub(id = 0x4200, name = "VIBRATE")
 fun vibrate(durationMs: Long): Unit = error(STUB_MSG)
 ```
 
 Notes:
-- The function is `public` (the default — annotations work on any
+- The function is `public` (the default, annotations work on any
   visibility, but the validator's closure walk treats `public` and
   `private` the same).
-- Body is `= error(STUB_MSG)` — concise + crashes loudly if the
+- Body is `= error(STUB_MSG)`, concise + crashes loudly if the
   compiler plugin ever fails to replace it.
 - The annotation's `id` matches `AppCapabilityIds.VIBRATE` exactly.
 - The annotation's `name` is human-readable, used in error messages.
@@ -85,7 +85,7 @@ For flow:
 fun observeBattery(): Flow<Int> = error(STUB_MSG)
 ```
 
-### Step 3 — Register the implementation
+### Step 3, Register the implementation
 
 ```kotlin
 @Singleton
@@ -121,11 +121,11 @@ The four registration shapes on `CapabilityRegistry`:
 
 > Most app capabilities are `register` (sync) or `registerSuspend`
 > (background work). `registerFlow` is for observable streams.
-> `registerComposable` is rare — it lets you bridge a host-side
+> `registerComposable` is rare, it lets you bridge a host-side
 > `@Composable` into KBC without an adapter. Adapters are still
 > preferred for first-class UI components.
 
-### Step 4 — Add the JSON entry
+### Step 4, Add the JSON entry
 
 `app/ketoy-capabilities.json`:
 
@@ -145,7 +145,7 @@ The four registration shapes on `CapabilityRegistry`:
 The compiler reads this file at build time, validates each
 `@KetoyCapabilityStub` ID exists, fuzzy-matches names for typos.
 
-### Step 5 — Use it
+### Step 5, Use it
 
 ```kotlin
 @KetoyComposable @KetoyEntryPoint
@@ -219,14 +219,14 @@ registerSuspend(AppCapabilityIds.OPEN_PROFILE) { args ->
 ## Capability lifecycle
 
 - **Registration**: when `KetoyHiltModule` constructs the `CapabilityRegistry`
-  (singleton — runs once at app start).
+  (singleton, runs once at app start).
 - **Invocation**: every KBC call site.
 - **Cancellation**: suspend / flow capabilities respect coroutine
   cancellation. If the KBC `viewModelScope` cancels, in-flight
   capability calls are cancelled too (provided the host implementation
   is cooperative).
 
-The registry is **not** thread-safe for registration — register all
+The registry is **not** thread-safe for registration, register all
 capabilities once in `buildRegistry()`, don't add more after. Lookups
 are thread-safe by construction (the map is immutable after build).
 
@@ -234,7 +234,7 @@ are thread-safe by construction (the map is immutable after build).
 
 ## Strict-mode validation
 
-`KetoyConfig.validateManifest = true` (the default) — every capability
+`KetoyConfig.validateManifest = true` (the default), every capability
 ID a bundle declares **must** exist in the host's registry, even those
 marked `required = false`. Missing IDs throw
 `KetoyMissingCapabilityException` at bundle parse time:
@@ -261,12 +261,12 @@ capability.
 ## Best practices
 
 - **Reserve IDs in a single shared `object`**. Treat IDs like database
-  schema — never reassign.
+  schema, never reassign.
 - **Document the signature in KDoc on the ID constant**. KBC code looks
   at the stub's signature; host code looks at the registry. They must
   agree, but the canonical statement lives on the ID.
 - **Don't expose secrets through capabilities**. Auth tokens, refresh
-  tokens, encryption keys — keep them host-side. Expose only the
+  tokens, encryption keys, keep them host-side. Expose only the
   decorated operations (e.g. a `getAuthenticatedUserId(): String?`
   capability, not a `getAuthToken()`).
 - **Prefer suspend over sync** for anything that can block. The
@@ -274,6 +274,6 @@ capability.
 - **Return primitive types or `Map<String, Any?>`** rather than custom
   classes. KBC casts on read; complex types add coupling.
 - **Test capability registration in isolation**. The `ketoy-test` AAR's
-  `FakeCapabilityRegistry` makes this trivial — see [Testing](#).
+  `FakeCapabilityRegistry` makes this trivial, see [Testing](#).
 
 Next: [Custom Adapter →](custom-adapter.md)

@@ -5,7 +5,7 @@ covers what you can use inside a `@KetoyComposable` / `@KetoyEntryPoint`
 / `@KetoyViewModel` and what the compiler rejects.
 
 The shorter version: **write idiomatic Kotlin**. Data classes, sealed
-classes, `when`, lambdas, coroutines, generics, extension functions —
+classes, `when`, lambdas, coroutines, generics, extension functions,
 all supported. The boundary is at the **system interface**: Android
 APIs, reflection, file I/O, raw Java interop need to go through
 capabilities.
@@ -70,7 +70,7 @@ try {
 ```
 
 **Caveat**: catch is currently catch-all. The first handler runs for any
-exception type — multi-catch falls through to the first one. Always
+exception type, multi-catch falls through to the first one. Always
 explicitly re-throw `CancellationException` to preserve structured
 cancellation:
 
@@ -85,7 +85,7 @@ cancellation:
 
 ## Data classes
 
-Full support — `equals`, `hashCode`, `toString`, `copy`, `componentN`
+Full support, `equals`, `hashCode`, `toString`, `copy`, `componentN`
 auto-generated:
 
 ```kotlin
@@ -127,7 +127,7 @@ fun Screen(state: UiState) {
 ```
 
 `is` (`INSTANCEOF`), `as` (`CAST`), `as?` (`SAFE_CAST`),
-exhaustiveness checking — all work.
+exhaustiveness checking, all work.
 
 ---
 
@@ -175,7 +175,7 @@ fun PriceTag(price: Long) { Text(formatCurrency(price)) }
 ```
 
 Same-module top-level functions are auto-included in the closure walk.
-You don't need `@KetoyComposable` on plain helpers — only on entry
+You don't need `@KetoyComposable` on plain helpers, only on entry
 points and on `@Composable` functions that participate in adapter
 resolution.
 
@@ -195,7 +195,7 @@ The receiver becomes register 0 of the helper function.
 ### Inline functions
 
 `inline fun` is **inlined by the Kotlin frontend** before the IR
-extension runs — the compiler sees the inlined body. Reified type
+extension runs, the compiler sees the inlined body. Reified type
 parameters work if the use site is concrete.
 
 ### Higher-order functions / lambdas
@@ -214,7 +214,7 @@ captures, lowers them to function parameters threaded through
 
 ## Generics
 
-Erased at IR time — KBC sees the same shape Kotlin would. Type checks
+Erased at IR time, KBC sees the same shape Kotlin would. Type checks
 (`is List<String>`) only match the erased type:
 
 ```kotlin
@@ -285,7 +285,7 @@ c.value      // → 1
 ```
 
 User class instances live on the KBC heap (`NEW_INSTANCE`, `GET_FIELD`,
-`SET_FIELD`, `INVOKE_VIRTUAL`). Inheritance is **limited** — there's no
+`SET_FIELD`, `INVOKE_VIRTUAL`). Inheritance is **limited**, there's no
 virtual-dispatch table beyond the immediate `INVOKE_VIRTUAL` lookup.
 Adapter-routed Compose types and registered capabilities are the
 supported way to reach platform behaviour. For sealed-class hierarchies
@@ -300,7 +300,7 @@ fine.
 
 | Pattern | Error | Why |
 |---|---|---|
-| `android.util.Log.d(...)` | `DirectAndroidApiAccess` | Android framework — capability-bridge it. |
+| `android.util.Log.d(...)` | `DirectAndroidApiAccess` | Android framework, capability-bridge it. |
 | `kotlin.reflect.typeOf<T>()` | `ReflectionUsage` | No class metadata in the KBC sandbox. |
 | `MyClass::class.java` | `ReflectionUsage` | Same. |
 | `File("...").readText()` | `FileIoUsage` | Use a storage capability. |
@@ -312,9 +312,9 @@ fine.
 
 ### Limits that produce silent surprises (no error)
 
-- **`try / catch` is catch-all** — first handler runs for any throwable.
+- **`try / catch` is catch-all**, first handler runs for any throwable.
   Workaround: branch on `is` inside the handler.
-- **Generics are erased** — `is List<Int>` matches any list. Standard
+- **Generics are erased**, `is List<Int>` matches any list. Standard
   JVM behaviour.
 - **Inheritance** beyond `INVOKE_VIRTUAL` on direct method lookups
   is limited. Sealed-class + `when` is the recommended pattern.
@@ -330,7 +330,7 @@ unannotated top-level functions and extension functions are
 auto-included.
 
 Functions that are **not** reachable from any KBC root compile straight
-to DEX as plain Kotlin and ship with the next APK release — the closure
+to DEX as plain Kotlin and ship with the next APK release, the closure
 walk leaves them untouched. This is how you can have a single `:app`
 module containing both KBC source (e.g. `ketoyscreens/HomeScreen.kt`)
 and native fallbacks (e.g. `ui/HomeNativeFallback.kt`).
@@ -365,16 +365,16 @@ offending helper.
 | `remember { … }` | `COMPOSE_REMEMBER`. |
 | `mutableStateOf(initial)` | `COMPOSE_STATE`. |
 | `derivedStateOf { … }` | `COMPOSE_DERIVED`. |
-| `produceState(initial) { … }` | Not yet — wrap as a `Flow` + `collectAsState`. |
+| `produceState(initial) { … }` | Not yet, wrap as a `Flow` + `collectAsState`. |
 | `rememberCoroutineScope()` | Use `viewModelScope` (preferred) or implement as a capability. |
-| `Modifier.composed { … }` | Not yet — use a custom modifier op via an adapter. |
+| `Modifier.composed { … }` | Not yet, use a custom modifier op via an adapter. |
 
 ---
 
 ## What about `expect`/`actual`?
 
 KBC source is single-target (Android). `expect`/`actual` declarations
-aren't applicable — your KBC bundle is an Android-only artifact.
+aren't applicable, your KBC bundle is an Android-only artifact.
 
 For sharing logic between KBC and platform-native code, prefer:
 - Hoisting pure logic into a KMP module that both can depend on.

@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/guides/hilt.mdx';
 
 export const metadata = {
-  title: 'Hilt · Ketoy Docs',
+  alternates: { canonical: '/docs/guides/hilt' },
+  title: 'Hilt',
   description: 'The `dev.ketoy.vm:ketoy-hilt` AAR wires Ketoy into Hilt\'s',
 };
 

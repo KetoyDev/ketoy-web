@@ -1,19 +1,18 @@
-import { SDK_VERSION_FULL } from '@/constants';
 
 export const meta = {
   id: 'ketoy-0-3-4-alpha',
   section: 'platform',
   title: 'Ketoy 0.3.4-alpha is here',
   summary:
-    'A resource-resolver release — custom typography and real drawables are now first-class citizens in your KBC source.',
+    'A resource-resolver release, custom typography and real drawables are now first-class citizens in your KBC source.',
   chip: 'New',
   chipClass: 'uchip-new',
   date: 'May 19, 2026',
-  tag: `Platform · ${SDK_VERSION_FULL}`,
-  metaTag: `Platform · ${SDK_VERSION_FULL}`,
+  tag: 'Platform · 0.3.4-alpha',
+  metaTag: 'Platform · 0.3.4-alpha',
 };
 
-We're excited to ship **0.3.4-alpha** — a resource-resolver release that
+We're excited to ship **0.3.4-alpha**, a resource-resolver release that
 makes your KBC screens look the way you actually want them to. Custom
 typography. Real drawables. The two pieces that always made
 server-driven UI feel "almost there" are now first-class citizens in
@@ -30,7 +29,7 @@ your Kotlin source.
 }`}
 </CodeWindow>
 
-If you're already on 0.3.x, this is a drop-in upgrade — additive
+If you're already on 0.3.x, this is a drop-in upgrade, additive
 properties on `KetoyConfig`, no breaking API changes.
 
 ### What landed
@@ -48,14 +47,14 @@ properties on `KetoyConfig`, no breaking API changes.
   `IMAGE` adapter. Vector or bitmap, your choice.
 - **Six new bitwise Int opcodes** under the hood, so deeply-nested
   composables stop hitting interpreter ceilings. You don't need to do
-  anything — it just works.
+  anything, it just works.
 - **Per-adapter typed-getter overrides** via the `paramResolver=`
-  scan-roots directive — useful if you're authoring custom adapters
+  scan-roots directive, useful if you're authoring custom adapters
   and want a specific `KBCParamSet` getter for a parameter type that
   the global classifier doesn't dispatch on.
 
 <InfoCard title="What's next: more widgets, more polish">
-  We're spending the next stretch on widget customizability — making
+  We're spending the next stretch on widget customizability, making
   more of the Material3 + Foundation surface area work the way you'd
   expect in plain Compose. More slot types, more overload coverage,
   more of the modifiers and defaults you reach for every day.

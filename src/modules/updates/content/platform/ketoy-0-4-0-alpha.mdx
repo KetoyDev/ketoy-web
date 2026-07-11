@@ -1,20 +1,19 @@
 import Link from 'next/link';
-import { SDK_VERSION_FULL } from '@/constants';
 
 export const meta = {
   id: 'ketoy-0-4-0-alpha',
   section: 'platform',
   title: 'Ketoy 0.4.0-alpha is here',
   summary:
-    'The version-decoupling release — your Kotlin, AGP, Gradle and Compose versions are no longer pinned to KetoyVM. Bump freely.',
+    'The version-decoupling release, your Kotlin, AGP, Gradle and Compose versions are no longer pinned to KetoyVM. Bump freely.',
   chip: 'New',
   chipClass: 'uchip-new',
   date: 'Jun 12, 2026',
-  tag: `Platform · ${SDK_VERSION_FULL}`,
-  metaTag: `Platform · ${SDK_VERSION_FULL}`,
+  tag: 'Platform · 0.4.0-alpha',
+  metaTag: 'Platform · 0.4.0-alpha',
 };
 
-We're shipping **0.4.0-alpha** — the release that lifts the toolchain pin. Until
+We're shipping **0.4.0-alpha**, the release that lifts the toolchain pin. Until
 now, KetoyVM forced your app onto its exact Kotlin / AGP / Compose combination.
 That's gone. **0.4.0 decouples your project from KetoyVM's pinned toolchain on
 two independent axes.**
@@ -30,7 +29,7 @@ two independent axes.**
 }`}
 </CodeWindow>
 
-If you're already on 0.3.x, this is a drop-in upgrade — no breaking API changes.
+If you're already on 0.3.x, this is a drop-in upgrade, no breaking API changes.
 The headline difference is what you're now *allowed* to do: move your Kotlin,
 AGP, Gradle and Compose versions without matching KetoyVM's.
 
@@ -48,15 +47,15 @@ AGP, Gradle and Compose versions without matching KetoyVM's.
   `K2JVMCompiler` in a classloader isolated from your build. Your Kotlin compiler
   never loads KetoyVM compiler code; KetoyVM's pinned Kotlin never sees your
   toolchain. Verified on `Devices` at **Kotlin 2.2.10 / AGP 9.1.1 / Gradle
-  9.3.1** — a full AGP major ahead of KetoyVM's 8.13.
+  9.3.1**, a full AGP major ahead of KetoyVM's 8.13.
 - **Compose version decoupled for the supported surface.** Parameters are now
   keyed by **name**, not position, so a newer Compose that adds, reorders, or
   removes a param no longer shifts your arguments into the wrong slot. The
   Material3 1.4.0 `Text.autoSize` insertion that used to silently break custom
-  fonts now renders correctly — verified on a physical Pixel.
+  fonts now renders correctly, verified on a physical Pixel.
 - **Build-time advisories.** When your Compose diverges from the catalog, the
   compiler reports exactly what it dropped (unknown param, type-mismatch) plus a
-  per-bundle coverage summary — a visible advisory instead of a silent wrong
+  per-bundle coverage summary, a visible advisory instead of a silent wrong
   render.
 
 <InfoCard title="Read the full compatibility matrix">

@@ -2,12 +2,14 @@ import Link from 'next/link';
 import UpdatesHero from '@/modules/updates/components/UpdatesHero';
 import UpdatesSection from '@/modules/updates/components/UpdatesSection';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Latest updates - Ketoy',
+export const metadata = pageMetadata({
+  title: 'Latest updates',
   description:
-    "Platform and Ketoy SDK updates - release notes, new features, and what's coming next.",
-};
+    'Release notes and changelog for Ketoy, the Kotlin-native server-driven UI (SDUI) and over-the-air (OTA) platform for Android. Platform and SDK updates.',
+  path: '/updates',
+});
 
 export default function UpdatesPage() {
   const platform = getUpdatesBySection('platform');

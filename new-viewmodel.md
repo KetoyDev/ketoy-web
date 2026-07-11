@@ -1,0 +1,746 @@
+# ViewModels, State & Business Logic
+
+Ketoy lets you write **idiomatic Kotlin ViewModels** — `data class` UI
+state, a real `kotlinx` `StateFlow`, `viewModelScope.launch { }`,
+constructor-injected repositories, and the full set of Compose effects —
+and compile them into a `.ktx` bundle that runs natively on device. The
+code you write is the code Android developers already know. There is no
+Ketoy-specific ViewModel API to learn for the common case.
+
+This page covers the **typed ViewModel model** (recommended) end to end:
+declaring a ViewModel, modelling state with data classes, reading state in
+your composable, handling events, running coroutines, accessing
+repositories (Room / Hilt / Ktor / Retrofit), and using every Compose
+effect. A lower-level [state-map model](#alternative-the-state-map-model)
+is also available and documented at the end.
+
+!!! info "What runs where"
+    Your ViewModel and screen are **compiled to KBC bytecode** and execute
+    inside the Ketoy runtime on device. They are *sandboxed*: KBC cannot
+    touch Android APIs, the filesystem, reflection, or third-party
+    libraries directly. Anything outside the sandbox — your database, your
+    network client, navigation — is reached through the **capability
+    bridge** (see [Repository & data access](#repository-data-access)).
+    The data classes, `StateFlow`, coroutines, and Compose recomposition
+    all run as real compiled logic.
+
+---
+
+## A complete example
+
+Here is a full, working typed-ViewModel screen. Every construct in it
+compiles to KBC and ships in the bundle. The sections below break it down.
+
+```kotlin
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dev.ketoy.annotations.KetoyComposable
+import dev.ketoy.annotations.KetoyEntryPoint
+import dev.ketoy.annotations.KetoyViewModel
+import dev.ketoy.runtime.compose.ketoyViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+// 1. UI state as a plain data class.
+data class CounterUiState(val count: Int = 0, val loading: Boolean = false)
+
+// 2. The data layer, declared as an interface (the host provides the impl).
+interface CounterRepository {
+    suspend fun fetchSeed(): Int
+}
+
+// 3. The ViewModel — ordinary Kotlin.
+@KetoyViewModel
+class CounterViewModel(private val repo: CounterRepository) : ViewModel() {
+    private val _uiState = MutableStateFlow(CounterUiState())
+    val uiState: StateFlow<CounterUiState> = _uiState.asStateFlow()
+
+    fun increment() = _uiState.update { it.copy(count = it.count + 1) }
+
+    fun refresh() =
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
+            val seed = repo.fetchSeed()
+            _uiState.update { it.copy(count = seed, loading = false) }
+        }
+}
+
+// 4. The screen — resolves the VM, reads its state, dispatches events.
+@KetoyEntryPoint
+@KetoyComposable
+@Composable
+fun CounterScreen(modifier: Modifier = Modifier) {
+    val vm = ketoyViewModel<CounterViewModel>()
+    val state by vm.uiState.collectAsState()
+
+    Column(modifier = modifier.fillMaxSize().padding(24.dp)) {
+        if (state.loading) {
+            Text("Loading…")
+        } else {
+            Text("Count: ${state.count}")
+        }
+        Button(onClick = { vm.increment() }) { Text("Increment") }
+        Button(onClick = { vm.refresh() }) { Text("Seed from data") }
+    }
+}
+```
+
+---
+
+## Declaring a ViewModel
+
+Annotate an ordinary class with `@KetoyViewModel` and extend
+`androidx.lifecycle.ViewModel`:
+
+```kotlin
+@KetoyViewModel
+class CounterViewModel(private val repo: CounterRepository) : ViewModel() { … }
+```
+
+- The class is compiled into the bundle as a **KBC value type**. Its
+  fields are the declared backing-field properties **in declaration
+  order**.
+- **Constructor parameters that are dependencies** (interfaces you call
+  into — repositories, clients) become *inert* fields; they are never
+  read as data, only used to resolve capability calls (see
+  [Repository & data access](#repository-data-access)).
+- Property initializers (`_uiState = MutableStateFlow(...)`,
+  `uiState = _uiState.asStateFlow()`) run once when the ViewModel is first
+  resolved.
+
+!!! warning "Supported shapes"
+    `@KetoyViewModel` must be applied to a **concrete class** (not an
+    `object`, `abstract`, or `sealed` class). It must extend
+    `androidx.lifecycle.ViewModel`. Constructor parameters must be either
+    a `data class`/value type you also compile, or an **interface** the
+    host implements as a capability.
+
+---
+
+## Modelling state with data classes
+
+UI state is a plain `data class`. Data classes are first-class in KBC:
+construct them, read properties, `copy(...)`, destructure, and
+`when (x) { is … }` over sealed hierarchies all compile to dedicated
+bytecode (no reflection).
+
+```kotlin
+data class CounterUiState(val count: Int = 0, val loading: Boolean = false)
+
+// Construct (defaults are materialised at the call site):
+val initial = CounterUiState()                 // count = 0, loading = false
+val seeded  = CounterUiState(count = 42)       // loading defaults to false
+
+// Read a property:
+val n = state.count
+
+// Copy with overrides:
+val next = state.copy(count = state.count + 1)
+
+// Destructure:
+val (count, loading) = state
+```
+
+Sealed UI states work too:
+
+```kotlin
+sealed interface ScreenState {
+    data object Loading : ScreenState
+    data class Loaded(val items: List<String>) : ScreenState
+    data class Error(val message: String) : ScreenState
+}
+
+when (val s = state) {
+    is ScreenState.Loading -> Text("Loading…")
+    is ScreenState.Loaded  -> Text("${s.items.size} items")
+    is ScreenState.Error   -> Text(s.message)
+}
+```
+
+!!! note "Field names ship in the bundle"
+    A data class used by a ViewModel has its field **names** recorded in
+    the bundle's type pool so the runtime can size the object correctly.
+    Keep state classes focused; very wide data classes add bytes to the
+    bundle.
+
+---
+
+## Holding state — `StateFlow`
+
+State lives in a real `kotlinx.coroutines.flow.MutableStateFlow`, exposed
+as a read-only `StateFlow`:
+
+```kotlin
+private val _uiState = MutableStateFlow(CounterUiState())
+val uiState: StateFlow<CounterUiState> = _uiState.asStateFlow()
+```
+
+Mutate it with `update { }`:
+
+```kotlin
+fun increment() = _uiState.update { it.copy(count = it.count + 1) }
+```
+
+The compiler recognises a **closed set** of `kotlinx.coroutines.flow`
+calls — `MutableStateFlow(initial)`, `asStateFlow()`, `update { }`, and
+`.value` get/set. These run as real flow operations (no reflection,
+no interpretation of the flow internals).
+
+!!! warning "Use only the recognised flow surface"
+    Inside a KBC ViewModel you can use `MutableStateFlow`, `asStateFlow()`,
+    `update { }`, and `.value`. Other flow builders/operators (`flow { }`,
+    `combine`, `stateIn`, custom operators) are **not** part of the bundle
+    surface — expose those as host **capabilities** instead, or collect
+    them with [`collectAsState`](#reading-state-collectasstate). See
+    [Coroutines & Flow](coroutines-flow.md).
+
+---
+
+## Resolving the ViewModel — `ketoyViewModel<T>()`
+
+In your screen, get the lifecycle-scoped instance with the
+`ketoyViewModel<T>()` intrinsic:
+
+```kotlin
+val vm = ketoyViewModel<CounterViewModel>()
+```
+
+This resolves a **single cached instance** per screen, stored in the
+hosting `ViewModelStore`. It is created on first use (running the
+property initializers once) and **survives recomposition and
+configuration changes**. It is cleared when the screen leaves the back
+stack.
+
+---
+
+## Reading state — `collectAsState`
+
+Bridge the `StateFlow` into Compose with `collectAsState()`. Reading the
+resulting state **registers a recomposition dependency**, so the screen
+re-renders automatically whenever the flow emits. Two equivalent forms:
+
+=== "by delegate (recommended)"
+
+    ```kotlin
+    import androidx.compose.runtime.collectAsState
+    import androidx.compose.runtime.getValue
+
+    val state by vm.uiState.collectAsState()
+    Text("Count: ${state.count}")
+    ```
+
+=== ".value form"
+
+    ```kotlin
+    import androidx.compose.runtime.collectAsState
+
+    val state = vm.uiState.collectAsState()
+    Text("Count: ${state.value.count}")
+    ```
+
+Both compile to the **same** recomposing read. Use whichever you prefer;
+the `by`-delegate form needs the `import androidx.compose.runtime.getValue`.
+
+---
+
+## Events — calling ViewModel methods
+
+A `@Composable` calls ViewModel methods directly — there is no special
+event API. Pass them as `onClick` / `onValueChange` handlers:
+
+```kotlin
+Button(onClick = { vm.increment() }) { Text("Increment") }
+Button(onClick = { vm.refresh() })   { Text("Refresh") }
+```
+
+`vm.increment()` runs the compiled method body (here, a synchronous
+`update { }`). `vm.refresh()` launches a coroutine (next section).
+
+---
+
+## Coroutines — `viewModelScope.launch`
+
+Asynchronous work runs in `viewModelScope`, exactly like a normal
+ViewModel. The launched coroutine is a structured child of the screen's
+scope and is **cancelled automatically** when the screen is cleared.
+
+```kotlin
+fun refresh() =
+    viewModelScope.launch {
+        _uiState.update { it.copy(loading = true) }   // runs synchronously
+        val seed = repo.fetchSeed()                   // suspends — calls the host
+        _uiState.update { it.copy(count = seed, loading = false) }
+    }
+```
+
+- `viewModelScope.launch { … }` lowers to the runtime's structured
+  coroutine launch.
+- `suspend` calls into a repository (`repo.fetchSeed()`) suspend the KBC
+  coroutine and resume with the host's result.
+- Synchronous statements (`update { }`) run inline between suspension
+  points.
+
+!!! tip "Loading states"
+    The `loading = true → fetch → loading = false` pattern shown above is
+    the idiomatic way to drive a spinner. Because `collectAsState`
+    recomposes on every emission, the screen shows *Loading…* the instant
+    you set the flag and the result the instant the suspend returns.
+
+See [Coroutines & Flow](coroutines-flow.md) for `withContext`,
+dispatchers, `async`/`await`, and structured-concurrency details.
+
+---
+
+## Repository & data access
+
+This is the most important concept for real apps: **how a sandboxed KBC
+ViewModel reaches your database, network, or any host code.**
+
+The rule is the *capability bridge*. Your ViewModel depends only on an
+**interface**; the host provides the real implementation and registers it
+as a capability. KBC never imports Room, Hilt, Ktor, Retrofit, or any
+Android type.
+
+### 1. Declare the interface in the bundle
+
+```kotlin
+interface CounterRepository {
+    suspend fun fetchSeed(): Int
+}
+
+@KetoyViewModel
+class CounterViewModel(private val repo: CounterRepository) : ViewModel() {
+    fun refresh() = viewModelScope.launch {
+        val seed = repo.fetchSeed()        // → INVOKE_CAPABILITY_SUSPEND
+        _uiState.update { it.copy(count = seed) }
+    }
+}
+```
+
+A call to `repo.fetchSeed()` lowers to a **suspend capability call** keyed
+by the method's fully-qualified name. The receiver is dropped; the bundle
+carries only the interface.
+
+### 2. Map the method to a capability ID
+
+Add an entry to your capability registry JSON (`ketoy-capabilities.json`),
+mapping the method's FQ name to an app-specific ID (the range
+`0x4000`–`0x7FFF` is yours):
+
+```json
+{
+  "id": 16416,
+  "name": "COUNTER_SEED",
+  "fqName": "com.example.app.CounterRepository.fetchSeed",
+  "kind": "SUSPEND",
+  "parameterTypes": [],
+  "returnType": "kotlin.Int"
+}
+```
+
+### 3. Register the real implementation on the host
+
+In your `KetoyCapabilityProvider`, bind the ID to the actual code. This is
+where Room / Hilt / Ktor / Retrofit live — fully outside the sandbox:
+
+```kotlin
+@Singleton
+class AppCapabilityProvider @Inject constructor(
+    private val todoRepository: TodoRepository,   // Room + Hilt
+) : KetoyCapabilityProvider {
+    override fun buildRegistry(): CapabilityRegistry =
+        CapabilityRegistry().apply {
+            registerCoreCapabilities(/* network, storage, dispatchers, … */)
+
+            // Backs CounterRepository.fetchSeed():
+            registerSuspend(AppCapabilityIds.COUNTER_SEED) { _ ->
+                todoRepository.countAll()         // real Room SELECT COUNT(*)
+            }
+        }
+}
+```
+
+!!! success "Room, Hilt, Ktor, Retrofit all work — through the bridge"
+    The mechanism is identical for any backend. **Room**: register a
+    suspend capability whose body runs a DAO query (as above). **Ktor /
+    Retrofit**: register a suspend capability whose body calls your network
+    client. **Hilt**: inject the real repository into the provider, exactly
+    like any other singleton. The bundle stays dependency-free; the host
+    owns the I/O. KBC importing Room/Ktor/etc. directly is a hard non-goal.
+
+!!! warning "Keep the contract in sync"
+    The interface in the bundle, the JSON registry entry, and the host
+    registration must agree on the **ID, parameter types, and return
+    type**. A mismatch surfaces as a compile-time validator error
+    (unregistered capability) or a runtime missing-capability exception.
+    The compiler validates declarations against the registry, so most
+    mistakes are caught at build time.
+
+For the full capability model — IDs, kinds (`SYNC`/`SUSPEND`/`FLOW`),
+registration helpers (`KBCRoomBridge`, `registerCoreCapabilities`) — see
+[Capabilities → Registration](capabilities/registration.md) and the
+[Capability Reference](capabilities/reference.md).
+
+---
+
+## Compose effects
+
+All of Compose's effect and state primitives compile to KBC and ship in
+the bundle:
+
+| Pattern | Use |
+|---|---|
+| `remember { … }` | Cache a value across recompositions |
+| `remember(key) { … }` | Re-compute when `key` changes |
+| `mutableStateOf(initial)` | Local snapshot state |
+| `derivedStateOf { … }` | Computed state tracked by the snapshot system |
+| `collectAsState()` | Bridge a `Flow`/`StateFlow` into recomposing state |
+| `LaunchedEffect(key) { … }` | Run a suspend effect, restart on key change |
+| `SideEffect { … }` | Run after every successful recomposition |
+| `DisposableEffect(key) { … onDispose { … } }` | Effect with cleanup |
+
+### Local state
+
+Use the **explicit `.value`** form for local mutable state:
+
+```kotlin
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+
+val query = remember { mutableStateOf("") }
+TextField(value = query.value, onValueChange = { query.value = it })
+```
+
+!!! warning "`by` works for *read-only* state only"
+    The `by`-delegate sugar is supported for **read-only** `State` —
+    `collectAsState()` and `derivedStateOf { }`. A *mutable*
+    `var x by mutableStateOf(...)` needs the delegated-**setter** path,
+    which KBC does not lower; use the explicit `val s = remember {
+    mutableStateOf(...) }` + `s.value = …` form for local mutable state.
+
+### Derived state
+
+`derivedStateOf` returns a read-only `State`, so the `by` form is fine:
+
+```kotlin
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+
+val isValid by remember { derivedStateOf { query.value.length >= 3 } }
+```
+
+### Launched effect
+
+```kotlin
+LaunchedEffect(productId) {
+    // suspend work keyed on productId — restarts if it changes
+    vm.load(productId)
+}
+```
+
+### Disposable effect
+
+`DisposableEffect` runs setup on first composition (and on key change) and
+its `onDispose { }` cleanup when leaving composition (and before each
+restart) — the standard Compose lifecycle:
+
+```kotlin
+DisposableEffect(state.count) {
+    startObserving()                 // setup
+    onDispose { stopObserving() }    // cleanup
+}
+```
+
+!!! warning "Effect bodies cannot capture outer locals"
+    The bodies of `LaunchedEffect`, `SideEffect`, and `DisposableEffect`
+    (including its `onDispose`) run as standalone KBC functions and **do
+    not close over outer-scope variables**. Drive them through **keys**
+    (which the runtime passes for restart comparison) and **capability /
+    ViewModel calls**, not by referencing `val`s declared above the
+    effect. For example, call `vm.load(id)` or a registered capability
+    inside the effect rather than reading a captured local. (Content-slot
+    lambdas like `Column { … }` and `onClick` handlers *do* support
+    captures — this restriction is specific to the effect opcodes.)
+
+!!! note "`DisposableEffect` cleanup ordering"
+    The cleanup body is compiled as the function immediately after the
+    setup body and is invoked by the runtime on dispose / key change,
+    matching Compose semantics exactly. Keep cleanup side-effect-only
+    (unregister listeners, cancel host subscriptions via capabilities).
+
+---
+
+## Plain helper functions
+
+You are not limited to inlining everything. Plain top-level Kotlin
+functions in the **same bundle module** can be called from your
+ViewModel/screen — they compile to real function calls (not inlined):
+
+```kotlin
+private fun formatCount(n: Int): String = "You tapped $n times"
+
+@KetoyComposable @Composable
+fun CounterScreen(modifier: Modifier = Modifier) {
+    val vm = ketoyViewModel<CounterViewModel>()
+    val state by vm.uiState.collectAsState()
+    Text(formatCount(state.count))
+}
+```
+
+!!! warning "Same-module only"
+    Helpers must live in the **same Gradle module** as your KBC screens.
+    Calling a top-level function from *another* module fails compilation
+    with a `CrossModuleCall` error — either inline it into this module or
+    expose it as a host capability. Compose UI types and the stdlib subset
+    resolve through the classpath as usual.
+
+---
+
+## Wiring the screen into your app
+
+A KBC screen is rendered with `KetoyScreen`, which loads the signed bundle
+and runs the entry point. The entry-point function must be annotated
+`@KetoyEntryPoint @KetoyComposable @Composable` and take
+`modifier: Modifier = Modifier`:
+
+```kotlin
+KetoyScreen(
+    entryPoint = "CounterScreen",
+    bundleSource = KetoyBundleSource.Asset("ketoy/main.ktx"),
+    nativeFallback = { CounterNativeScreen() },   // shown if the bundle is absent/invalid
+)
+```
+
+!!! warning "Pass `nativeFallback` as a named argument"
+    There are two `KetoyScreen` overloads (one with an auto-resolved
+    fallback registry, one with an explicit trailing-lambda fallback). To
+    avoid an overload-resolution ambiguity, always pass the fallback as the
+    **named** `nativeFallback = { … }` argument rather than a bare trailing
+    lambda. The fallback renders whenever the bundle is missing, fails
+    signature verification, is incompatible, or is still loading — so it
+    should be a working native screen, not a placeholder.
+
+See [Bundle Delivery](bundle-delivery.md) for loading from assets, remote
+URLs, signing, and verification.
+
+---
+
+## Lifecycle
+
+| Stage | What happens |
+|---|---|
+| **Resolve** | `ketoyViewModel<T>()` instantiates the VM on first use and runs its property initializers once. |
+| **Cache** | The instance is stored in the screen's `ViewModelStore` and reused for the screen's lifetime. |
+| **Recomposition** | The same instance is returned; state survives. |
+| **Config change** | The `ViewModelStore` outlives the activity recreation, so the VM and its `StateFlow` survive a rotation. |
+| **`viewModelScope`** | A structured scope tied to the VM; child coroutines are cancelled on clear. |
+| **Clear** | When the screen leaves the back stack, the VM is cleared and `viewModelScope` is cancelled (in-flight coroutines/flows end with `CancellationException`). |
+
+---
+
+## What you can and cannot do
+
+**Supported in a KBC ViewModel / screen:**
+
+- `data class` UI state — construct, read, `copy`, destructure, sealed
+  `when`.
+- `MutableStateFlow` / `StateFlow` / `asStateFlow()` / `update { }` /
+  `.value`.
+- `ketoyViewModel<T>()`, `collectAsState()` (both `.value` and `by`).
+- `viewModelScope.launch { }` and `suspend` calls into host capabilities.
+- All Compose effects (`remember`, `mutableStateOf`, `derivedStateOf`,
+  `LaunchedEffect`, `SideEffect`, `DisposableEffect`, `collectAsState`).
+- Constructor-injected repository **interfaces** (capability bridge).
+- Same-module plain helper functions, the Kotlin stdlib subset, control
+  flow, arithmetic, and the Material3 component catalog.
+
+**Not allowed (hard sandbox limits):**
+
+- ❌ Direct Android / `androidx` API access (use a capability).
+- ❌ Reflection (`kotlin.reflect`, `Class.get*`).
+- ❌ File / network I/O directly (use a capability).
+- ❌ `GlobalScope` or unstructured concurrency.
+- ❌ Importing third-party libraries (Room, Ktor, Retrofit, …) into the
+  bundle — reach them through capabilities.
+- ❌ Arbitrary `kotlinx.coroutines.flow` operators beyond the recognised
+  surface.
+
+The compiler enforces these at build time with actionable
+`KetoyBC:` diagnostics (FQ name, why it's forbidden, how to fix, docs
+link). See [Android APIs (forbidden)](capabilities/android-apis.md).
+
+---
+
+## Best practices
+
+- **Model state as one `data class`.** A single `uiState` flow is easier
+  to reason about than many scattered `mutableStateOf`s, and `copy(...)`
+  makes updates explicit.
+- **Keep ViewModels pure-Kotlin.** All I/O goes through capability
+  interfaces. This keeps the bundle portable and the boundary auditable.
+- **Name capabilities in the app range** (`0x4000`–`0x7FFF`) and keep the
+  JSON registry, the interface, and the host registration in lockstep.
+- **Drive loading/error through state**, not through effects — set a flag
+  in the flow and let `collectAsState` recompose.
+- **Always provide a real `nativeFallback`.** It is the steady-state UI
+  whenever the bundle can't render; treat it as a first-class screen.
+- **Don't capture in effects.** Pass keys; call capabilities/VM methods.
+
+---
+
+## Precautions & known limitations
+
+!!! warning "Effect bodies don't capture"
+    `LaunchedEffect` / `SideEffect` / `DisposableEffect` bodies cannot read
+    outer-scope locals. Use keys + capability/VM calls. (Content slots and
+    `onClick` lambdas *do* capture.)
+
+!!! warning "Closed flow surface"
+    Only `MutableStateFlow` / `asStateFlow` / `update` / `.value` are
+    recognised inside the bundle. Build other flows host-side and expose
+    them as `FLOW` capabilities collected via `collectAsState`.
+
+!!! warning "Constructor DI is interface-only"
+    Inject **interfaces** the host implements as capabilities. Injecting a
+    concrete Room DAO, Ktor client, or Android type into a
+    `@KetoyViewModel` constructor is not supported — that's exactly what
+    the bridge prevents.
+
+!!! warning "Signature verification is on by default"
+    Bundles are Ed25519-signed and verified at load. Ship the public key
+    with your app and sign bundles with your private key, or rendering
+    falls back to `nativeFallback`. See [Security](security.md).
+
+!!! note "Bundle size"
+    Data-class field names and ViewModel state shapes are recorded in the
+    bundle. This is small but real — prefer focused state classes over
+    very wide ones.
+
+---
+
+## Alternative: the state-map model
+
+For dynamic, schema-less state (e.g. screens driven entirely by host data
+with no compiled `data class`), a lower-level **state-map** model is also
+available. It backs `KetoyVirtualViewModel` with a
+`MutableStateFlow<Map<String, Any?>>` and exposes it to KBC through the
+`VM_*` capabilities, plus a `SavedStateHandle` for process-death
+persistence and an `extras` channel for navigation arguments.
+
+!!! tip "Prefer the typed model"
+    For most apps the typed ViewModel above is clearer, type-safe, and
+    idiomatic. Reach for the state-map model only when you specifically
+    need an untyped, dynamic key-value state or `SavedStateHandle`
+    persistence semantics.
+
+### State map
+
+`KetoyVirtualViewModel` exposes `StateFlow<Map<String, Any?>>`. KBC reads
+via `VM_GET_STATE`, writes via `VM_SET_STATE`, and observes individual
+keys via `VM_OBSERVE_STATE`.
+
+```kotlin
+@KetoyComposable @Composable
+fun ProductDetailScreen() {
+    val productId = remember { ketoyVmGetState("productId") as String }
+    val product by ketoyVmObserveState("product").collectAsState(initial = null)
+
+    LaunchedEffect(productId) {
+        ketoyVmSetState("product", fetchProduct(productId))   // fetchProduct = capability
+    }
+    if (product != null) ProductCard(product as Product)
+}
+```
+
+### `KetoyBaseViewModel`
+
+Older `@KetoyViewModel` classes can extend `KetoyBaseViewModel`, which
+provides four `lateinit var` properties bound by the runtime before
+`init()`:
+
+```kotlin
+@KetoyViewModel
+class CounterVm : KetoyBaseViewModel() {
+    override fun init() { setState("count", 0) }
+
+    @KetoyEvent("increment")
+    fun increment() {
+        val current = getState("count") as Int
+        setState("count", current + 1)
+    }
+}
+```
+
+- `viewModelScope: CoroutineScope`, `getState: (String) -> Any?`,
+  `setState: (String, Any?) -> Unit`, `observeState: (String) -> Flow<Any?>`.
+- Reading these from the **constructor** throws
+  `UninitializedPropertyAccessException` — use them only in `init()` or
+  event handlers.
+
+### Event dispatch
+
+KBC dispatches via `VM_DISPATCH("increment", payload)`; the VM looks up
+the handler in its descriptor's event table and invokes the KBC function
+with the payload as argument 0. **Unknown event names are silently
+ignored** (the host can't crash a screen by sending an unhandled event).
+
+### Persistence (`SavedStateHandle`)
+
+`SavedStateHandle` persists only certain types: `String`, primitives +
+boxed primitives, `Bundle`, `Parcelable`, `Serializable`, and primitive
+arrays. A non-persistable value is silently dropped from saved state but
+still works in-memory until the process dies.
+
+### Extras (navigation arguments)
+
+`KetoyScreen(extras = mapOf("productId" to "abc-123"))` seeds the state
+map **only on first creation**. On config-change/process-death restore,
+the saved state takes priority and `extras` are not re-seeded.
+
+```kotlin
+composable(
+    "product_detail/{productId}",
+    arguments = listOf(navArgument("productId") { type = NavType.StringType }),
+) { entry ->
+    KetoyScreen(
+        bundleSource = KetoyBundleSource.Asset("ketoy/product_detail.ktx"),
+        extras = mapOf("productId" to entry.arguments!!.getString("productId")!!),
+    )
+}
+```
+
+---
+
+## In tests
+
+`KetoyTestRuntime` constructs VMs with a debug config and no
+`SavedStateHandle` persistence. To exercise the saved-state path,
+construct `KetoyVirtualViewModel.Factory` with a `SavedStateHandle`
+explicitly. See [Testing](testing.md).
+
+---
+
+## See also
+
+- [Coroutines & Flow](coroutines-flow.md) — `viewModelScope`,
+  `withContext`, dispatchers, and Flow inside KBC.
+- [Capabilities → Registration](capabilities/registration.md) — wiring
+  repositories, network, and platform services.
+- [Capability Reference](capabilities/reference.md) — every capability ID,
+  including the `VM_*` state bridge.
+- [Bundle Delivery](bundle-delivery.md) — `KetoyScreen`, signing, and
+  loading bundles.
+- [Security](security.md) — the trust model and Ed25519 signing.

@@ -6,12 +6,14 @@ import {
   constructorRows, modifierGroups, tokenCards, kotlinCards,
   typeRows, nonGoalRows, capabilityRows,
 } from '@/modules/features/data';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Supported features · Ketoy',
+export const metadata = pageMetadata({
+  title: 'Supported Compose features for Kotlin SDUI',
   description:
-    'Every Ketoy feature grounded in the actual source - composables, modifiers, capabilities, KBC opcodes, and tooling.',
-};
+    'The full matrix of Jetpack Compose composables, modifiers, capabilities, and KBC opcodes supported by Ketoy, the Kotlin-native server-driven UI (SDUI) framework for Android with over-the-air updates.',
+  path: '/features',
+});
 
 const C = ({ children, size = '0.92em' }) => (
   <code style={{ fontFamily: 'var(--font-mono)', fontSize: size }}>{children}</code>

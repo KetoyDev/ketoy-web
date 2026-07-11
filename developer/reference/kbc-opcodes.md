@@ -24,7 +24,7 @@ write `@KetoyComposable` functions.
 
 | Hex | Mnemonic | Operands | Effect |
 |---|---|---|---|
-| `0x00` | `NOP` | — | No-op. |
+| `0x00` | `NOP` |, | No-op. |
 | `0x01` | `LOAD_INT` | dst:u8, value:i32 | `regs[dst] = value` |
 | `0x02` | `LOAD_LONG` | dst:u8, value:i64 | |
 | `0x03` | `LOAD_FLOAT` | dst:u8, value:f32 | |
@@ -38,10 +38,10 @@ write `@KetoyComposable` functions.
 
 ## Arithmetic (`0x0B–0x1F`)
 
-Double: `0x0B–0x0E` — `ADD_DOUBLE`, `SUB_DOUBLE`, `MUL_DOUBLE`, `DIV_DOUBLE`.
-Int: `0x10–0x15` — `ADD_INT`, `SUB_INT`, `MUL_INT`, `DIV_INT`, `MOD_INT`, `NEG_INT`.
-Long: `0x16–0x1B` — `ADD_LONG`, `SUB_LONG`, `MUL_LONG`, `DIV_LONG`, `MOD_LONG`, `NEG_LONG`.
-Float: `0x1C–0x1F` — `ADD_FLOAT`, `SUB_FLOAT`, `MUL_FLOAT`, `DIV_FLOAT`.
+Double: `0x0B–0x0E`, `ADD_DOUBLE`, `SUB_DOUBLE`, `MUL_DOUBLE`, `DIV_DOUBLE`.
+Int: `0x10–0x15`, `ADD_INT`, `SUB_INT`, `MUL_INT`, `DIV_INT`, `MOD_INT`, `NEG_INT`.
+Long: `0x16–0x1B`, `ADD_LONG`, `SUB_LONG`, `MUL_LONG`, `DIV_LONG`, `MOD_LONG`, `NEG_LONG`.
+Float: `0x1C–0x1F`, `ADD_FLOAT`, `SUB_FLOAT`, `MUL_FLOAT`, `DIV_FLOAT`.
 
 All three-register form: `dst:u8, lhs:u8, rhs:u8` (NEG: `dst:u8, src:u8`).
 
@@ -54,16 +54,16 @@ because the exception-wrap contract is non-trivial in DEX.
 
 | Hex | Mnemonic | Operands |
 |---|---|---|
-| `0x20` | `CMP_EQ` | dst:u8, lhs:u8, rhs:u8 — uses `equals` |
+| `0x20` | `CMP_EQ` | dst:u8, lhs:u8, rhs:u8, uses `equals` |
 | `0x21` | `CMP_NEQ` | same |
 | `0x22` | `CMP_LT` | same |
 | `0x23` | `CMP_LTE` | same |
 | `0x24` | `CMP_GT` | same |
 | `0x25` | `CMP_GTE` | same |
-| `0x26` | `CMP_REF_EQ` | dst, lhs, rhs — reference equality (`===`) |
+| `0x26` | `CMP_REF_EQ` | dst, lhs, rhs, reference equality (`===`) |
 | `0x27` | `IS_NULL` | dst:u8, src:u8 |
 | `0x28` | `IS_NOT_NULL` | dst:u8, src:u8 |
-| `0x29` | `NOT` | dst:u8, src:u8 — Boolean negation |
+| `0x29` | `NOT` | dst:u8, src:u8, Boolean negation |
 
 ## Control flow (`0x30–0x38`)
 
@@ -74,10 +74,10 @@ because the exception-wrap contract is non-trivial in DEX.
 | `0x32` | `JUMP_IF_FALSE` | cond:u8, targetPC:i32 |
 | `0x33` | `JUMP_IF_NULL` | reg:u8, targetPC:i32 |
 | `0x34` | `JUMP_IF_NOT_NULL` | reg:u8, targetPC:i32 |
-| `0x35` | `RETURN` | src:u8 — `0xFF` sentinel returns `Unit` |
+| `0x35` | `RETURN` | src:u8, `0xFF` sentinel returns `Unit` |
 | `0x36` | `THROW` | reg:u8 |
 | `0x37` | `TRY_CATCH` | handlerPC:i32, catchTypeIdx:u16, exDst:u8 |
-| `0x38` | `END_TRY` | — pops handler stack |
+| `0x38` | `END_TRY` |, pops handler stack |
 
 Exception handler type-filtering is currently catch-all
 (KNOWN_ISSUES #2): the `catchTypeIdx` is recorded but not matched
@@ -110,7 +110,7 @@ Bitwise opcodes were added in 0.3.x to support K2's `$default` /
 |---|---|---|
 | `0x50` | `INVOKE_CAPABILITY` | dst:u8, capId:u16, argc:u8, args:u8\* |
 | `0x51` | `INVOKE_CAPABILITY_VOID` | capId:u16, argc:u8, args:u8\* |
-| `0x52` | `INVOKE_CAPABILITY_SUSPEND` | dst:u8, capId:u16, argc:u8, args:u8\* — sets up suspension |
+| `0x52` | `INVOKE_CAPABILITY_SUSPEND` | dst:u8, capId:u16, argc:u8, args:u8\*, sets up suspension |
 
 After `INVOKE_CAPABILITY_SUSPEND`, a `SUSPEND_POINT` typically follows.
 
@@ -146,7 +146,7 @@ After `INVOKE_CAPABILITY_SUSPEND`, a `SUSPEND_POINT` typically follows.
 
 | Hex | Mnemonic | Operands |
 |---|---|---|
-| `0x80` | `COMPOSE_CALL` | (placeholder — `COMPOSABLE_CALL` is the real adapter dispatch at `0xB0`) |
+| `0x80` | `COMPOSE_CALL` | (placeholder, `COMPOSABLE_CALL` is the real adapter dispatch at `0xB0`) |
 | `0x81` | `COMPOSE_REMEMBER` | dst, key |
 | `0x82` | `COMPOSE_STATE` | dst, initial |
 | `0x83` | `COMPOSE_DERIVED` | dst, computeFnIdx |
@@ -172,8 +172,8 @@ Every `+` / template / multi-arg concat collapses to one
 
 | Hex | Mnemonic | Operands |
 |---|---|---|
-| `0xA0` | `CAST` | dst, src, typeIdx — throws on mismatch |
-| `0xA1` | `SAFE_CAST` | dst, src, typeIdx — null on mismatch |
+| `0xA0` | `CAST` | dst, src, typeIdx, throws on mismatch |
+| `0xA1` | `SAFE_CAST` | dst, src, typeIdx, null on mismatch |
 | `0xA2` | `UNBOX_INT` | dst, src |
 | `0xA3` | `BOX_INT` | dst, src |
 | `0xA4` | `UNBOX_LONG` | dst, src |
@@ -205,7 +205,7 @@ default or the registered `paramDefault`.
 | Hex | Mnemonic | Operands |
 |---|---|---|
 | `0xF0` | `DEBUG_PRINT` | reg:u8 |
-| `0xF1` | `BREAKPOINT` | — |
+| `0xF1` | `BREAKPOINT` |, |
 
 Only emitted with `debugMode = true` in the Gradle DSL.
 
@@ -224,7 +224,7 @@ val bytes = File("main.ktx").readBytes()
 val bundle = KtxReader(verifySignature = false).read(bytes)
 
 for ((i, fn) in bundle.functions.withIndex()) {
-    println("fn[$i] ${fn.name} — ${fn.code.size} bytes, ${fn.localCount} locals")
+    println("fn[$i] ${fn.name}, ${fn.code.size} bytes, ${fn.localCount} locals")
     val decoded = KBCInstructionDecoder.decodeAll(fn.code, bundle.stringPool)
     decoded.forEach { println("  $it") }
 }

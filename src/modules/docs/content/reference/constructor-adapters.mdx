@@ -32,12 +32,12 @@ directives), see [Custom Adapter](/docs/guides/custom-adapter).
 
 | Directive | Lambda type | Use case |
 |---|---|---|
-| `constructor=<Fq>:0xNNNN` | `(params) -> T` runs on the interpreter thread | Plain classes — `KeyboardOptions`, `KeyboardActions`, `Offset`, `Shadow`. |
-| `factory=<Fq>(<types>):0xNNNN` | `(params) -> T` runs on the interpreter thread | Top-level factory functions — `RoundedCornerShape(...)`. |
+| `constructor=<Fq>:0xNNNN` | `(params) -> T` runs on the interpreter thread | Plain classes, `KeyboardOptions`, `KeyboardActions`, `Offset`, `Shadow`. |
+| `factory=<Fq>(<types>):0xNNNN` | `(params) -> T` runs on the interpreter thread | Top-level factory functions, `RoundedCornerShape(...)`. |
 | `objectFactory=<Fq>(<types>):0xNNNN` | `@Composable (params) -> T` runs inside composition | Material3 `*Defaults.foo(...)` factories that read MaterialTheme tokens. |
 
 `objectFactory=` is required for any factory that touches
-`MaterialTheme` / `LocalContentColor` / other composition-locals —
+`MaterialTheme` / `LocalContentColor` / other composition-locals,
 constructing them outside composition would crash.
 
 ---
@@ -81,10 +81,10 @@ A value gets a **`CONSTRUCT_JVM` opcode + constructor adapter** when:
 A value gets **inline `KBCValue` encoding** (no constructor opcode)
 when:
 - It's a singleton / property-getter token (`Color.Red`,
-  `FontWeight.Bold`, `Arrangement.Center`) — see
-  [Compose Tokens](/docs/compose-tokens).
+  `FontWeight.Bold`, `Arrangement.Center`), see
+  [Compose Tokens](/docs/reference/compose-tokens).
 - It's a primitive (`16.dp`, `"Hello"`, `42`).
-- It's a `Color(0xFFAA00FF)` literal — special-cased to inline the ARGB
+- It's a `Color(0xFFAA00FF)` literal, special-cased to inline the ARGB
   directly via the encoder's `colorArgFromConstructor` helper.
 
 ---
@@ -100,7 +100,7 @@ paramCount:u8             number of non-default param entries
 ```
 
 The `KBCValue` payload uses the same tag-byte encoding as
-`COMPOSABLE_CALL` — `Default`, `IntVal`, `StringLiteral`, `Register`, etc.
+`COMPOSABLE_CALL`, `Default`, `IntVal`, `StringLiteral`, `Register`, etc.
 
 When the receiving `COMPOSABLE_CALL` later passes the constructed
 object as a param, it encodes it as `KBCValue.Register(n)`. The
@@ -139,7 +139,7 @@ The runtime:
    pulling out the object built in step 1.
 
 This is why Compose-domain construction in KBC adds zero round-trips at
-the call site — everything resolves on the interpreter thread before
+the call site, everything resolves on the interpreter thread before
 recomposition.
 
-Next: [Compose Tokens →](/docs/compose-tokens)
+Next: [Compose Tokens →](/docs/reference/compose-tokens)

@@ -32,7 +32,7 @@ suspend fun httpGet(url: String): String = error(STUB_MSG)
 suspend fun httpPost(url: String, body: String): String = error(STUB_MSG)
 ```
 
-> The IDs match `CapabilityIds.HTTP_GET` etc. exactly — you're not
+> The IDs match `CapabilityIds.HTTP_GET` etc. exactly, you're not
 > registering anything new, you're declaring the **signature** the KBC
 > compiler can resolve. The compile-time validator checks the ID exists
 > in `ketoy-capabilities.json`.
@@ -56,21 +56,25 @@ Also add these to `app/ketoy-capabilities.json`:
 ## Use them
 
 ```kotlin
-@KetoyViewModel
-class UserProfileViewModel : KetoyBaseViewModel() {
+data class UserProfileUiState(
+    val loading: Boolean = false,
+    val user: String? = null,
+    val error: String? = null,
+)
 
-    override fun init() { setState("loading", false) }
+@KetoyViewModel
+class UserProfileViewModel : ViewModel() {
+    private val _uiState = MutableStateFlow(UserProfileUiState())
+    val uiState: StateFlow<UserProfileUiState> = _uiState.asStateFlow()
 
     fun load(userId: Long) {
         viewModelScope.launch {
-            setState("loading", true)
+            _uiState.update { it.copy(loading = true, error = null) }
             try {
                 val json = httpGet("https://api.example.com/users/$userId")
-                setState("user", json)
+                _uiState.update { it.copy(user = json, loading = false) }
             } catch (e: Exception) {
-                setState("error", e.message)
-            } finally {
-                setState("loading", false)
+                _uiState.update { it.copy(error = e.message, loading = false) }
             }
         }
     }
@@ -90,11 +94,14 @@ registered lambda, resumes with the response body.
 fun sseSubscribe(url: String): Flow<String> = error(STUB_MSG)
 
 @KetoyViewModel
-class StockTickerViewModel : KetoyBaseViewModel() {
-    override fun init() {
+class StockTickerViewModel : ViewModel() {
+    private val _price = MutableStateFlow("")
+    val price: StateFlow<String> = _price.asStateFlow()
+
+    init {
         viewModelScope.launch {
             sseSubscribe("https://api.example.com/ticker/AAPL")
-                .collect { line -> setState("price", line) }
+                .collect { line -> _price.value = line }
         }
     }
 }
@@ -180,15 +187,15 @@ suspend fun fetchTodo(id: Long): Any? = error(STUB_MSG)
 suspend fun createTodo(title: String): Any? = error(STUB_MSG)
 ```
 
-The host signature returns `List<TodoDto>` — KBC sees `List<Any?>`
+The host signature returns `List<TodoDto>`, KBC sees `List<Any?>`
 because KBC can't model your DTO type. Cast field-by-field on read.
 
 ---
 
 ## Error handling
 
-HTTP capabilities throw real exceptions on failure — `IOException`,
-`HttpRequestTimeoutException`, etc. — wrapped through KBC's exception
+HTTP capabilities throw real exceptions on failure, `IOException`,
+`HttpRequestTimeoutException`, etc., wrapped through KBC's exception
 machinery as `KetoyException` subtypes. Catch them like normal:
 
 ```kotlin
@@ -227,7 +234,7 @@ class AuthInterceptor @Inject constructor(
 // Wire into Retrofit's OkHttpClient, host-side only.
 ```
 
-KBC just calls `fetchTodos()` — the Bearer header is added by the
+KBC just calls `fetchTodos()`, the Bearer header is added by the
 interceptor.
 
 ---
@@ -236,11 +243,11 @@ interceptor.
 
 | You write | Why it fails |
 |---|---|
-| `URL("https://...").openStream()` | `DirectAndroidApiAccess` — `java.net` isn't allowed. |
+| `URL("https://...").openStream()` | `DirectAndroidApiAccess`, `java.net` isn't allowed. |
 | `OkHttpClient().newCall(...)` | `DirectAndroidApiAccess`. |
 | Constructing `Request.Builder()` in KBC | `NonKbcConstructor`. |
 | `withContext(Dispatchers.IO) { File(...).readText() }` | `FileIoUsage`. |
 
 The capability boundary is the **only** way KBC reaches the network.
 
-Next: [DataStore →](/docs/datastore)
+Next: [DataStore →](/docs/guides/datastore)

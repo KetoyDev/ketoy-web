@@ -1,11 +1,13 @@
 import UpdatesListView from '@/modules/updates/components/UpdatesListView';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Platform updates - Ketoy',
+export const metadata = pageMetadata({
+  title: 'Platform updates',
   description:
-    'Every change to the Ketoy runtime, Cloud, signing pipeline and developer tooling.',
-};
+    'Every change to the Ketoy runtime, Cloud, OTA signing pipeline and developer tooling for Kotlin server-driven UI on Android.',
+  path: '/updates/platform',
+});
 
 const PlatformIcon = (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round">

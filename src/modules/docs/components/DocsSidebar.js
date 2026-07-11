@@ -19,6 +19,7 @@ export default function DocsSidebar() {
               <Link
                 key={item.label}
                 href={item.href}
+                prefetch={false}
                 className={active ? 'active' : undefined}
               >
                 {item.label}

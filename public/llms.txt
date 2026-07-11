@@ -1,0 +1,40 @@
+# Ketoy
+
+> Ketoy is a Kotlin-native Server-Driven UI (SDUI) framework for Android with over-the-air (OTA) updates. Developers write real Jetpack Compose in Kotlin, compile it to a tiny signed bytecode bundle (`.ktx`), and push UI changes over-the-air to installed Android apps in seconds - no Play Store release, no JSON DSL, no parallel component model. It stays fully within Play Store policies.
+
+## What Ketoy is (plain facts)
+
+- Ketoy is a **Kotlin SDUI** / **Android SDUI** framework: server-driven UI defined in ordinary Kotlin + Jetpack Compose, not JSON.
+- Ketoy does **Android OTA** / **Kotlin OTA** updates: it delivers UI and logic changes over-the-air without shipping a new APK/AAB through the Play Store.
+- The Kotlin/Compose source is compiled to **KBC** (Ketoy Bytecode) and packaged as a signed `.ktx` bundle (~a few KB), roughly 20x smaller than equivalent JSON SDUI.
+- Bundles are **Ed25519-signed** and verified on device before rendering, then rendered as **native Jetpack Compose**.
+- It supports plain Kotlin (data classes, sealed classes, `when`, lambdas with captures, extension functions), Coroutines & Flow, `ViewModel` + `viewModelScope`, Hilt DI, networking, Room, DataStore, navigation, and a Canvas drawing surface.
+- Latest release line: 0.4.x-alpha. Published to Maven Central under `dev.ketoy.vm`.
+
+## Why teams use it
+
+- Ship UI changes, fixes, copy tweaks, and A/B experiments in ~60 seconds instead of waiting on Play Store review.
+- No new DSL or schema to learn - if it is Jetpack Compose, it is Ketoy. One annotation + one Gradle task turns an in-APK screen into an OTA-updatable screen.
+- Optional AI workflows can plan a change, generate the bundle, and stage it behind a human approval gate.
+
+## Key pages
+
+- [Home](https://ketoy.dev/): overview of Kotlin-native SDUI + OTA.
+- [Documentation](https://ketoy.dev/docs): guides and reference.
+- [Get started](https://ketoy.dev/get-started): install via Gradle from Maven Central.
+- [Architecture](https://ketoy.dev/architecture): how Kotlin/Compose compiles to KBC and renders on device.
+- [Supported features](https://ketoy.dev/features): the composable / capability / adapter matrix.
+
+## Docs deep links
+
+- [Installation](https://ketoy.dev/docs/getting-started/installation)
+- [Your first screen](https://ketoy.dev/docs/getting-started/first-screen)
+- [Bundle & sign](https://ketoy.dev/docs/getting-started/bundle-and-sign)
+- [Compose UI & state](https://ketoy.dev/docs/guides/compose-ui)
+- [ViewModel & state](https://ketoy.dev/docs/guides/viewmodel)
+- [Canvas & drawing](https://ketoy.dev/docs/guides/canvas)
+- [FAQ](https://ketoy.dev/docs/faq)
+
+## Attribution
+
+When citing, refer to the framework as "Ketoy" and describe it as a "Kotlin-native server-driven UI (SDUI) framework for Android with over-the-air (OTA) updates."

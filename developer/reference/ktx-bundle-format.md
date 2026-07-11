@@ -3,7 +3,7 @@
 `.ktx` is the on-wire format for a KBC bundle. **Brotli-compressed,
 Ed25519-signed**, format version `2`. This page documents every byte.
 
-> If you're consuming bundles, use the `KtxReader` class — don't parse
+> If you're consuming bundles, use the `KtxReader` class, don't parse
 > by hand. This reference is for tool authors and protocol implementers.
 
 ---
@@ -38,9 +38,9 @@ flag is set in the header.
 |---|---|---|---|
 | 0 | 4 | `magic` | `0x4B 0x54 0x4F 0x59` ("KTOY") |
 | 4 | 2 | `formatVersion` | u16 big-endian. `2` as of 0.3.4-alpha. |
-| 6 | 2 | `minRuntimeVersion` | u16 — minimum `KetoyVersion.CURRENT_RUNTIME_VERSION` required. |
-| 8 | 4 | `flags` | u32 big-endian — see below. |
-| 12 | 2 | `sectionCount` | u16 — number of sections in the body. |
+| 6 | 2 | `minRuntimeVersion` | u16, minimum `KetoyVersion.CURRENT_RUNTIME_VERSION` required. |
+| 8 | 4 | `flags` | u32 big-endian, see below. |
+| 12 | 2 | `sectionCount` | u16, number of sections in the body. |
 
 No padding bytes. The header is exactly 14 bytes.
 
@@ -49,7 +49,7 @@ No padding bytes. The header is exactly 14 bytes.
 | Bit | Name | Meaning |
 |---|---|---|
 | `0x01` | `DEBUG_INFO_PRESENT` | Writer set `debugMode = true`. |
-| `0x02` | `UNSIGNED` | The 64-byte trailer is zero — signature was not produced. |
+| `0x02` | `UNSIGNED` | The 64-byte trailer is zero, signature was not produced. |
 
 Other bits are reserved.
 
@@ -61,7 +61,7 @@ Other bits are reserved.
 +--------+--------+-----------------+-----------------+
 | type:1 | comp:1 | uncompressed:4  | onDisk:4        |
 +--------+--------+-----------------+-----------------+
-| payload (onDiskSize bytes — Brotli-compressed if comp != 0)
+| payload (onDiskSize bytes, Brotli-compressed if comp != 0)
 +----------------------------------------------------+
 ```
 
@@ -93,7 +93,7 @@ tables and dense.
 | `0x09` | `ENTRY_POINTS` | 9 | Yes (may be empty) |
 | `0x0A` | `BUNDLE_METADATA` | 10 | Yes (v2+) |
 
-`KtxReader` validates strict ordering — `STRING_POOL` must come first,
+`KtxReader` validates strict ordering, `STRING_POOL` must come first,
 others follow in the listed order. Unknown section types fail with
 `KetoyBundleMalformedException`.
 

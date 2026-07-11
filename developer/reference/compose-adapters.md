@@ -25,10 +25,10 @@ KSP-emitted binary) to validate calls.
 | `0x0007` | `androidx.compose.material3.Scaffold` | Full Material3. Content slot resolves through `getPaddingValuesContentSlot`. |
 | `0x0008` | `androidx.compose.material3.Surface` | Non-clickable overload (the clickable overload is explicitly excluded). |
 | `0x0009` | `androidx.compose.material3.Card` | 6-param non-clickable overload. `colors`, `elevation` built via `CardDefaults.cardColors` / `cardElevation` constructor adapters. |
-| `0x000B` | `androidx.compose.foundation.layout.Spacer` | `modifier` only — width/height live on the modifier chain (`Modifier.height(20.dp)`). |
+| `0x000B` | `androidx.compose.foundation.layout.Spacer` | `modifier` only, width/height live on the modifier chain (`Modifier.height(20.dp)`). |
 | `0x000C` | `androidx.compose.material3.Button` | `onClick`, `enabled` (honourDefault), `colors`, `elevation`, `border`, `contentPadding`, `interactionSource`, content. |
 | `0x000F` | `androidx.compose.material3.IconButton` | `onClick`, `modifier`, `enabled` (honourDefault), `colors`, `interactionSource`, content. |
-| `0x0012` | `androidx.compose.material3.TextField` | String overload picked explicitly. Full param list — see source. |
+| `0x0012` | `androidx.compose.material3.TextField` | String overload picked explicitly. Full param list, see source. |
 | `0x0014` | `androidx.compose.material3.Checkbox` | `checked`, `onCheckedChange`, `modifier`, `enabled` (honourDefault), `colors`, `interactionSource`. |
 | `0x0016` | `androidx.compose.material3.Switch` | `checked`, `onCheckedChange`, `modifier`, `thumbContent`, `enabled`, `colors`, `interactionSource`. |
 | `0x0018` | `coil.compose.AsyncImage` | 16-arg post-1.x overload. `placeholder`/`error`/`fallback` Painter slots use the `UnsupportedFallback` (omit-on-default) classifier. |
@@ -48,21 +48,21 @@ doesn't include them. KBC source referencing them fails with
 |---|---|---|
 | `0x0005` | `LazyColumn` | `LazyListScope` receiver-typed content lambda needs SlotScope-aware codegen. |
 | `0x0006` | `LazyRow` | Same. |
-| `0x000A` | `ElevatedCard` | None — open to PR. |
-| `0x000D` | `OutlinedButton` | None — open to PR. |
-| `0x000E` | `TextButton` | None — open to PR. |
-| `0x0010` | `FloatingActionButton` | None — open to PR. |
-| `0x0011` | `ExtendedFloatingActionButton` | None — open to PR. |
-| `0x0013` | `OutlinedTextField` | None — open to PR. |
-| `0x0015` | `RadioButton` | None — open to PR. |
-| `0x0017` | `Slider` | None — open to PR. |
-| `0x001A` | `HorizontalDivider` | None — open to PR. |
-| `0x001B` | `CircularProgressIndicator` | None — open to PR. |
-| `0x001C` | `LinearProgressIndicator` | None — open to PR. |
-| `0x001E` | `NavigationBar` | None — open to PR. |
-| `0x001F` | `TabRow` | None — open to PR. |
-| `0x0020` | `AlertDialog` | None — open to PR. |
-| `0x0021` | `ModalBottomSheet` | None — open to PR. |
+| `0x000A` | `ElevatedCard` | None, open to PR. |
+| `0x000D` | `OutlinedButton` | None, open to PR. |
+| `0x000E` | `TextButton` | None, open to PR. |
+| `0x0010` | `FloatingActionButton` | None, open to PR. |
+| `0x0011` | `ExtendedFloatingActionButton` | None, open to PR. |
+| `0x0013` | `OutlinedTextField` | None, open to PR. |
+| `0x0015` | `RadioButton` | None, open to PR. |
+| `0x0017` | `Slider` | None, open to PR. |
+| `0x001A` | `HorizontalDivider` | None, open to PR. |
+| `0x001B` | `CircularProgressIndicator` | None, open to PR. |
+| `0x001C` | `LinearProgressIndicator` | None, open to PR. |
+| `0x001E` | `NavigationBar` | None, open to PR. |
+| `0x001F` | `TabRow` | None, open to PR. |
+| `0x0020` | `AlertDialog` | None, open to PR. |
+| `0x0021` | `ModalBottomSheet` | None, open to PR. |
 | `0x0022` | `LazyVerticalGrid` | `LazyGridScope` receiver lambda. |
 | `0x0023` | `HorizontalPager` | `PagerScope` receiver lambda. |
 

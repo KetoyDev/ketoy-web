@@ -1,10 +1,12 @@
 import UpdatesListView from '@/modules/updates/components/UpdatesListView';
 import { getUpdatesBySection } from '@/modules/updates/lib/updates';
+import { pageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'SDK updates - Ketoy',
-  description: 'Every change to the Ketoy SDK - Compose components, adapters and capabilities.',
-};
+export const metadata = pageMetadata({
+  title: 'SDK updates',
+  description: 'Every change to the Ketoy SDK for Kotlin server-driven UI, Compose components, adapters, and capabilities.',
+  path: '/updates/sdk',
+});
 
 const SdkIcon = (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">

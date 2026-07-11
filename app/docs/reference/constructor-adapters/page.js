@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/reference/constructor-adapters.mdx';
 
 export const metadata = {
-  title: 'Constructor Adapters · Ketoy Docs',
+  alternates: { canonical: '/docs/reference/constructor-adapters' },
+  title: 'Constructor Adapters',
   description: 'Complex Compose-domain types (`TextStyle`, `KeyboardOptions`,',
 };
 

@@ -2,13 +2,14 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/guides/viewmodel.mdx';
 
 export const metadata = {
-  title: 'ViewModel · Ketoy Docs',
-  description: 'KBC ViewModels are real Android `ViewModel`s — they survive configuration change, scope coroutines to `viewModelScope`, and persist a filtered state subset across process death via `SavedStateHandle`.',
+  alternates: { canonical: '/docs/guides/viewmodel' },
+  title: 'ViewModels, State & Business Logic',
+  description: 'Write idiomatic Kotlin ViewModels, data class UI state, a real StateFlow, viewModelScope.launch, constructor-injected repositories, and the full set of Compose effects, compiled into a .ktx bundle that runs natively on device.',
 };
 
 export default function Page() {
   return (
-    <DocPage eyebrow={"Guides"} title={"ViewModel"} lede={"KBC ViewModels are real Android `ViewModel`s \u2014 they survive configuration change, scope coroutines to `viewModelScope`, and persist a filtered state subset across process death via `SavedStateHandle`."}>
+    <DocPage eyebrow={"Guides"} title={"ViewModels, State & Business Logic"} lede={"Write idiomatic Kotlin ViewModels, `data class` UI state, a real `StateFlow`, `viewModelScope.launch`, constructor-injected repositories, and the full set of Compose effects, compiled into a `.ktx` bundle that runs natively on device."}>
       <Content />
     </DocPage>
   );

@@ -1,31 +1,30 @@
-import { SDK_VERSION_FULL } from '@/constants';
 
 export const meta = {
   id: 'version-compatibility',
   section: 'sdk',
   title: 'Version compatibility: Kotlin, AGP, Gradle & Compose decoupled',
   summary:
-    'Since 0.4.0-alpha, KetoyVM is decoupled from your toolchain on two axes — Kotlin/AGP/Gradle via an embedded compiler, and the Compose version via name-based parameter remapping.',
+    'Since 0.4.0-alpha, KetoyVM is decoupled from your toolchain on two axes, Kotlin/AGP/Gradle via an embedded compiler, and the Compose version via name-based parameter remapping.',
   chip: 'Alpha',
   chipClass: 'uchip-beta',
   date: 'Jun 12, 2026',
-  tag: `SDK · ${SDK_VERSION_FULL}`,
-  metaTag: `SDK · ${SDK_VERSION_FULL}`,
+  tag: 'SDK · 0.4.0-alpha',
+  metaTag: 'SDK · 0.4.0-alpha',
 };
 
 **Since 0.4.0-alpha**, KetoyVM is decoupled from your project's toolchain on
 **two independent axes**:
 
-1. **Kotlin / AGP / Gradle** — fully decoupled by the embedded compiler
+1. **Kotlin / AGP / Gradle**, fully decoupled by the embedded compiler
    (ADR-0004).
-2. **Compose runtime version** — decoupled for the *supported parameter
+2. **Compose runtime version**, decoupled for the *supported parameter
    surface* by name-based remapping (ADR-0005).
 
 This update documents the **impact** of being on a newer (Kotlin 2.2 / 2.3,
 newer Compose BOM) or older version than KetoyVM's pinned toolchain, in **both
 directions**, and how to pull in features KetoyVM doesn't ship yet.
 
-KetoyVM pins its own toolchain internally — **Kotlin 2.0.21** + a matching
+KetoyVM pins its own toolchain internally, **Kotlin 2.0.21** + a matching
 Compose Compiler, and a Material3 adapter catalog generated against **Compose
 BOM 2024.11.00 (Material3 1.3.x)**. The question this page answers is: *what
 happens to your app when your versions differ from those?*
@@ -34,7 +33,7 @@ happens to your app when your versions differ from those?*
 
 | Your axis | Newer than KetoyVM | Older than KetoyVM | Floor |
 |---|---|---|---|
-| **Kotlin** | ✅ Irrelevant — embedded compiler runs pinned Kotlin in isolation | ✅ Irrelevant | Kotlin ≥ 2.0.0 |
+| **Kotlin** | ✅ Irrelevant, embedded compiler runs pinned Kotlin in isolation | ✅ Irrelevant | Kotlin ≥ 2.0.0 |
 | **AGP** | ✅ Irrelevant (one AGP-9 caveat below) | ✅ Irrelevant | Any AGP supporting the runtime AAR's `compileSdk` |
 | **Gradle** | ✅ Irrelevant | ✅ Irrelevant | Gradle 8.6+ (Problems API) |
 | **Compose** | ✅ **Version**-free for supported params; new *features* need an adapter | ✅ Version-free for supported params | Any Compose whose param **names/types** match the catalog |
@@ -50,21 +49,21 @@ thing you opt into.
 
 <FaqItem question="Does being on a newer (2.2/2.3) or older version affect your project?">
 
-**Kotlin / AGP / Gradle — no impact, either direction.** The embedded compiler
+**Kotlin / AGP / Gradle, no impact, either direction.** The embedded compiler
 runs pinned Kotlin 2.0.21 in an isolated classloader; your toolchain never sees
 it and vice-versa. Verified at Kotlin 2.2.10 / AGP 9.1.1 / Gradle 9.3.1. Floor
 is Kotlin ≥ 2.0.0. One ecosystem caveat documented: under AGP 9 you must drop
 the standalone `kotlin.android` plugin.
 
-**Compose — the version is free, the feature set is not.** ADR-0005's name-based
+**Compose, the version is free, the feature set is not.** ADR-0005's name-based
 remapping makes any Compose version render correctly for the parameters in
 KetoyVM's catalog, forward and backward. Params your Compose adds / renames /
-retypes are dropped to the Compose default with a build advisory — never a
+retypes are dropped to the Compose default with a build advisory, never a
 silent wrong render.
 
 </FaqItem>
 
-<FaqItem question="You're on 2.2/2.3 and want features KetoyVM doesn't ship — how do you add them?">
+<FaqItem question="You're on 2.2/2.3 and want features KetoyVM doesn't ship, how do you add them?">
 
 Three paths, **none** needing a KetoyVM release:
 
@@ -75,11 +74,11 @@ Three paths, **none** needing a KetoyVM release:
 - **New value type** → custom constructor adapter.
 
 The only thing requiring a KetoyVM release is adding a param to KetoyVM's *own
-generated* Material3 adapters — and the custom-adapter path sidesteps even that.
+generated* Material3 adapters, and the custom-adapter path sidesteps even that.
 
 </FaqItem>
 
-<FaqItem question="Are both directions — newer and older — really handled the same way?">
+<FaqItem question="Are both directions, newer and older, really handled the same way?">
 
 Yes. **Forward** (newer Compose, extra/reordered params) and **backward** (older
 Compose, fewer params) are handled by the same name-match. Each argument is
@@ -97,7 +96,7 @@ Two cases, distinguished honestly:
   `Default`, so the Compose default applies and it renders correctly.
 - **A genuine binary-incompatible removal of a whole composable / required
   param → out of scope.** That's a Compose ABI break beyond the matrix (one
-  Compose itself avoids within its stability guarantees) — and even then the
+  Compose itself avoids within its stability guarantees), and even then the
   **native fallback** is the steady-state safety net, so it degrades to the
   native render, not a crash.
 
@@ -105,7 +104,7 @@ Two cases, distinguished honestly:
 
 </FaqList>
 
-### 1. The Kotlin / AGP / Gradle axis — fully decoupled
+### 1. The Kotlin / AGP / Gradle axis, fully decoupled
 
 **Impact of any version, newer or older: none.**
 
@@ -127,16 +126,15 @@ compiler code; KetoyVM's pinned Kotlin never sees your toolchain.
 </CodeWindow>
 
 **Verified in production:** the reference app built at **Kotlin
-2.2.10 / AGP 9.1.1 / Gradle 9.3.1** — AGP a full *major* ahead of KetoyVM's 8.13
-— compiled its `.ktx` and rendered the KBC screen on device.
+2.2.10 / AGP 9.1.1 / Gradle 9.3.1**, AGP a full *major* ahead of KetoyVM's 8.13, compiled its `.ktx` and rendered the KBC screen on device.
 
 - **Forward support (you on Kotlin 2.2 / 2.3):** works unchanged. The embedded
   compiler tolerates newer dependency metadata on your compile classpath via the
   standard escape hatches (`skipMetadataVersionCheck` / `skipPrereleaseCheck` /
-  `allowUnstableDependencies` — the same flags KSP and kapt use). The embedded
+  `allowUnstableDependencies`, the same flags KSP and kapt use). The embedded
   compile only reads **API signatures** to lower your `@Ketoy*` closure; it never
   links bytecode internals, so newer metadata is safe.
-- **Backward support (you on Kotlin 2.0.x / 2.1.x):** works unchanged — your
+- **Backward support (you on Kotlin 2.0.x / 2.1.x):** works unchanged, your
   metadata is *older* than the pinned frontend, which is always readable. Floor:
   **Kotlin ≥ 2.0.0**, because the runtime AAR's stdlib is 2.0-based.
 
@@ -145,7 +143,7 @@ compiler code; KetoyVM's pinned Kotlin never sees your toolchain.
     AGP 9 ships &ldquo;built-in Kotlin&rdquo; and removed the legacy
     <code>BaseExtension</code> the standalone <code>org.jetbrains.kotlin.android</code>
     plugin casts to. Under AGP 9 you must <strong>not</strong> apply
-    <code>org.jetbrains.kotlin.android</code> — AGP drives Kotlin itself. Keep
+    <code>org.jetbrains.kotlin.android</code>, AGP drives Kotlin itself. Keep
     <code>com.android.application</code> + <code>org.jetbrains.kotlin.plugin.compose</code>.
     This is a general AGP-9 migration step independent of KetoyVM; the
     <code>dev.ketoy.compiler</code> plugin and the embedded compile are unaffected.
@@ -155,11 +153,11 @@ compiler code; KetoyVM's pinned Kotlin never sees your toolchain.
 The embedded Kotlin only matters to you at KetoyVM's own bump cadence (yearly
 major bumps in Q1, plus out-of-band bumps for security/ABI breaks). It governs
 **what Kotlin syntax you can write inside a `@KetoyComposable` body** (the KBC
-subset) — not what version your app uses. That subset is basic language surface
+subset), not what version your app uses. That subset is basic language surface
 (control flow, arithmetic, `when`, data classes, `remember`, coroutines), so the
 band almost never moves in a way you'd notice.
 
-### 2. The Compose axis — version-free for the supported surface
+### 2. The Compose axis, version-free for the supported surface
 
 KetoyVM lowers each `@Composable` call into a `COMPOSABLE_CALL` opcode carrying
 a sparse list of `(paramIndex, KBCValue)` pairs. Before 0.4.0 that `paramIndex`
@@ -188,14 +186,14 @@ version only affects emit-time *resolution*, never the wire contract.
 
 So both **forward** (newer Compose with extra/reordered params) and **backward**
 (older Compose with fewer params) are handled by the same name-match. Dropped
-params degrade to the Compose default and emit a build-time advisory — **never a
+params degrade to the Compose default and emit a build-time advisory, **never a
 silent wrong render**.
 
 <InfoCard title="Verified on device">
   rebuilt at **Compose BOM 2026.02.01 / Material3 1.4.0** (newer
   than the catalog) emitted the expected advisories (`Text.autoSize` and a
   `TopAppBarDefaults` color dropped as unknown-to-catalog) and the Courgette font
-  **rendered correctly** — `fontFamily` mapped by name despite `autoSize`
+  **rendered correctly**, `fontFamily` mapped by name despite `autoSize`
   shifting its position.
 </InfoCard>
 
@@ -205,22 +203,21 @@ surface**. What it does *not* do, by design:
 - A brand-new Compose **parameter** KetoyVM has no adapter coverage for is
   **dropped** (Compose default applies).
 - A brand-new Compose **component** KetoyVM has no adapter for can't be called
-  from a KBC body at all — the validator rejects it as an unregistered composable.
+  from a KBC body at all, the validator rejects it as an unregistered composable.
 
 Both are covered by §4.
 
-### 3. "Something was removed in my Compose version" — does it still work?
+### 3. "Something was removed in my Compose version", does it still work?
 
 **Source-level / default-hidden removal (the common case): yes.** When Compose
 deprecates-then-hides a *parameter*, your KBC source either never set it (it
 falls to the Compose default) or the encoder simply doesn't encode it. The
 adapter reads `Default`. Renders correctly.
 
-**Binary-incompatible removal (rare): out of scope — it's a Compose ABI break,
+**Binary-incompatible removal (rare): out of scope, it's a Compose ABI break,
 not a KetoyVM one.** The prebuilt adapters link against the single Compose
 present at runtime (yours). If your Compose genuinely *binary-removes* a whole
-composable or a required parameter, the adapter fails to link (`NoSuchMethodError`)
-— but Compose maintains binary compatibility for `@Composable` functions across
+composable or a required parameter, the adapter fails to link (`NoSuchMethodError`), but Compose maintains binary compatibility for `@Composable` functions across
 versions, so this effectively does not arise for the Material3/Foundation surface
 KetoyVM ships.
 
@@ -228,8 +225,8 @@ KetoyVM ships.
   <p>
     Whatever happens to the KBC render, the <strong>native fallback</strong> is
     the steady state. <code>KetoyScreen(entryPoint = "X")</code> renders the
-    native <code>X()</code> function — compiled by <em>your</em> Kotlin against
-    <em>your</em> Compose — whenever the bundle is absent, corrupt, incompatible,
+    native <code>X()</code> function, compiled by <em>your</em> Kotlin against
+    <em>your</em> Compose, whenever the bundle is absent, corrupt, incompatible,
     or fails to load. Even a worst-case Compose ABI break degrades to the native
     render, not a crash.
   </p>
@@ -238,19 +235,19 @@ KetoyVM ships.
 ### 4. Adding features KetoyVM doesn't ship yet
 
 You want a component or parameter KetoyVM's catalog doesn't cover. You have
-**three** paths — none require waiting for a KetoyVM release.
+**three** paths, none require waiting for a KetoyVM release.
 
-- **4.1 — A new Android API / side effect → capability.** If it's a *behaviour*
+- **4.1, A new Android API / side effect → capability.** If it's a *behaviour*
   (haptics, a platform API, analytics, a network call, a DataStore key), register
   it on your `KetoyCapabilityProvider`, expose it via a `@KetoyCapabilityStub`,
   and call it from your `@KetoyComposable` body. Use the app-specific ID range
   `0x4000–0x7FFF`.
-- **4.2 — A new Compose component → custom composable adapter.** Write a
+- **4.2, A new Compose component → custom composable adapter.** Write a
   `KBCComposableAdapter` at an app-specific id and register it on
   `runtime.adapterRegistry`. Because you compile it against *your* Compose, it
   picks up whatever version/feature you're on. This is also the escape hatch for
   a **new parameter on an existing component** you need *now*.
-- **4.3 — A new Compose value type (constructor) → custom constructor adapter.**
+- **4.3, A new Compose value type (constructor) → custom constructor adapter.**
   For a new constructable value (`TextStyle`-like, a shape, a config object),
   write a custom constructor adapter the same way.
 
@@ -273,7 +270,7 @@ runtime.adapterRegistry.register(MyChartAdapter)`}
 </CodeWindow>
 
 The one thing you **can't** do from consumer config alone: add a new param to
-one of KetoyVM's **own generated** Material3 adapters — that means regenerating
+one of KetoyVM's **own generated** Material3 adapters, that means regenerating
 the catalog, which is a KetoyVM release. The custom-adapter path above sidesteps
 it: register a parallel adapter at an app-specific id and get the param
 immediately.
@@ -283,17 +280,17 @@ immediately.
 When your Compose version diverges from the catalog, the embedded compiler tells
 you exactly what it dropped, via the Gradle Problems API + task log:
 
-- **Unknown param** (`WARNING`) — *"`<Composable>.<param>` is not in the KetoyVM
+- **Unknown param** (`WARNING`), *"`<Composable>.<param>` is not in the KetoyVM
   adapter catalog (consumer Compose newer than supported); using the Compose
   default."*
-- **Type-mismatch drop** (`WARNING`) — *"`<Composable>.<param>` type changed
+- **Type-mismatch drop** (`WARNING`), *"`<Composable>.<param>` type changed
   (`<consumerType>` vs catalog `<catalogType>`); skipped to avoid a wrong-typed
   render."*
-- **Per-bundle summary** (`INFO`) — e.g. *"346 argument(s) encoded; 2 unknown,
-  0 type-mismatched."* — "fully covered" means your version matches the catalog
+- **Per-bundle summary** (`INFO`), e.g. *"346 argument(s) encoded; 2 unknown,
+  0 type-mismatched."*, "fully covered" means your version matches the catalog
   surface exactly.
 
-These make the coverage boundary **observable** at build time — a divergent
+These make the coverage boundary **observable** at build time, a divergent
 Compose version surfaces as a visible advisory instead of a silent wrong render.
 
 ### 6. Recommended posture
@@ -304,7 +301,7 @@ Compose version surfaces as a visible advisory instead of a silent wrong render.
   correctly for every param in the catalog; watch the build advisories for
   anything dropped.
 - **If you depend on a brand-new Compose param or component**, ship a custom
-  adapter (§4.2) — immediate, no KetoyVM release needed.
+  adapter (§4.2), immediate, no KetoyVM release needed.
 - **If you depend on a new behaviour/API**, ship a capability (§4.1).
 - **Keep your native fallbacks honest.** They are the steady state and your
   insurance against any Compose ABI surprise.

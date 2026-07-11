@@ -34,7 +34,7 @@ KetoyBC: Reflection ('kotlin.reflect.typeOf') is not allowed in KBC programs.
 
   KBC bundles execute in a sandboxed environment without class metadata.
   Reflection cannot be used because the KBC runtime does not load class
-  definitions — it interprets instructions and resolves types through
+  definitions, it interprets instructions and resolves types through
   the capability and adapter registries.
 
   Fix: Replace reflection with direct capability or adapter calls, or
@@ -56,8 +56,8 @@ KetoyBC: File I/O ('java.io.File.<init>') is not allowed in KBC programs.
 
   The KBC sandbox does not expose the filesystem. Use KetoyStorage capabilities
   for persistence:
-    CAP_KV_GET / CAP_KV_SET   — key-value storage (DataStore)
-    CAP_DB_*                  — database operations (Room)
+    CAP_KV_GET / CAP_KV_SET  , key-value storage (DataStore)
+    CAP_DB_*                 , database operations (Room)
 
   Fix: Register a storage capability in your KetoyCapabilityProvider
   and call it from KBC instead of touching java.io directly.
@@ -66,7 +66,7 @@ KetoyBC: File I/O ('java.io.File.<init>') is not allowed in KBC programs.
 ```
 
 **Triggers**: `java.io.*`, `java.nio.*`, `kotlin.io.*`. **Fix**: use
-DataStore or Room via capabilities — see
+DataStore or Room via capabilities, see
 [DataStore](/docs/guides/datastore), [Room](/docs/guides/room).
 
 ---
@@ -177,7 +177,7 @@ KetoyBC: Cannot construct 'androidx.compose.material3.NavigationDrawerItemColors
 [Custom Adapter](/docs/guides/custom-adapter)).
 
 > Note: this error does **NOT** fire for user-defined classes
-> (`data class Todo(...)`) or primitive types — those go through the
+> (`data class Todo(...)`) or primitive types, those go through the
 > normal heap path, not `CONSTRUCT_JVM`.
 
 ---
@@ -225,7 +225,7 @@ KetoyBC: @KetoyViewModel is misused.
 **Triggers**: applying `@KetoyComposable` to a non-`@Composable`
 function, `@KetoyViewModel` to a non-class, `@KetoyEntryPoint` to
 something that isn't a top-level composable, etc. **Fix**: read the
-"Applied to:" line — it tells you what's wrong.
+"Applied to:" line, it tells you what's wrong.
 
 ---
 
@@ -253,7 +253,7 @@ two roots produce one diagnostic per root.
 
 ## Errors emitted by the runtime (not the compiler)
 
-These don't appear at build time — they fail the bundle load or first
+These don't appear at build time, they fail the bundle load or first
 call:
 
 | Exception | When |
@@ -280,12 +280,12 @@ Three opt-in markers control compiler behaviour at the API level
 | Annotation | Effect |
 |---|---|
 | `@KetoyStableApi` | Marks a Ketoy API as stable. |
-| `@KetoyInternalApi` | `ERROR`-severity opt-in — touching this fails compilation unless you `@OptIn`. |
-| `@KetoyExperimentalApi` | `WARNING`-severity opt-in — touching this warns. |
+| `@KetoyInternalApi` | `ERROR`-severity opt-in, touching this fails compilation unless you `@OptIn`. |
+| `@KetoyExperimentalApi` | `WARNING`-severity opt-in, touching this warns. |
 
 There are **no** flags to suppress the hard-non-goal errors above
 (Android API access, reflection, file I/O, etc.). Those are
-intentionally hard — if you need to do one of those things, do it
+intentionally hard, if you need to do one of those things, do it
 host-side and bridge through a capability.
 
 Next: [FAQ →](/docs/faq)

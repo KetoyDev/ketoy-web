@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/getting-started/first-screen.mdx';
 
 export const metadata = {
-  title: 'Your First Screen · Ketoy Docs',
+  alternates: { canonical: '/docs/getting-started/first-screen' },
+  title: 'Your First Screen',
   description: 'A Ketoy screen is a plain `@Composable` function annotated with',
 };
 

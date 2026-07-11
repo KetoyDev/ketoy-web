@@ -1,20 +1,20 @@
 # Ketoy Developer Documentation
 
 **Ketoy** is a server-driven execution runtime for Android. You write plain
-Kotlin — including Jetpack Compose, coroutines, ViewModels, Navigation,
-Room, Hilt — with a handful of `@Ketoy*` annotations. The Ketoy compiler
+Kotlin, including Jetpack Compose, coroutines, ViewModels, Navigation,
+Room, Hilt, with a handful of `@Ketoy*` annotations. The Ketoy compiler
 plugin lowers your code into a compact, signed bytecode bundle (`.ktx`)
 that any APK with the Ketoy runtime can execute natively.
 
 > **The app is the OS. The server ships programs.**
 
 You can update screens, fix bugs, run A/B tests, and roll out features
-without going through the Play Store — every bundle is Ed25519-signed,
+without going through the Play Store, every bundle is Ed25519-signed,
 sandboxed by capability, and rendered through real Jetpack Compose on the
 device.
 
 This site is the **developer manual** for Ketoy `0.3.4-alpha`. Every
-example is verified against current code — `dev.ketoy.vm:*:0.3.4-alpha`
+example is verified against current code, `dev.ketoy.vm:*:0.3.4-alpha`
 on Maven Central.
 
 ---
@@ -43,14 +43,14 @@ on Maven Central.
 
 ## Hard non-goals
 
-Some things Ketoy will **never** support — by design:
+Some things Ketoy will **never** support, by design:
 
 - No downloadable DEX / JVM bytecode (KBC only).
 - No reflection inside KBC.
-- No direct `android.*` / `androidx.*` API access from KBC source — every
+- No direct `android.*` / `androidx.*` API access from KBC source, every
   Android touchpoint is mediated by the capability registry.
 - No `GlobalScope`, `runBlocking`, or unstructured concurrency.
-- No raw I/O — file, network, prefs all go through capabilities.
+- No raw I/O, file, network, prefs all go through capabilities.
 - No skipping signature verification in production builds.
 
 If you need any of those things, they belong in **native Kotlin** in your

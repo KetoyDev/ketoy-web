@@ -1,0 +1,88 @@
+import Link from 'next/link';
+
+export const meta = {
+  id: 'ketoy-0-4-13-alpha',
+  section: 'platform',
+  title: 'Ketoy 0.4.13-alpha is here',
+  summary:
+    'KBC screens become real, interactive Kotlin: typed ViewModels, local var state, reusable components, forEach lists, and a full Canvas drawing surface.',
+  chip: 'New',
+  chipClass: 'uchip-new',
+  date: 'Jul 8, 2026',
+  tag: 'Platform · 0.4.13-alpha',
+  metaTag: 'Platform · 0.4.13-alpha',
+};
+
+We're shipping **0.4.13-alpha**, the release that turns KBC screens from
+static layouts into **real, interactive, idiomatic Kotlin**. You write
+ordinary Compose (typed ViewModels, `var` state, reusable components,
+`forEach` loops, a full `Canvas` drawing surface) and it compiles to a
+signed `.ktx` bundle that renders natively on device. No new mental
+model, no server round-trips for state changes.
+
+### Coordinates
+
+<CodeWindow file="build.gradle.kts">
+{`dependencies {
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.4.13-alpha"))
+    implementation("dev.ketoy.vm:ketoy-runtime")
+    implementation("dev.ketoy.vm:ketoy-hilt")             // optional
+    implementation("dev.ketoy.vm:ketoy-adapters-material3")
+}`}
+</CodeWindow>
+
+Drop-in upgrade from 0.3.x. Everything below is additive; nothing in
+existing screens changes.
+
+### What landed
+
+<ChipRow>
+  <Chip>Typed ViewModels</Chip>
+  <Chip>Local var state</Chip>
+  <Chip>Reusable components</Chip>
+  <Chip>forEach lists</Chip>
+  <Chip>Canvas / DrawScope</Chip>
+  <Chip>Scroll + spacedBy</Chip>
+  <Chip>Per-corner shapes</Chip>
+</ChipRow>
+
+- **Typed ViewModels.** Write an idiomatic `@KetoyViewModel` with a real
+  `StateFlow`, consume it with `ketoyViewModel<T>()`, and read it with
+  `collectAsState()`. The VM survives recomposition and config change and
+  is cleared with the screen. Constructor-injected repository interfaces
+  reach Room, Ktor, and Retrofit through the capability bridge.
+- **Local Compose state.** `var count by remember { mutableStateOf(0) }`,
+  the typed factories (`mutableIntStateOf`, `mutableFloatStateOf`, ...),
+  and `rememberSaveable` all compile.
+- **Reusable `@KetoyComposable` components.** Extract a helper composable
+  and call it with callbacks, content slots, `data class` params, and
+  lists. This is the primary way to keep KBC screens DRY.
+- **List iteration.** `items.forEach { ... }` and `forEachIndexed` emit a
+  composable per item, over literal lists or lists returned by a host
+  capability.
+- **Canvas / DrawScope.** A full sandboxed drawing surface: shapes,
+  paths, gradients, transforms, and text through `rememberTextMeasurer()`.
+- **Layout additions.** `verticalScroll` / `horizontalScroll`,
+  `Arrangement.spacedBy`, per-corner `RoundedCornerShape`,
+  `HorizontalDivider` / `VerticalDivider`, and `themeColor("name")` for
+  light and dark mode from one bundle.
+
+<InfoCard title="Read the feature guides">
+  <p>
+    Every feature ships with a how-to. Start with{' '}
+    <Link href="/docs/guides/viewmodel">ViewModels, State &amp; Business Logic</Link>,
+    then the new{' '}
+    <Link href="/docs/guides/reusable-components">Reusable components</Link> and{' '}
+    <Link href="/docs/guides/canvas">Canvas &amp; drawing</Link> guides.
+    Local state, `forEach`, and the layout additions are covered in{' '}
+    <Link href="/docs/guides/compose-ui">Compose UI &amp; state</Link>.
+  </p>
+</InfoCard>
+
+### Compose-version decoupling
+
+Adapter parameters are now encoded by **name** in the catalog's index
+space, not by position in the consumer's Compose signature. A newer
+Compose version that inserts or reorders a component parameter no longer
+shifts your bundle's arguments. You get this for free; nothing to
+configure.

@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/reference/ktx-bundle-format.mdx';
 
 export const metadata = {
-  title: '`.ktx` Bundle Format · Ketoy Docs',
+  alternates: { canonical: '/docs/reference/ktx-bundle-format' },
+  title: '`.ktx` Bundle Format',
   description: '`.ktx` Bundle Format',
 };
 

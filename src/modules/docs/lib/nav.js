@@ -18,6 +18,8 @@ export const docsNav = [
     title: 'Guides',
     items: [
       { label: 'Compose UI & state', href: '/docs/guides/compose-ui' },
+      { label: 'Reusable components', href: '/docs/guides/reusable-components' },
+      { label: 'Canvas & drawing', href: '/docs/guides/canvas' },
       { label: 'ViewModel', href: '/docs/guides/viewmodel' },
       { label: 'Coroutines & Flow', href: '/docs/guides/coroutines-flow' },
       { label: 'Navigation', href: '/docs/guides/navigation' },

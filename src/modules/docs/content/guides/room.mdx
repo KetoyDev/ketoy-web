@@ -1,6 +1,6 @@
 The host owns:
-- `@Entity`, `@Dao`, `@Database` — normal Room.
-- Repository — normal singleton.
+- `@Entity`, `@Dao`, `@Database`, normal Room.
+- Repository, normal singleton.
 - `KBCRoomBridge { ... }` block that registers each DAO operation as a
   capability.
 
@@ -176,7 +176,7 @@ class TodoCapabilityProvider @Inject constructor(
 | `mutate(id) { args -> Unit }` | `registerSuspend` | `suspend (args) -> Unit` for inserts / updates / deletes that return no useful value. |
 | `suspendCapability(id) { args -> T }` | `registerSuspend` | Generic suspend; use when the return type is meaningful (e.g. the new row id from an insert). |
 | `flowCapability(id) { args -> flow }` | `registerFlow` | Generic non-list flow. |
-| `syncCapability(id) { args -> T }` | `register` | Sync (rare for Room — most DAO ops are suspend). |
+| `syncCapability(id) { args -> T }` | `register` | Sync (rare for Room, most DAO ops are suspend). |
 
 All bridge methods enforce `id >= APP_SPECIFIC_START`. Calling with a
 lower ID throws:
@@ -209,12 +209,12 @@ suspend fun updateTodoTitle(id: Long, title: String): Unit = error(STUB_MSG)
 @KetoyCapabilityStub(id = 0x4005, name = "DELETE_TODO")
 suspend fun deleteTodo(id: Long): Unit = error(STUB_MSG)
 
-private const val STUB_MSG = "KetoyVM capability stub — replaced by INVOKE_CAPABILITY at compile time"
+private const val STUB_MSG = "KetoyVM capability stub, replaced by INVOKE_CAPABILITY at compile time"
 ```
 
 Note the return types: the bridge erases entity types to
 `List<Any?>` / `List<Any?>?`. The first element is conventionally the
-ID, then the columns in declaration order — but you can shape it
+ID, then the columns in declaration order, but you can shape it
 however you want host-side. For typed access on the KBC side, build a
 small helper:
 
@@ -236,63 +236,53 @@ private fun List<Any?>.toTodo() = Todo(
 
 ## 6. Use them in a ViewModel
 
+A **typed ViewModel** holds the list as a `StateFlow<List<Todo>>` and
+reuses the `Todo` data class and `toTodo()` helper from the previous
+section. It collects the `observeTodos()` capability flow in
+`viewModelScope` and exposes plain methods for the mutations:
+
 ```kotlin
 @KetoyViewModel
-class TodoListViewModel : KetoyBaseViewModel() {
+class TodoListViewModel : ViewModel() {
+    private val _todos = MutableStateFlow<List<Todo>>(emptyList())
+    val todos: StateFlow<List<Todo>> = _todos.asStateFlow()
 
-    override fun init() {
-        setState("todos", emptyList<Any?>())
-
+    init {
         viewModelScope.launch {
-            observeTodos().collect { todos ->
-                setState("todos", todos)
+            observeTodos().collect { rows ->
+                _todos.value = rows.map { it.toTodo() }
             }
         }
     }
 
-    fun addNew(payload: Any?) {
-        val title = (payload as? String) ?: return
-        viewModelScope.launch { addTodo(title) }
-    }
+    fun addNew(title: String) = viewModelScope.launch { addTodo(title) }
 
-    fun toggle(payload: Any?) {
-        @Suppress("UNCHECKED_CAST")
-        val args = payload as? List<Any?> ?: return
-        viewModelScope.launch {
-            setTodoCompleted(args[0] as Long, args[1] as Boolean)
-        }
-    }
+    fun toggle(id: Long, completed: Boolean) =
+        viewModelScope.launch { setTodoCompleted(id, completed) }
 
-    fun remove(payload: Any?) {
-        val id = (payload as? Long) ?: return
-        viewModelScope.launch { deleteTodo(id) }
-    }
+    fun remove(id: Long) = viewModelScope.launch { deleteTodo(id) }
 }
 ```
 
-And a composable:
+And a composable that resolves the VM, reads its state with
+`collectAsState`, and calls its methods directly:
 
 ```kotlin
 @KetoyComposable @KetoyEntryPoint
 @Composable
-fun TodoListScreen() {
-    @Suppress("UNCHECKED_CAST")
-    val todos = (vmGetState("todos") as? List<List<Any?>>) ?: emptyList()
+fun TodoListScreen(modifier: Modifier = Modifier) {
+    val vm = ketoyViewModel<TodoListViewModel>()
+    val todos by vm.todos.collectAsState()
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        todos.forEach { row ->
-            val id = row[0] as Long
-            val title = row[1] as String
-            val completed = row[2] as Boolean
+    Column(modifier = modifier.padding(16.dp)) {
+        todos.forEach { todo ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
-                    checked = completed,
-                    onCheckedChange = { checked ->
-                        vmDispatch("toggle", listOf(id, checked))
-                    }
+                    checked = todo.completed,
+                    onCheckedChange = { checked -> vm.toggle(todo.id, checked) }
                 )
-                Text(title, modifier = Modifier.weight(1f))
-                IconButton(onClick = { vmDispatch("remove", id) }) {
+                Text(todo.title, modifier = Modifier.weight(1f))
+                IconButton(onClick = { vm.remove(todo.id) }) {
                     Icon(Icons.Filled.Delete, contentDescription = "Delete")
                 }
             }
@@ -327,7 +317,7 @@ errors with the exact ID and name in the message.
 ## Migrations
 
 When you migrate the database schema, you migrate **host-side** as
-normal Room. The KBC bundle doesn't care — it only sees `List<Any?>`.
+normal Room. The KBC bundle doesn't care, it only sees `List<Any?>`.
 
 If you change a capability's signature (e.g. `setTodoCompleted` now
 takes an extra `priority: Int`), bump the bundle's `minAppVersion` so
@@ -339,8 +329,8 @@ older APKs reject the new bundle.
 
 | You write | Why it fails |
 |---|---|
-| `dao.observeAll()` directly | `DirectAndroidApiAccess` — Room is `androidx.room.*`, not allowed in KBC. |
+| `dao.observeAll()` directly | `DirectAndroidApiAccess`, Room is `androidx.room.*`, not allowed in KBC. |
 | `@Entity` / `@Dao` in KBC source | Annotations work but Room codegen needs DEX-level reflection that KBC doesn't support. |
-| Constructing `TodoEntity(...)` in KBC | `NonKbcConstructor` — Room entities aren't in the standard ctor adapter set. Either expose a `createTodo(title, ...)` capability, or keep your KBC code working with `List<Any?>`. |
+| Constructing `TodoEntity(...)` in KBC | `NonKbcConstructor`. Room entities aren't in the standard ctor adapter set. Either expose a `createTodo(title, ...)` capability, or keep your KBC code working with `List<Any?>`. |
 
-Next: [Hilt →](/docs/hilt)
+Next: [Hilt →](/docs/guides/hilt)

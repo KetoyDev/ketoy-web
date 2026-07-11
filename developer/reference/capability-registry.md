@@ -15,7 +15,7 @@ table form.
 
 | Range | Owner | Purpose |
 |---|---|---|
-| `0x0001`–`0x00FF` | Layout (legacy) | First-pass capabilities — superseded by adapters in most cases. Don't add new IDs here. |
+| `0x0001`–`0x00FF` | Layout (legacy) | First-pass capabilities, superseded by adapters in most cases. Don't add new IDs here. |
 | `0x0100`–`0x01FF` | Text (legacy) | Same as above. |
 | `0x0200`–`0x02FF` | Buttons (legacy) | Same. |
 | `0x0300`–`0x03FF` | Media (legacy) | Same. |
@@ -53,7 +53,7 @@ which is called transitively by `registerCoreCapabilities(...)`.
 
 ---
 
-## Storage — KV (`0x0600–0x0605`)
+## Storage, KV (`0x0600–0x0605`)
 
 Registered by `registerCoreCapabilities(...)` when you pass a
 `DataStore<Preferences>`.
@@ -72,7 +72,7 @@ Supported value types: `String`, `Int`, `Long`, `Float`, `Double`,
 
 ---
 
-## Storage — Room (`0x0610–0x0614`)
+## Storage, Room (`0x0610–0x0614`)
 
 Generic IDs. Typed Room operations are app-specific (`0x4000+`) via
 `KBCRoomBridge`.
@@ -137,7 +137,7 @@ already does).
 
 ## ViewModel state (`0x0A00–0x0A03`)
 
-Registered by `registerViewModelStateCapabilities(viewModel)` — done
+Registered by `registerViewModelStateCapabilities(viewModel)`, done
 automatically by `KetoyScreen` when it instantiates a
 `KetoyVirtualViewModel`.
 
@@ -181,13 +181,13 @@ Registered by `registerFlowCapabilities(flowEngine)`.
 | `0x0C07` | `STATE_FLOW_CREATE` | sync constructor |
 | `0x0C08` | `SHARED_FLOW_CREATE` | sync constructor |
 
-These don't usually appear in KBC source directly — the compiler
+These don't usually appear in KBC source directly, the compiler
 recognises `.map { }`, `.filter { }`, etc. and lowers them onto these
 IDs through `KBCFlowEngine`.
 
 ---
 
-## `registerCoreCapabilities(...)` — one-stop bootstrap
+## `registerCoreCapabilities(...)`, one-stop bootstrap
 
 ```kotlin
 fun CapabilityRegistry.registerCoreCapabilities(
@@ -205,10 +205,10 @@ Registers, in order:
 4. Dispatchers (always).
 
 **Not** registered by `registerCoreCapabilities`:
-- Navigation — call `registerNavigationCapabilities(navigator)`.
-- ViewModel state — registered by `KetoyVirtualViewModel`.
-- Flow operators — registered by `KetoyVM` against its `KBCFlowEngine`.
-- Room — register per-DAO via `KBCRoomBridge`.
+- Navigation, call `registerNavigationCapabilities(navigator)`.
+- ViewModel state, registered by `KetoyVirtualViewModel`.
+- Flow operators, registered by `KetoyVM` against its `KBCFlowEngine`.
+- Room, register per-DAO via `KBCRoomBridge`.
 
 ---
 

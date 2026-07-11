@@ -1,7 +1,7 @@
 # Compose Tokens
 
 The full table of Compose property-getter reads the compiler plugin
-resolves into inline byte-tagged literals — no `CONSTRUCT_JVM` opcode,
+resolves into inline byte-tagged literals, no `CONSTRUCT_JVM` opcode,
 no host adapter call, just a few bytes in the bundle.
 
 88 entries across 13 token families. All live in the
@@ -43,11 +43,11 @@ typed value to the receiving slot.
 | `0x16` | `ImeActionId` | `1 byte` |
 | `0x17` | `CapitalizationId` | `1 byte` |
 | `0x18` | `VisualTransformationId` | `1 byte` |
-| `0x19` | `Register` | `1 byte` — pointer to runtime-constructed value |
+| `0x19` | `Register` | `1 byte`, pointer to runtime-constructed value |
 | `0x1A` | `ListRegister` | `1 byte` |
-| `0x1B` | `ModifierRef` | `2 bytes` — modifier table index |
+| `0x1B` | `ModifierRef` | `2 bytes`, modifier table index |
 | `0x1C` | `FontFamilyTokenId` | `1 byte` |
-| `0x1F` | `FunctionRef` | `2 bytes` — function table index |
+| `0x1F` | `FunctionRef` | `2 bytes`, function table index |
 | `0x20` | `NoCallback` | tag-only |
 | `0x21` | `TextUnitUnspecified` | tag-only |
 | `0x22` | `DpUnspecified` | tag-only |
@@ -58,7 +58,7 @@ typed value to the receiving slot.
 
 ## Token families (88 entries)
 
-### Colors (12 — `KBCValue.ColorARGB`)
+### Colors (12, `KBCValue.ColorARGB`)
 
 ```
 Color.Black        0xFF000000      Color.White        0xFFFFFFFF
@@ -69,11 +69,11 @@ Color.Yellow       0xFFFFFF00      Color.Cyan         0xFF00FFFF
 Color.Magenta      0xFFFF00FF      Color.Transparent  0x00000000
 ```
 
-For any other color, use `Color(0xAARRGGBB)` literal — the encoder
+For any other color, use `Color(0xAARRGGBB)` literal, the encoder
 inlines it as `ColorARGB(value)` via a dedicated path in
 `KBCValueEncoder.colorArgFromConstructor`.
 
-### Dimensions (2 — `Dp` / `Sp`)
+### Dimensions (2, `Dp` / `Sp`)
 
 ```
 Int.dp     → KBCValue.Dp(value)
@@ -83,10 +83,10 @@ Float.sp   → KBCValue.Sp(value)
 ```
 
 Encoded as 4-byte floats. Only the `<get-dp>` / `<get-sp>` numeric
-receiver pattern resolves through the registry — `Dp.Companion.Hairline`,
+receiver pattern resolves through the registry, `Dp.Companion.Hairline`,
 `TextUnit.Unspecified` etc. flow through other paths.
 
-### Font weights (9 — `KBCValue.FontWeightInt`)
+### Font weights (9, `KBCValue.FontWeightInt`)
 
 ```
 FontWeight.Thin        100
@@ -100,10 +100,10 @@ FontWeight.ExtraBold   800
 FontWeight.Black       900
 ```
 
-For other weights, use `FontWeight(450)` (constructor call — falls
+For other weights, use `FontWeight(450)` (constructor call, falls
 through to a different code path; less compact but works).
 
-### Font styles (2 — `KBCValue.FontStyleId`)
+### Font styles (2, `KBCValue.FontStyleId`)
 
 ```
 FontStyle.Normal       NORMAL
@@ -121,10 +121,10 @@ FontFamily.Cursive     CURSIVE
 ```
 
 `FontFamily(Font(R.font.X))` is atomically collapsed to
-`KBCValue.StringLiteral("X")` — the resource **name** is encoded; the
+`KBCValue.StringLiteral("X")`, the resource **name** is encoded; the
 runtime resolves it through `KBCFontFamilyResolver`.
 
-### TextAlign (6 — `KBCValue.TextAlignId`)
+### TextAlign (6, `KBCValue.TextAlignId`)
 
 ```
 TextAlign.Start    START
@@ -135,7 +135,7 @@ TextAlign.Left     LEFT
 TextAlign.Right    RIGHT
 ```
 
-### TextOverflow (3 — `KBCValue.TextOverflowId`)
+### TextOverflow (3, `KBCValue.TextOverflowId`)
 
 ```
 TextOverflow.Clip      CLIP
@@ -143,7 +143,7 @@ TextOverflow.Ellipsis  ELLIPSIS
 TextOverflow.Visible   VISIBLE
 ```
 
-### TextDecoration (3 — `KBCValue.TextDecorationId`)
+### TextDecoration (3, `KBCValue.TextDecorationId`)
 
 ```
 TextDecoration.None         NONE
@@ -151,7 +151,7 @@ TextDecoration.Underline    UNDERLINE
 TextDecoration.LineThrough  LINE_THROUGH
 ```
 
-### Arrangement (12 — vertical / horizontal / both)
+### Arrangement (12, vertical / horizontal / both)
 
 Unambiguous (single direction):
 
@@ -170,7 +170,7 @@ Arrangement.Center, Arrangement.SpaceEvenly,
 Arrangement.SpaceBetween, Arrangement.SpaceAround
 ```
 
-These four entries are stored as `ParamTypeDispatched` — when the
+These four entries are stored as `ParamTypeDispatched`, when the
 encoder sees `Arrangement.SpaceBetween` passed to a
 `verticalArrangement: Arrangement.Vertical` slot, it emits
 `VerticalArrangementId(SPACE_BETWEEN)`; the same source token passed to
@@ -203,7 +203,7 @@ Alignment.CenterHorizontally
 Alignment.End
 ```
 
-### ContentScale (7 — `KBCValue.ContentScaleId`)
+### ContentScale (7, `KBCValue.ContentScaleId`)
 
 ```
 ContentScale.Crop         ContentScale.Fit          ContentScale.FillBounds
@@ -211,7 +211,7 @@ ContentScale.Inside       ContentScale.None
 ContentScale.FillHeight   ContentScale.FillWidth
 ```
 
-### KeyboardType (8 — `KBCValue.KeyboardTypeId`)
+### KeyboardType (8, `KBCValue.KeyboardTypeId`)
 
 ```
 KeyboardType.Text             KeyboardType.Number
@@ -220,14 +220,14 @@ KeyboardType.Email            KeyboardType.Password
 KeyboardType.NumberPassword   KeyboardType.Decimal
 ```
 
-### ImeAction (8 — `KBCValue.ImeActionId`)
+### ImeAction (8, `KBCValue.ImeActionId`)
 
 ```
 ImeAction.Default   ImeAction.None    ImeAction.Go     ImeAction.Search
 ImeAction.Send      ImeAction.Next    ImeAction.Done   ImeAction.Previous
 ```
 
-### KeyboardCapitalization (4 — `KBCValue.CapitalizationId`)
+### KeyboardCapitalization (4, `KBCValue.CapitalizationId`)
 
 ```
 KeyboardCapitalization.None
@@ -236,24 +236,24 @@ KeyboardCapitalization.Words
 KeyboardCapitalization.Sentences
 ```
 
-### VisualTransformation (1 — `KBCValue.VisualTransformationId`)
+### VisualTransformation (1, `KBCValue.VisualTransformationId`)
 
 ```
 VisualTransformation.None
 ```
 
-`PasswordVisualTransformation()` is a class — flows through
+`PasswordVisualTransformation()` is a class, flows through
 `CONSTRUCT_JVM` instead.
 
 ---
 
 ## Material Icons
 
-Icons aren't token-encoded — they use `KBCValue.StringLiteral` carrying
+Icons aren't token-encoded, they use `KBCValue.StringLiteral` carrying
 the canonical FQ name. The runtime resolves through a host-provided
 `KBCImageVectorResolver`.
 
-The token registry **does** know about icon style packages — it
+The token registry **does** know about icon style packages, it
 pattern-matches `androidx.compose.material.icons.<style>.<name>` and the
 `Icons.<style>` selector getters so KBC source can write
 `Icons.Filled.Settings` and have it normalised to the canonical FQ.
@@ -285,19 +285,19 @@ registration pattern.
 
 Things you might expect to be tokens but aren't:
 
-- **`MaterialTheme.colorScheme.primary`** etc. — these are not tokens;
+- **`MaterialTheme.colorScheme.primary`** etc., these are not tokens;
   they read from `LocalColorScheme` at render time. Pass them through
   to the adapter via `Register`-bound runtime values (often via a
   `remember { MaterialTheme.colorScheme.primary }` style ceremony).
 - **`Dp.Hairline`, `Dp.Unspecified`, `TextUnit.Unspecified`,
-  `Color.Unspecified`** — encoded as the tag-only sentinel variants
+  `Color.Unspecified`**, encoded as the tag-only sentinel variants
   (`DpUnspecified`, `TextUnitUnspecified`, `ColorUnspecified`).
-- **Custom material theme tokens** (`shapes.medium`, etc.) — these are
+- **Custom material theme tokens** (`shapes.medium`, etc.), these are
   property reads on `MaterialTheme.shapes`, resolved at render time.
-- **`em` units** — deferred. There's no `KBCValue.Em` variant yet.
+- **`em` units**, deferred. There's no `KBCValue.Em` variant yet.
 
 For tokens not in the registry that should be, file an issue or PR
-adding the family — every entry is a few lines in
+adding the family, every entry is a few lines in
 `ComposeTokenRegistry.kt`.
 
 Next: [Compile Errors →](compile-errors.md)

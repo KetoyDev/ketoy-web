@@ -16,11 +16,11 @@ entry points, and bundle metadata (including `minAppVersion`). The last
 
 The runtime's `KetoyRuntime.parseBundle(bytes)` pipeline:
 
-1. `Ed25519Verifier.verify(bytes, publicKey)` — fail-fast before any
+1. `Ed25519Verifier.verify(bytes, publicKey)`, fail-fast before any
    parsing.
-2. `KtxReader.read(bytes)` — section-by-section decode.
+2. `KtxReader.read(bytes)`, section-by-section decode.
 3. `BundleValidator.validate(bundle, adapter, constructor, capability)`
-   — every manifest entry must exist in the host's registries.
+  , every manifest entry must exist in the host's registries.
 
 If any step fails the bundle is rejected and the `nativeFallback` you
 passed to `KetoyScreen` renders instead.
@@ -85,7 +85,7 @@ ketoy {
 
 When `signingKeyFile` is unset (or the file is missing / malformed), the
 plugin emits an unsigned bundle and logs a WARNING. Unsigned bundles
-**only load** when `KetoyConfig.enableSignatureVerification = false` —
+**only load** when `KetoyConfig.enableSignatureVerification = false`,
 that mode is for unit tests and local development, never production.
 
 ---
@@ -108,7 +108,7 @@ KetoyConfig(
 ```
 
 `KetoyKeystore` enforces the 32-byte size and throws
-`KetoyBundleFormatException` on mismatch — fail-fast at boot rather than
+`KetoyBundleFormatException` on mismatch, fail-fast at boot rather than
 discovering the wrong key shape at bundle-load time.
 
 With Hilt:
@@ -125,8 +125,8 @@ fun provideKetoyConfigCustomizer(
 }
 ```
 
-`KetoyConfigCustomizer` is an optional Hilt binding via `@BindsOptionalOf`
-— hosts that don't bind one get the library default (sig verify off,
+`KetoyConfigCustomizer` is an optional Hilt binding via `@BindsOptionalOf`.
+Hosts that don't bind one get the library default (sig verify off,
 suitable for tests). See [Hilt guide](../guides/hilt.md).
 
 ---
@@ -141,7 +141,7 @@ Output:
 
 ```
 > Task :app:ketoyBundle
-KetoyBC: Compilation complete — 22 functions emitted, 1 composables,
+KetoyBC: Compilation complete, 22 functions emitted, 1 composables,
 0 view models, 1 entry points. Bundle ID: main. Wrote 3464 bytes to
 .../app/src/main/assets/ketoy/main.ktx (signed)
 ```
@@ -165,7 +165,7 @@ println("Bundle: ${bundle.id}, ${bundle.functions.size} functions")
 
 ## 5. Ship bundles three ways
 
-### 5a — Bundled in the APK (default)
+### 5a, Bundled in the APK (default)
 
 The Gradle plugin writes `.ktx` straight into
 `app/src/main/assets/ketoy/main.ktx`. The `merge<Variant>Assets` task is
@@ -182,7 +182,7 @@ KetoyScreen(
 )
 ```
 
-### 5b — Bytes in memory (tests, advanced caches)
+### 5b, Bytes in memory (tests, advanced caches)
 
 ```kotlin
 val bytes: ByteArray = /* loaded from anywhere */
@@ -193,7 +193,7 @@ KetoyScreen(
 )
 ```
 
-### 5c — Remote URL with ETag cache (production OTA delivery)
+### 5c, Remote URL with ETag cache (production OTA delivery)
 
 ```kotlin
 KetoyScreen(
@@ -238,7 +238,7 @@ running APK is older than the bundle's `minAppVersion`, the bundle is
 treated as incompatible and the `nativeFallback` renders.
 
 > **Note**: Runtime enforcement of `minAppVersion` is wire-format-ready
-> as of 0.3.4-alpha — the bytes round-trip and the field is exposed via
+> as of 0.3.4-alpha, the bytes round-trip and the field is exposed via
 > `bundle.minAppVersion`. Active enforcement (with rollback + the
 > `onBundleAppVersionMismatch` callback) ships in a later patch. Until
 > then, gate manually in your `KetoyBundleSource` selection logic.
@@ -256,7 +256,7 @@ When you need to rotate (suspected leak, scheduled rotation):
    private key.
 4. Ship a follow-up APK that drops the old public key.
 
-This requires a small custom verifier on your side — `KetoyKeystore`
+This requires a small custom verifier on your side, `KetoyKeystore`
 only loads one key at a time today.
 
 ---
@@ -274,7 +274,7 @@ Before shipping a release APK:
 - [ ] Private keys are in CI secret storage, never in the repo.
 - [ ] Your `nativeFallback` is a real screen, not a "loading…"
       placeholder. Test by deleting `main.ktx` from the APK assets and
-      relaunching — that's exactly what users see when the bundle fails
+      relaunching, that's exactly what users see when the bundle fails
       to load.
 - [ ] You have a rollback plan: keep the previous bundle on the CDN
       under a stable URL, and have an LCM (last-known-good) cache key.
@@ -286,9 +286,9 @@ Before shipping a release APK:
 | Error | Cause |
 |---|---|
 | `KetoyBundleSignatureException: signature verification failed` | Bundle signed with a different key than the public key in `KetoyConfig`. Or the bundle's bytes were modified after signing. |
-| `KetoyBundleFormatException: expected 32 bytes but got N` | Public key file is the wrong size — you probably grabbed the PKCS#8 wrapper instead of the raw 32 bytes. Re-run the `tail -c 32` step. |
+| `KetoyBundleFormatException: expected 32 bytes but got N` | Public key file is the wrong size, you probably grabbed the PKCS#8 wrapper instead of the raw 32 bytes. Re-run the `tail -c 32` step. |
 | `KetoyMissingCapabilityException: 0x4001 not registered` | Bundle's capability manifest declares an ID the host registry doesn't provide. Either register it in your `KetoyCapabilityProvider`, or remove the `@KetoyCapabilityStub` from KBC source. |
 | `KetoyMissingAdapterException: 0x4042 not registered` | Same as above for composable adapters. Re-run `./gradlew :app:kspRelease` if the adapter is in `adapter-scan-roots.txt`. |
-| Bundle loads in debug, fails in release | Probably an R8 / ProGuard rule stripping out an icon, font, or drawable resource. Resolvers should use direct compile-time references (`R.font.X`, `Icons.Filled.X`) — see the [Compose UI guide](../guides/compose-ui.md). |
+| Bundle loads in debug, fails in release | Probably an R8 / ProGuard rule stripping out an icon, font, or drawable resource. Resolvers should use direct compile-time references (`R.font.X`, `Icons.Filled.X`), see the [Compose UI guide](../guides/compose-ui.md). |
 
 Next: [Compose UI & State →](../guides/compose-ui.md)

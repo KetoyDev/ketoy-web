@@ -68,7 +68,7 @@ Output:
 
 ```
 > Task :app:ketoyBundle
-KetoyBC: Compilation complete — 7 functions emitted, 1 composables,
+KetoyBC: Compilation complete, 7 functions emitted, 1 composables,
 0 view models, 1 entry points. Bundle ID: main. Wrote 1542 bytes to
 .../app/build/tmp/ketoy_compiler_output/main.ktx (signed)
 ```
@@ -86,7 +86,7 @@ This file ships inside your APK as an asset. The runtime loads it via
 
 ## 3. Render it
 
-`MainActivity` is already wired (from [Installation](/docs/installation)):
+`MainActivity` is already wired (from [Installation](/docs/getting-started/installation)):
 
 ```kotlin
 KetoyScreen(
@@ -102,7 +102,7 @@ Build & install:
 ./gradlew :app:installDebug
 ```
 
-Launch — you'll see your KBC screen.
+Launch, you'll see your KBC screen.
 
 ---
 
@@ -137,10 +137,10 @@ Adapters: COLUMN(0x0002), TEXT(0x0001), SPACER(0x000B), BUTTON(0x000C)
 2. Recognised `Column`, `Text`, `Spacer`, `Button` against the
    built-in Material3 adapter catalog.
 3. Resolved `16.dp` / `8.dp` / `24.dp` through the
-   [Compose Token Registry](/docs/reference/compose-tokens) — each
+   [Compose Token Registry](/docs/reference/compose-tokens), each
    becomes a single `KBCValue.Dp(16f)` byte tag in the bundle.
 4. Resolved `Modifier.fillMaxSize().padding(16.dp)` through the
-   modifier IR walker — the chain is interned into the bundle's
+   modifier IR walker, the chain is interned into the bundle's
    modifier table once and referenced by index.
 5. Emitted one `COMPOSABLE_CALL` opcode per Compose call site with the
    adapter ID + sparse-encoded parameters.
@@ -174,7 +174,7 @@ fun HelloKetoyScreen() {
 }
 ```
 
-The `count++` lambda captures `count` from the outer scope — Ketoy
+The `count++` lambda captures `count` from the outer scope, Ketoy
 performs **closure conversion** at compile time, threading the captured
 state through `KBCValue.ClosureRef` at the call site.
 
@@ -187,9 +187,9 @@ For production-grade state that survives rotation, see
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| `KetoyBC: Direct access to FontWeight.Companion.<get-Bold>` | Token not in seeded registry. | Bold/Medium are seeded — make sure you're on `0.4.0-alpha`. |
+| `KetoyBC: Direct access to FontWeight.Companion.<get-Bold>` | Token not in seeded registry. | Bold/Medium are seeded, make sure you're on `0.4.0-alpha`. |
 | `KetoyBC: Unregistered composable: com.example.MyWidget` | Calling a `@Composable` that has no adapter. | Either write a [custom adapter](/docs/guides/custom-adapter) or wrap it as native UI behind a capability. |
 | `KetoyBC: Direct access to android.util.Log` | Calling `android.*` directly from KBC. | Wrap as a [custom capability](/docs/guides/custom-capability), or use the built-in `LOG` capability. |
 | Bundle loads but screen is blank | Native fallback rendered instead. | Check `entryPoint` matches the function name exactly. Check `adb logcat \| grep KetoyBundleLoader` for parse/verify errors. |
 
-Next: [Bundle & Sign for production →](/docs/bundle-and-sign)
+Next: [Bundle & Sign for production →](/docs/getting-started/bundle-and-sign)

@@ -2,14 +2,14 @@
 
 Navigation in a Ketoy app has two layers:
 
-1. **Host-side Navigation-Compose** — your `NavHost` + `NavController`,
+1. **Host-side Navigation-Compose**, your `NavHost` + `NavController`,
    same as any normal Compose app. Each route is either a native
    `@Composable` or a `KetoyScreen` that loads a `.ktx` entry point.
-2. **KBC-side navigation capabilities** — `NAV_PUSH`, `NAV_POP`,
-   `NAV_REPLACE`, etc. — let KBC code drive the host's `NavController`
+2. **KBC-side navigation capabilities**, `NAV_PUSH`, `NAV_POP`,
+   `NAV_REPLACE`, etc., let KBC code drive the host's `NavController`
    without owning it.
 
-The bridge is `KetoyNavigator` — an interface with one production
+The bridge is `KetoyNavigator`, an interface with one production
 implementation, `ComposeKetoyNavigator`, that wraps a `NavController`.
 
 ---
@@ -58,7 +58,7 @@ Key points:
 
 - **`ComposeKetoyNavigator` lifetime = the surrounding composition.**
   Use `remember(navController)` to reuse it across recompositions.
-- **`LocalKetoyNavigator`** is the bridge — `registerNavigationCapabilities`
+- **`LocalKetoyNavigator`** is the bridge, `registerNavigationCapabilities`
   reads from it on the host side. (Or pass the navigator directly into
   your `KetoyCapabilityProvider`.)
 - **`extras = mapOf("productId" to id)`** seeds the KBC ViewModel's state
@@ -194,11 +194,11 @@ fun ProductDetailScreen() {
 | `popTo(route, inclusive)` | `NAV_POP_TO` (`0x0703`) | Pop up to a route. |
 | `deepLink(uri)` | `NAV_DEEP_LINK` (`0x0704`) | Handle a deep-link URI. |
 | `setResult(key, value)` | `NAV_SET_RESULT` (`0x0705`) | Store a result for the previous destination. |
-| `getResult(key)` | `NAV_GET_RESULT` (`0x0706`) | suspend — read & consume a result. |
+| `getResult(key)` | `NAV_GET_RESULT` (`0x0706`) | suspend, read & consume a result. |
 | `canPop()` | `NAV_CAN_POP` (`0x0707`) | Returns Boolean. |
 | `getCurrentRoute()` | `NAV_CURRENT_ROUTE` (`0x0708`) | Returns String?. |
 
-All except `getResult` are **synchronous** capabilities — they fire on
+All except `getResult` are **synchronous** capabilities, they fire on
 the main thread and return immediately.
 
 ---
@@ -250,7 +250,7 @@ KBC doesn't know or care whether the destination is KBC or native.
 
 ## 8. Back press handling
 
-`KetoyScreen` doesn't intercept back-press by default — your host
+`KetoyScreen` doesn't intercept back-press by default, your host
 `NavHost` handles it as usual. If you need custom back behavior inside
 a KBC screen (e.g. close a dialog instead of popping), use the standard
 `BackHandler` composable:

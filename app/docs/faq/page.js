@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/faq.mdx';
 
 export const metadata = {
-  title: 'FAQ · Ketoy Docs',
+  alternates: { canonical: '/docs/faq' },
+  title: 'FAQ',
   description: 'Common questions about Ketoy, what it is, what it isn\'t, and how to work with it.',
 };
 

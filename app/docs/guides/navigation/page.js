@@ -2,7 +2,8 @@ import DocPage from '@/modules/docs/components/DocPage';
 import Content from '@/modules/docs/content/guides/navigation.mdx';
 
 export const metadata = {
-  title: 'Navigation · Ketoy Docs',
+  alternates: { canonical: '/docs/guides/navigation' },
+  title: 'Navigation',
   description: 'Navigation in a Ketoy app has two layers:',
 };
 
