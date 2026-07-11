@@ -110,7 +110,7 @@ export default function FeaturesPage() {
               </p>
             </Callout>
 
-            <Callout title="Compose-version decoupled - since 0.4.0-alpha">
+            <Callout title="Compose-version decoupled - since 0.4.13-alpha">
               <p>
                 Every parameter on these adapters is keyed by <strong>name</strong>, not position.
                 The emitter maps each argument&rsquo;s param name to the catalog&rsquo;s{' '}

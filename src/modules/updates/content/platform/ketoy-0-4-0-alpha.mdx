@@ -3,17 +3,17 @@ import Link from 'next/link';
 export const meta = {
   id: 'ketoy-0-4-0-alpha',
   section: 'platform',
-  title: 'Ketoy 0.4.0-alpha is here',
+  title: 'Ketoy 0.4.13-alpha is here',
   summary:
     'The version-decoupling release, your Kotlin, AGP, Gradle and Compose versions are no longer pinned to KetoyVM. Bump freely.',
   chip: 'New',
   chipClass: 'uchip-new',
   date: 'Jun 12, 2026',
-  tag: 'Platform · 0.4.0-alpha',
-  metaTag: 'Platform · 0.4.0-alpha',
+  tag: 'Platform · 0.4.13-alpha',
+  metaTag: 'Platform · 0.4.13-alpha',
 };
 
-We're shipping **0.4.0-alpha**, the release that lifts the toolchain pin. Until
+We're shipping **0.4.13-alpha**, the release that lifts the toolchain pin. Until
 now, KetoyVM forced your app onto its exact Kotlin / AGP / Compose combination.
 That's gone. **0.4.0 decouples your project from KetoyVM's pinned toolchain on
 two independent axes.**
@@ -22,7 +22,7 @@ two independent axes.**
 
 <CodeWindow file="build.gradle.kts">
 {`dependencies {
-    implementation(platform("dev.ketoy.vm:ketoy-bom:0.4.0-alpha"))
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.4.13-alpha"))
     implementation("dev.ketoy.vm:ketoy-runtime")
     implementation("dev.ketoy.vm:ketoy-hilt")            // optional
     implementation("dev.ketoy.vm:ketoy-adapters-material3")
