@@ -2,7 +2,7 @@
 
 ## Requirements
 
-As of **`0.4.13-alpha`**, Ketoy no longer pins your project to a single Kotlin /
+As of **`0.4.16-alpha`**, Ketoy no longer pins your project to a single Kotlin /
 AGP / Gradle / Compose combination. The compiler plugin ships its own embedded
 Kotlin compiler (ADR-0004) that runs in an isolated worker, and the Compose
 version is decoupled for the supported parameter surface via name-based
@@ -71,7 +71,7 @@ ketoy init
 The CLI plans every edit, shows a unified diff, asks for confirmation,
 then:
 
-1. Inserts `id("dev.ketoy.compiler") version "0.4.13-alpha"` into your
+1. Inserts `id("dev.ketoy.compiler") version "0.4.16-alpha"` into your
    app module's plugins block.
 2. Appends the Ketoy dependencies (BOM + runtime + capabilities + adapters).
 3. Appends a `ketoy { exportFromAppModule = true; bundleId = "main";
@@ -141,7 +141,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
-    id("dev.ketoy.compiler") version "0.4.13-alpha"   // ← Ketoy plugin
+    id("dev.ketoy.compiler") version "0.4.16-alpha"   // ← Ketoy plugin
     id("kotlin-kapt")                                  // if using Hilt
     id("dagger.hilt.android.plugin")                   // if using Hilt
 }
@@ -166,7 +166,7 @@ android {
 }
 
 dependencies {
-    val ketoyBom = platform("dev.ketoy.vm:ketoy-bom:0.4.13-alpha")
+    val ketoyBom = platform("dev.ketoy.vm:ketoy-bom:0.4.16-alpha")
     implementation(ketoyBom)
 
     implementation("dev.ketoy.vm:ketoy-runtime")
