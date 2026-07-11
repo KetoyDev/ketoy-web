@@ -21,6 +21,201 @@
       line-height: 1.5;
     }
 
+    /* ============ Tooling: CLI + MCP ============ */
+    .tooling-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .tooling-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    /* Graphics stretch to equal height so the headings below them line up. */
+    .tooling-card > .cli-term,
+    .tooling-card > .mcp-panel {
+      flex: 1 1 auto;
+    }
+    .tooling-text h3 {
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+    .tooling-text p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0;
+      min-height: 2.9em; /* reserve two lines so the footers align */
+    }
+    .tooling-foot {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .tooling-install {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      padding: 6px 11px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--ink-2);
+      white-space: nowrap;
+    }
+    [data-theme="dark"] .tooling-install { background: var(--surface-2); }
+    .tooling-foot .link {
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 14.5px;
+      color: var(--accent-ink);
+      white-space: nowrap;
+    }
+
+    /* shared green check used in both graphics */
+    .cli-body .ok, .mcp-reply .ok {
+      color: #4ae389;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    /* CLI terminal graphic */
+    .cli-term {
+      background: #07130d;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 20px 50px -24px rgba(3,30,18,0.7);
+      display: flex;
+      flex-direction: column;
+    }
+    .cli-chrome {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+    .cli-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .cli-dot.r { background: #ff5f57; }
+    .cli-dot.y { background: #febc2e; }
+    .cli-dot.g { background: #28c840; }
+    .cli-title {
+      margin-left: 8px;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: rgba(233,255,244,0.5);
+    }
+    .cli-body {
+      flex: 1 1 auto;
+      padding: 18px 20px 22px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.9;
+      color: #dfeee7;
+    }
+    .cli-line { color: #eafff4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cli-line.sp { margin-top: 14px; }
+    .cli-line .p { color: #4ae389; margin-right: 8px; }
+    .cli-out { color: rgba(233,255,244,0.62); padding-left: 2px; }
+    .cli-out b { color: #93f0c0; font-weight: 600; }
+    .cli-cur {
+      display: inline-block;
+      width: 8px; height: 15px;
+      margin-left: 3px;
+      background: #4ae389;
+      vertical-align: text-bottom;
+      animation: cli-blink 1.1s steps(1) infinite;
+    }
+    @keyframes cli-blink { 50% { opacity: 0; } }
+
+    /* MCP agent panel graphic */
+    .mcp-panel {
+      background: #0a1410;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 20px 50px -24px rgba(3,30,18,0.7);
+    }
+    .mcp-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(233,255,244,0.5);
+    }
+    .mcp-star {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3ddc84, #1db765);
+      display: inline-flex; align-items: center; justify-content: center;
+      color: #06331d; font-size: 12px; font-weight: 700;
+    }
+    .mcp-call {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+    .mcp-tool { color: #93f0c0; }
+    .mcp-arg { color: rgba(233,255,244,0.6); }
+    .mcp-reply {
+      display: flex;
+      align-items: flex-start;
+      padding: 0 2px;
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: #dfeee7;
+    }
+    .mcp-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto; /* pin chips to the bottom when the panel is stretched */
+      padding-top: 4px;
+    }
+    .mcp-chip {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: rgba(74,227,137,0.10);
+      border: 1px solid rgba(74,227,137,0.22);
+      color: #9ff0c4;
+    }
+
+    @media (max-width: 1000px) {
+      .tooling-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .cli-cur { animation: none !important; }
+    }
+
     /* Support grid */
     .support-grid {
       display: grid;

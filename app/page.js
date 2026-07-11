@@ -1,8 +1,9 @@
 import '../public/styles/home.css';
 import Link from 'next/link';
-import { SDK_VERSION_FULL, SDK_VERSION_SHORT } from '@/constants';
+import { SDK_VERSION_SHORT } from '@/constants';
 import CodeWindow from '@/components/CodeWindow';
 import OtaMotion from '@/modules/home/components/OtaMotion';
+import { CliGraphic, McpGraphic } from '@/modules/home/components/ToolingGraphics';
 import SupportTrigger from '@/modules/home/components/SupportTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
@@ -66,48 +67,6 @@ fun CheckoutScreen() {
     }
 }
 // $ ./gradlew ketoyBundle  →  checkout.ktx  ·  3.4 KB`;
-
-const QUICK_GRADLE = `plugins {
-  id("dev.ketoy.compiler") version "${SDK_VERSION_FULL}"
-}
-
-dependencies {
-  implementation(platform("dev.ketoy.vm:ketoy-bom:${SDK_VERSION_FULL}"))
-  implementation("dev.ketoy.vm:ketoy-runtime")
-  implementation("dev.ketoy.vm:ketoy-hilt")
-  implementation("dev.ketoy.vm:ketoy-adapters-material3")
-  ksp("dev.ketoy.vm:ketoy-ksp-processor")
-}`;
-
-const QUICK_HOME = `// The same Compose you already write.
-@KetoyEntryPoint
-@Composable
-fun HomeScreen() {
-  val vm    = ketoyViewModel<HomeViewModel>()
-  val state by vm.state.collectAsState()
-
-  Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-    Text("Welcome, " + state["name"])
-    Button(onClick = { vm.dispatch("get_started") }) {
-      Text("Get Started")
-    }
-  }
-}`;
-
-const QUICK_TERMINAL = `# Compile to KBC
-$ ./gradlew :ketoy-screens:ketoyBundle
-
-> Task :ketoy-screens:ketoyBundle
-  HomeScreen.kt        → home.ktx        2.1 KB
-  CheckoutScreen.kt    → checkout.ktx    3.4 KB
-  Signed:    Ed25519
-  Compressed:Brotli q=11
-
-# Upload. That's the whole release process.
-$ aws s3 cp build/ketoy-bundles/ s3://cdn/ketoy/ \\
-    --recursive --content-encoding br
-
-# Live on every device in ~60s.`;
 
 export default function HomePage() {
   return (
@@ -254,21 +213,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Quick start */}
-      <section>
+      {/* Tooling: CLI + MCP */}
+      <section className="surface">
         <div className="container">
           <div className="section-head" data-reveal>
-            <span className="eyebrow">Quick start</span>
-            <h2>Three blocks. One Gradle task.</h2>
+            <span className="eyebrow">Tooling</span>
+            <h2>Command line and AI agents.</h2>
             <p>
-              Add the plugin. Write your Compose screen. Run <code style={{ fontFamily: 'var(--font-mono)', fontSize: '0.9em' }}>ketoyBundle</code> and upload.
+              The Ketoy CLI runs your whole workflow. The Ketoy MCP helps your AI agent write correct Ketoy code.
             </p>
           </div>
 
-          <div className="cards-grid">
-            <CodeWindow file="build.gradle.kts">{QUICK_GRADLE}</CodeWindow>
-            <CodeWindow file="HomeScreen.kt">{QUICK_HOME}</CodeWindow>
-            <CodeWindow file="terminal" tag="~60s rollout">{QUICK_TERMINAL}</CodeWindow>
+          <div className="tooling-grid">
+            <div className="tooling-card">
+              <CliGraphic />
+              <div className="tooling-text">
+                <h3>Ketoy CLI</h3>
+                <p>Set up a project, push to the cloud, and roll back. All from the terminal.</p>
+                <div className="tooling-foot">
+                  <code className="tooling-install">npm install -g ketoy-dev</code>
+                  <Link className="link" href="/docs/cli">CLI docs</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="tooling-card">
+              <McpGraphic />
+              <div className="tooling-text">
+                <h3>Ketoy MCP</h3>
+                <p>Your AI agent checks what Ketoy supports before it writes a line.</p>
+                <div className="tooling-foot">
+                  <code className="tooling-install">claude mcp add ketoy</code>
+                  <Link className="link" href="/docs/mcp">MCP docs</Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

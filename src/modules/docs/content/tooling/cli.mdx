@@ -1,0 +1,149 @@
+The `ketoy` CLI runs your whole Ketoy workflow from the terminal. Set up a
+project, build a signed bundle, push it to Ketoy Cloud, and roll back a bad
+release. One tool, from `init` to live.
+
+---
+
+## Install
+
+```bash
+npm install -g ketoy-dev
+ketoy version
+```
+
+The npm package is `ketoy-dev`; the installed binary is `ketoy`. It downloads
+the native binary for your platform (macOS, Linux, Windows on x64 and arm64).
+Requires **Node.js 18 or newer**.
+
+<Callout title="Other install paths">
+  Prefer a raw binary? Download it from the
+  [Releases](https://github.com/ketoy/cli/releases) page and move `ketoy` onto
+  your `PATH`. To build from source you need Go 1.21 or newer:
+  `git clone https://github.com/ketoy/cli && cd cli && go build -o ketoy .`
+</Callout>
+
+---
+
+## Set up a project
+
+Run `ketoy init` from your Android project root. It makes small, additive edits
+and is safe to run again. Completed steps are skipped.
+
+```bash
+ketoy init
+# or point it at a folder:
+ketoy init /path/to/AndroidProject
+```
+
+It wires everything for a working bundle:
+
+1. Adds the `dev.ketoy.compiler` Gradle plugin.
+2. Adds the SDK dependencies (BOM, runtime, annotations, capabilities, adapters).
+3. Appends the `ketoy { }` build config that emits `assets/ketoy/main.ktx`.
+4. Creates `app/ketoy-capabilities.json`.
+5. Ignores private signing keys in `.gitignore`.
+6. Generates an Ed25519 keypair and signs the bundle by default.
+7. Creates `MyApplication.kt` and links it in the manifest.
+8. Wires `MainActivity` with the runtime locals.
+9. Adds a sample `HomeScreen.kt` so the first build produces a bundle.
+
+Signing is on by default. The private key lands in
+`app/keys/release-private.key` (gitignored), the public key ships in your APK,
+and the runtime verifies every bundle on device. Keep the private key in a CI
+secret. Pass `--no-sign` for a quick unsigned setup.
+
+<Callout kind="warn" title="Hilt projects">
+  Hilt wiring differs. On a Hilt project `init` applies only the Gradle setup
+  and points you at the rest of the docs. Force this path with `--hilt`.
+</Callout>
+
+After init, build the signed bundle:
+
+```bash
+./gradlew :app:ketoyBundle
+```
+
+| Flag | What it does |
+|---|---|
+| `--version <v>` | Pin the Ketoy SDK and plugin version |
+| `--hilt` | Hilt project: Gradle setup only |
+| `--no-sign` | Skip key generation and ship unsigned |
+
+---
+
+## Deploy to Ketoy Cloud
+
+Create an account, make an app, and push the bundle. Every device on that app
+picks up the new version over the air.
+
+```bash
+ketoy auth register       # create an account
+ketoy auth login          # log in and save credentials
+ketoy profile create      # set up your developer profile
+ketoy app create          # create an app
+
+ketoy push ktx <appId> main.ktx --version 1
+
+ketoy doctor              # check your setup
+```
+
+### Manage releases
+
+```bash
+ketoy ktx versions <appId>     # list versions
+ketoy ktx live <appId>         # show the live version
+ketoy ktx download <appId>     # download a version to disk
+ketoy ktx rollback <appId>     # roll back to an earlier version
+```
+
+Roll back the moment something looks wrong. The last good version goes live
+again in seconds.
+
+---
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `ketoy init [path]` | Set up Ketoy in an Android project |
+| `ketoy auth register` | Create a Ketoy account |
+| `ketoy auth login` | Log in and save credentials |
+| `ketoy auth status` | Show the current login state |
+| `ketoy profile create` | Set up your developer profile |
+| `ketoy app create` | Create a new app |
+| `ketoy app list` | List your apps |
+| `ketoy push ktx <appId> <file>` | Push a signed bundle |
+| `ketoy ktx live <appId>` | Show the live version |
+| `ketoy ktx rollback <appId>` | Roll back to an earlier version |
+| `ketoy namespace verify <appId>` | Verify namespace ownership |
+| `ketoy doctor` | Diagnose common issues |
+| `ketoy version` | Print the CLI version |
+
+---
+
+## CI and scripting
+
+Every command takes `--json` for clean machine output. Push from your pipeline
+with an API key:
+
+```bash
+APP_ID="your-app-id"
+ketoy push ktx "$APP_ID" ./build/app.ktx --version "$BUILD_NUMBER" --json
+```
+
+Add `--dev` to target the development API.
+
+---
+
+## Shell autocomplete
+
+```bash
+ketoy completion bash > /etc/bash_completion.d/ketoy
+ketoy completion zsh  > "${fpath[1]}/_ketoy"
+ketoy completion fish > ~/.config/fish/completions/ketoy.fish
+```
+
+---
+
+Next: let your AI agent write correct Ketoy code with the
+[Ketoy MCP](/docs/mcp).

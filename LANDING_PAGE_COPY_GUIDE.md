@@ -79,8 +79,9 @@ These are strict. They are what separates our copy from the old draft.
 
 ## 5. Page structure (6 sections, tight)
 
-Model: Shorebird/Kotlin open confident and stay short. Ketoy uses exactly six
-sections. Do not add more without removing one.
+Model: Shorebird/Kotlin open confident and stay short. Ketoy stays tight. Add a
+section only when it carries a distinct product capability, and fold everything
+else into an existing one.
 
 1. **Hero** — tag pill, outcome H1, one-line sub, dual CTA, product code window,
    the OTA motion, a 4-stat credibility strip.
@@ -88,7 +89,10 @@ sections. Do not add more without removing one.
 3. **What's supported** — the depth proof (6 capability cards) + one positive
    takeaway line + link to `/features`.
 4. **Security** — 3 cards + one Play Store FAQ callout. Dark band.
-5. **Quick start** — 3 code windows (Gradle, screen, terminal).
+5. **Tooling** — the CLI and MCP as two cards, each with a graphic (terminal /
+   agent tool-call), a heading, one line, an install snippet, and a docs link
+   (`/docs/cli`, `/docs/mcp`). Mirrors Shorebird's "opinionated platform"
+   section with a CLI screenshot plus capability cards.
 6. **Final CTA** — one outcome headline, one line, two buttons.
 
 **Removed on purpose:** anything longer. No "wait-cost calculator", no "ship by
@@ -133,10 +137,18 @@ Fold differentiators into a single positive line.
 - **FAQ callout uses a real question** (Kotlin's "Why Kotlin?" move):
   "Is this allowed on the Play Store?" → answer starts with "Yes."
 
-### Quick start
-- **H2:** "Three blocks. One Gradle task."
-- **Body:** "Add the plugin. Write your Compose screen. Run `ketoyBundle` and upload."
-- Three code windows carry the detail; prose stays minimal.
+### Tooling (CLI + MCP)
+- **H2:** "Command line and AI agents." (plain and descriptive, Kotlin register,
+  not marketing; avoid possessive claims like "your terminal")
+- **Body:** "The Ketoy CLI runs your whole workflow. The Ketoy MCP helps your AI agent write correct Ketoy code."
+- **Two cards**, each: a graphic on top, a two-word heading, one benefit line, a
+  mono install snippet, and a docs link.
+  - `Ketoy CLI` — "Set up a project, push to the cloud, and roll back. All from
+    the terminal." · `npm install -g ketoy-dev` · *CLI docs* → `/docs/cli`
+  - `Ketoy MCP` — "Your AI agent checks what Ketoy supports before it writes a
+    line." · `claude mcp add ketoy` · *MCP docs* → `/docs/mcp`
+- Graphics live in [ToolingGraphics.js](src/modules/home/components/ToolingGraphics.js);
+  keep them static (the only motion is the CLI caret, off under reduced motion).
 
 ### Final CTA
 - **H2:** "Write Kotlin. Ship the screen."
@@ -184,5 +196,5 @@ Run this on any new or edited line before committing:
 - [ ] Framed positively — no "No X" or defensive phrasing.
 - [ ] "and" instead of "&"; no decorative symbols or arrow glyphs in text.
 - [ ] Real technical nouns kept for credibility.
-- [ ] Still exactly six sections. If you added one, you removed one.
+- [ ] Section count stays tight (currently 7). Add one only for a distinct product capability.
 - [ ] `next build` passes and `/` prerenders.

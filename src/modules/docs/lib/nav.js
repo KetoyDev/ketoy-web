@@ -15,6 +15,13 @@ export const docsNav = [
     ],
   },
   {
+    title: 'Tooling',
+    items: [
+      { label: 'Ketoy CLI', href: '/docs/cli' },
+      { label: 'Ketoy MCP', href: '/docs/mcp' },
+    ],
+  },
+  {
     title: 'Guides',
     items: [
       { label: 'Compose UI & state', href: '/docs/guides/compose-ui' },
