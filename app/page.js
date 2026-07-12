@@ -1,9 +1,9 @@
 import '../public/styles/home.css';
 import Link from 'next/link';
 import { SDK_VERSION_SHORT } from '@/constants';
-import CodeWindow from '@/components/CodeWindow';
 import OtaMotion from '@/modules/home/components/OtaMotion';
 import { CliGraphic, McpGraphic } from '@/modules/home/components/ToolingGraphics';
+import CopyButton from '@/components/mdx/CopyButton';
 import SupportTrigger from '@/modules/home/components/SupportTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
@@ -50,24 +50,6 @@ const HOME_FAQ = [
   },
 ];
 
-const CHECKOUT_KT = `@KetoyEntryPoint @Composable
-fun CheckoutScreen() {
-    val vm    = ketoyViewModel<CheckoutViewModel>()
-    val state by vm.state.collectAsState()
-
-    Scaffold(topBar = { TopAppBar(title = { Text("Checkout") }) }) { p ->
-        LazyColumn(modifier = Modifier.padding(p)) {
-            items(state.cartItems) { item ->
-                ProductCard(name = item.name, price = item.price)
-            }
-        }
-        Button(onClick = { vm.dispatch("place_order") }) {
-            Text("Place Order - $" + state.total)
-        }
-    }
-}
-// $ ./gradlew ketoyBundle  →  checkout.ktx  ·  3.4 KB`;
-
 export default function HomePage() {
   return (
     <>
@@ -79,30 +61,27 @@ export default function HomePage() {
           <span className="a3"></span>
         </div>
         <div className="container">
-          <div className="hero-grid">
-            <div>
-              <div className="hero-tag">
-                <span className="pill">v{SDK_VERSION_SHORT}</span>
-                <span>Kotlin OTA</span>
-                <span className="live-dot" aria-hidden="true"></span>
-              </div>
-              <h1>
-                Ship <strong>Compose UI</strong> over the air.
-              </h1>
-              <p className="lede">
-                Write real Jetpack Compose. Push updates to every device in seconds.
-              </p>
-              <div className="hero-actions">
-                <Link className="btn btn-primary" href="/get-started">
-                  Get started
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M13 5l7 7-7 7" />
-                  </svg>
-                </Link>
-                <Link className="btn btn-ghost" href="/architecture">How it works</Link>
-              </div>
+          <div className="hero-lead">
+            <div className="hero-tag">
+              <span className="pill">v{SDK_VERSION_SHORT}</span>
+              <span>Kotlin OTA</span>
+              <span className="live-dot" aria-hidden="true"></span>
             </div>
-            <CodeWindow file="CheckoutScreen.kt" tag="@KetoyEntryPoint">{CHECKOUT_KT}</CodeWindow>
+            <h1>
+              Ship <strong>Compose UI</strong> over the air.
+            </h1>
+            <p className="lede">
+              Write real Jetpack Compose. Push updates to every device in seconds.
+            </p>
+            <div className="hero-actions">
+              <Link className="btn btn-primary" href="/get-started">
+                Get started
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link className="btn btn-ghost" href="/architecture">How it works</Link>
+            </div>
           </div>
 
           {/* Over-the-air delivery motion (design-import slot) */}
@@ -115,6 +94,69 @@ export default function HomePage() {
                 <div className="l">{s.l}</div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integrate: command line + AI agents */}
+      <section className="surface">
+        <div className="container">
+          <div className="section-head" data-reveal>
+            <span className="eyebrow">Integrate in minutes</span>
+            <h2>Command line and AI agents.</h2>
+            <p>
+              The Ketoy CLI runs your whole workflow from the terminal. The Ketoy MCP gives
+              any AI coding agent an accurate map of what Ketoy supports — before it writes a line.
+            </p>
+          </div>
+
+          <div className="integrate-grid" data-reveal>
+            {/* Command line */}
+            <div className="integrate-card">
+              <div className="integrate-head">
+                <span className="integrate-kicker">Command line</span>
+                <h3>Ketoy CLI</h3>
+                <p>Set up a project, push to the cloud, and roll back — all from the terminal.</p>
+              </div>
+              <CliGraphic />
+              <div className="integrate-cmd">
+                <span className="prompt">$</span>
+                <code>npm install -g ketoy-dev</code>
+                <CopyButton text="npm install -g ketoy-dev" />
+              </div>
+              <Link className="integrate-link" href="/docs/cli">
+                CLI docs
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* AI agents */}
+            <div className="integrate-card">
+              <div className="integrate-head">
+                <span className="integrate-kicker">AI agents</span>
+                <h3>Ketoy MCP</h3>
+                <p>Point any MCP-compatible agent at one endpoint. It checks what Ketoy supports before writing code.</p>
+              </div>
+              <McpGraphic />
+              <div className="integrate-cmd">
+                <span className="prompt">↳</span>
+                <code>http://mcp.ketoy.dev/mcp</code>
+                <CopyButton text="http://mcp.ketoy.dev/mcp" />
+              </div>
+              <div className="agent-row" aria-label="Works with any MCP client">
+                {['Claude Code', 'Codex', 'Cursor', 'Windsurf', 'Any MCP client'].map((a) => (
+                  <span className="agent-chip" key={a}>{a}</span>
+                ))}
+              </div>
+              <Link className="integrate-link" href="/docs/mcp">
+                MCP docs
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -209,45 +251,6 @@ export default function HomePage() {
                 <p>{c.p}</p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tooling: CLI + MCP */}
-      <section className="surface">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow">Tooling</span>
-            <h2>Command line and AI agents.</h2>
-            <p>
-              The Ketoy CLI runs your whole workflow. The Ketoy MCP helps your AI agent write correct Ketoy code.
-            </p>
-          </div>
-
-          <div className="tooling-grid">
-            <div className="tooling-card">
-              <CliGraphic />
-              <div className="tooling-text">
-                <h3>Ketoy CLI</h3>
-                <p>Set up a project, push to the cloud, and roll back. All from the terminal.</p>
-                <div className="tooling-foot">
-                  <code className="tooling-install">npm install -g ketoy-dev</code>
-                  <Link className="link" href="/docs/cli">CLI docs</Link>
-                </div>
-              </div>
-            </div>
-
-            <div className="tooling-card">
-              <McpGraphic />
-              <div className="tooling-text">
-                <h3>Ketoy MCP</h3>
-                <p>Your AI agent checks what Ketoy supports before it writes a line.</p>
-                <div className="tooling-foot">
-                  <code className="tooling-install">claude mcp add ketoy</code>
-                  <Link className="link" href="/docs/mcp">MCP docs</Link>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

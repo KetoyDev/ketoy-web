@@ -510,6 +510,18 @@ p { margin: 0; color: var(--ink-2); }
   align-items: center;
   position: relative;
 }
+/* Centered hero lead: tag + headline + buttons stacked above the OTA motion. */
+.hero-lead {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-lead .lede { max-width: 560px; }
+.hero-lead .hero-actions { justify-content: center; }
 .hero-tag {
   display: inline-flex;
   align-items: center;

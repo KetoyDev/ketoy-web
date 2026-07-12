@@ -10,21 +10,37 @@ from the SDK source, so the answers stay accurate to the code.
 
 ## Connect
 
-The server is live at `http://mcp.ketoy.dev/mcp`.
+Ketoy MCP is a standard streamable-HTTP MCP server. Any MCP-compatible AI coding
+agent can use it. The server is live at:
 
-```bash
-# Claude Code
-claude mcp add --transport http ketoy http://mcp.ketoy.dev/mcp
+```text
+http://mcp.ketoy.dev/mcp
 ```
 
-- **Claude.ai and Desktop:** add it as a Custom Connector (HTTP) pointing at
-  `http://mcp.ketoy.dev/mcp`.
-- **Codex, Cursor, and Windsurf:** add an HTTP MCP server entry with the same URL.
+Add it to whichever agent you use — the URL is the same everywhere:
+
+- **CLI agents:** register it as an HTTP MCP server. For example, in Claude Code:
+  `claude mcp add --transport http ketoy http://mcp.ketoy.dev/mcp`. Other CLI
+  agents use their own `mcp add` / config equivalent.
+- **Desktop and web agents:** add it as a Custom Connector (HTTP) pointing at the
+  URL above.
+- **Editors and IDE agents** (Cursor, Windsurf, Codex, and others): add an HTTP
+  MCP server entry with the same URL.
+
+If your tool speaks MCP over HTTP, it works — no plugin, no vendor lock-in.
 
 <Callout title="What it needs">
   Nothing. No account, no API key, no database. It is pure compute serving
   bundled knowledge, hosted on Cloudflare Workers. Supported MCP protocol
   versions: `2025-06-18`, `2025-03-26`, `2024-11-05`.
+</Callout>
+
+<Callout title="Which agent should I use?">
+  Whichever one you already work in. Ketoy MCP is agent-neutral and we do not
+  endorse any model or vendor. For what it is worth, when we exercised the tools
+  end to end we saw the strongest results with Claude Code on the Opus 4.8 model —
+  but that is an observation from our own testing, not a recommendation. Use the
+  agent and model that fit your workflow.
 </Callout>
 
 ---

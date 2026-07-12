@@ -21,66 +21,101 @@
       line-height: 1.5;
     }
 
-    /* ============ Tooling: CLI + MCP ============ */
-    .tooling-grid {
+    /* ============ Integrate: command line + AI agents ============ */
+    .integrate-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
-    .tooling-card {
+    .integrate-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 22px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
     }
-    /* Graphics stretch to equal height so the headings below them line up. */
-    .tooling-card > .cli-term,
-    .tooling-card > .mcp-panel {
-      flex: 1 1 auto;
+    .integrate-head { display: flex; flex-direction: column; gap: 6px; }
+    .integrate-kicker {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent-ink);
     }
-    .tooling-text h3 {
-      font-size: 20px;
+    .integrate-head h3 {
+      font-size: 21px;
       letter-spacing: -0.01em;
-      margin-bottom: 6px;
     }
-    .tooling-text p {
+    .integrate-head p {
       font-family: var(--font-body);
       font-weight: 300;
       font-size: 15px;
       line-height: 1.55;
       color: var(--muted);
       margin: 0;
-      min-height: 2.9em; /* reserve two lines so the footers align */
     }
-    .tooling-foot {
-      margin-top: 16px;
+    /* Graphics stretch so the command rows below them line up across cards. */
+    .integrate-card > .cli-term,
+    .integrate-card > .mcp-panel {
+      flex: 1 1 auto;
+    }
+    /* Copyable install / endpoint row */
+    .integrate-cmd {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .tooling-install {
-      font-family: var(--font-mono);
-      font-size: 12.5px;
-      padding: 6px 11px;
-      border-radius: 8px;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
       background: var(--surface);
       border: 1px solid var(--border);
+    }
+    [data-theme="dark"] .integrate-cmd { background: var(--surface-2); }
+    .integrate-cmd .prompt {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-ink);
+      flex-shrink: 0;
+    }
+    .integrate-cmd code {
+      font-family: var(--font-mono);
+      font-size: 13px;
       color: var(--ink-2);
+      flex: 1 1 auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
       white-space: nowrap;
     }
-    [data-theme="dark"] .tooling-install { background: var(--surface-2); }
-    .tooling-foot .link {
+    .integrate-cmd .code-copy { margin-left: 0; flex-shrink: 0; }
+    /* Agent chips: any MCP client works */
+    .agent-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .agent-chip {
+      font-family: var(--font-ui);
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(74,227,137,0.10);
+      border: 1px solid rgba(74,227,137,0.24);
+      color: var(--accent-ink);
+    }
+    .integrate-link {
+      margin-top: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-family: var(--font-ui);
       font-weight: 600;
       font-size: 14.5px;
       color: var(--accent-ink);
-      white-space: nowrap;
     }
+    .integrate-link svg { transition: transform 140ms ease; }
+    .integrate-link:hover svg { transform: translateX(3px); }
 
     /* shared green check used in both graphics */
     .cli-body .ok, .mcp-reply .ok {
@@ -210,7 +245,7 @@
     }
 
     @media (max-width: 1000px) {
-      .tooling-grid { grid-template-columns: 1fr; }
+      .integrate-grid { grid-template-columns: 1fr; }
     }
     @media (prefers-reduced-motion: reduce) {
       .cli-cur { animation: none !important; }
