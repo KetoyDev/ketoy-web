@@ -382,7 +382,7 @@ Column { Text(title) }`}</pre></div>
               </div>
             </div>
 
-            <p>The runtime resolves the active bundle, looks up the entry point by name, constructs a <code>KetoyVirtualViewModel</code> (a real Android <code>ViewModel</code> wrapping a <code>KetoyVM</code> tied to <code>viewModelScope</code>), and dispatches the entry-point function. Bundle absent or entry-point missing? Run the trailing lambda - no error UI, no spinner.</p>
+            <p>The runtime resolves the active bundle, looks up the entry point by name, constructs a <code>KetoyVirtualViewModel</code> (a real Android <code>ViewModel</code> wrapping a <code>Ketoy</code> tied to <code>viewModelScope</code>), and dispatches the entry-point function. Bundle absent or entry-point missing? Run the trailing lambda - no error UI, no spinner.</p>
 
             <h3 style={{ marginTop: 32, marginBottom: 12 }}>The interpreter loop</h3>
             <div className="code-window" style={{ margin: '16px 0' }}>
@@ -422,7 +422,7 @@ Column { Text(title) }`}</pre></div>
             <p style={{ marginTop: 16 }}>This is also the place where Play Store&rsquo;s DPA §4.4 stays clean - KBC is <em>not</em> downloaded executable bytecode, it&rsquo;s our own bytecode <em>interpreted</em> on-device, and the JIT generates fresh DEX on the user&rsquo;s own device (the same thing ART does constantly). We never download pre-built DEX or JVM bytecode.</p>
 
             <h3 style={{ marginTop: 32, marginBottom: 12 }}>ViewModels - KetoyVirtualViewModel + KetoyBaseViewModel</h3>
-            <p>Two layers, both load-bearing. <strong>Runtime side</strong>: <code>KetoyVirtualViewModel</code> is a real Android <code>ViewModel</code> that owns a <code>KetoyVM</code> per screen. It exposes <code>state: StateFlow&lt;Map&lt;String, Any?&gt;&gt;</code>, the typical <code>getState</code>/<code>setState</code>/<code>observeState</code> surface, and a <code>dispatch(eventName, payload)</code> entry point that invokes the KBC function registered for that event.</p>
+            <p>Two layers, both load-bearing. <strong>Runtime side</strong>: <code>KetoyVirtualViewModel</code> is a real Android <code>ViewModel</code> that owns a <code>Ketoy</code> per screen. It exposes <code>state: StateFlow&lt;Map&lt;String, Any?&gt;&gt;</code>, the typical <code>getState</code>/<code>setState</code>/<code>observeState</code> surface, and a <code>dispatch(eventName, payload)</code> entry point that invokes the KBC function registered for that event.</p>
             <p style={{ marginTop: 16 }}><strong>KBC side</strong>: developers extend <code>KetoyBaseViewModel</code> from <code>@KetoyViewModel</code>-annotated classes. Four <code>lateinit</code> properties get bound by the runtime after construction: <code>viewModelScope</code>, plus the <code>getState</code> / <code>setState</code> / <code>observeState</code> lambda surface. The view model class compiles to KBC. Its <code>viewModelScope</code> is the same scope as the host <code>KetoyVirtualViewModel</code> - coroutines launched there cancel when the screen leaves the back stack.</p>
           </div>
 

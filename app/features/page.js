@@ -303,7 +303,7 @@ export default function FeaturesPage() {
                 <span className="eyebrow" style={{ color: 'var(--accent-ink)' }}>Host side</span>
                 <h3 style={{ marginTop: 6 }}>KetoyVirtualViewModel</h3>
                 <p style={{ fontSize: 14.5 }}>
-                  Extends Android <C>ViewModel</C>, owns a <C>KetoyVM</C> per screen, instantiated
+                  Extends Android <C>ViewModel</C>, owns a <C>Ketoy</C> per screen, instantiated
                   by <C>KetoyScreen</C> via <C>viewModel(factory)</C>.
                 </p>
                 <h4 style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 13, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: 14, marginBottom: 6 }}>State API</h4>

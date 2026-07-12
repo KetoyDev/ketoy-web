@@ -5,7 +5,7 @@ export const meta = {
   section: 'platform',
   title: 'Ketoy 0.4.0-alpha is here',
   summary:
-    'The version-decoupling release, your Kotlin, AGP, Gradle and Compose versions are no longer pinned to KetoyVM. Bump freely.',
+    'The version-decoupling release, your Kotlin, AGP, Gradle and Compose versions are no longer pinned to Ketoy. Bump freely.',
   chip: 'New',
   chipClass: 'uchip-new',
   date: 'Jun 12, 2026',
@@ -15,7 +15,7 @@ export const meta = {
 
 We're shipping **0.4.0-alpha**, the release that lifts the toolchain pin. Until
 now, Ketoy forced your app onto its exact Kotlin / AGP / Compose combination.
-That's gone. **0.4.0 decouples your project from KetoyVM's pinned toolchain on
+That's gone. **0.4.0 decouples your project from Ketoy's pinned toolchain on
 two independent axes.**
 
 ### Coordinates
@@ -31,7 +31,7 @@ two independent axes.**
 
 If you're already on 0.3.x, this is a drop-in upgrade, no breaking API changes.
 The headline difference is what you're now *allowed* to do: move your Kotlin,
-AGP, Gradle and Compose versions without matching KetoyVM's.
+AGP, Gradle and Compose versions without matching Ketoy's.
 
 ### What landed
 
@@ -45,9 +45,9 @@ AGP, Gradle and Compose versions without matching KetoyVM's.
 
 - **Kotlin / AGP / Gradle fully decoupled.** A Gradle worker now drives a pinned
   `K2JVMCompiler` in a classloader isolated from your build. Your Kotlin compiler
-  never loads KetoyVM compiler code; KetoyVM's pinned Kotlin never sees your
+  never loads Ketoy compiler code; Ketoy's pinned Kotlin never sees your
   toolchain. Verified on `Devices` at **Kotlin 2.2.10 / AGP 9.1.1 / Gradle
-  9.3.1**, a full AGP major ahead of KetoyVM's 8.13.
+  9.3.1**, a full AGP major ahead of Ketoy's 8.13.
 - **Compose version decoupled for the supported surface.** Parameters are now
   keyed by **name**, not position, so a newer Compose that adds, reorders, or
   removes a param no longer shifts your arguments into the wrong slot. The
@@ -63,7 +63,7 @@ AGP, Gradle and Compose versions without matching KetoyVM's.
     The SDK update <strong>&ldquo;Version compatibility: Kotlin, AGP, Gradle
     &amp; Compose decoupled&rdquo;</strong> walks through the impact of every
     newer/older version in both directions, and the three paths for pulling in
-    features KetoyVM doesn't ship yet (capabilities, custom composable adapters,
+    features Ketoy doesn't ship yet (capabilities, custom composable adapters,
     custom constructor adapters).
   </p>
   <p>

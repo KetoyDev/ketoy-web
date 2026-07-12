@@ -637,11 +637,11 @@ keys via `VM_OBSERVE_STATE`.
 ```kotlin
 @KetoyComposable @Composable
 fun ProductDetailScreen() {
-    val productId = remember { ketoyVmGetState("productId") as String }
-    val product by ketoyVmObserveState("product").collectAsState(initial = null)
+    val productId = remember { KetoyGetState("productId") as String }
+    val product by KetoyObserveState("product").collectAsState(initial = null)
 
     LaunchedEffect(productId) {
-        ketoyVmSetState("product", fetchProduct(productId))   // fetchProduct = capability
+        KetoySetState("product", fetchProduct(productId))   // fetchProduct = capability
     }
     if (product != null) ProductCard(product as Product)
 }

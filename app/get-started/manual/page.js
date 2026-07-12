@@ -221,7 +221,7 @@ import dev.ketoy.annotations.KetoyEntryPoint
 @Composable
 fun HelloScreen() {
     Column(modifier = Modifier.padding(24.dp)) {
-        Text(text = "Hello from KetoyVM")
+        Text(text = "Hello from Ketoy")
         Spacer(Modifier.height(12.dp))
         Text(text = "Shipped as KBC bytecode, executed natively.")
     }

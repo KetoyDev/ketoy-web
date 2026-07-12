@@ -215,7 +215,7 @@ suspend fun updateTodoTitle(id: Long, title: String): Unit = error(STUB_MSG)
 @KetoyCapabilityStub(id = 0x4005, name = "DELETE_TODO")
 suspend fun deleteTodo(id: Long): Unit = error(STUB_MSG)
 
-private const val STUB_MSG = "KetoyVM capability stub, replaced by INVOKE_CAPABILITY at compile time"
+private const val STUB_MSG = "Ketoy capability stub, replaced by INVOKE_CAPABILITY at compile time"
 ```
 
 Note the return types: the bridge erases entity types to

@@ -325,6 +325,6 @@ private fun HelloNativeFallback() {
 
 You should see the `HelloKetoyScreen` content on launch. If you instead
 see the native fallback, the bundle didn't load, check `adb logcat` for
-`KetoyVM` / `KetoyBundleLoader` log lines.
+`Ketoy` / `KetoyBundleLoader` log lines.
 
 Next: [Write your first screen →](first-screen.md)

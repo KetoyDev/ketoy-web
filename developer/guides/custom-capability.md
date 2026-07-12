@@ -56,7 +56,7 @@ package com.example.myapp.ketoyscreens
 import dev.ketoy.annotations.KetoyCapabilityStub
 
 private const val STUB_MSG =
-    "KetoyVM capability stub, replaced by INVOKE_CAPABILITY at compile time"
+    "Ketoy capability stub, replaced by INVOKE_CAPABILITY at compile time"
 
 @KetoyCapabilityStub(id = 0x4200, name = "VIBRATE")
 fun vibrate(durationMs: Long): Unit = error(STUB_MSG)

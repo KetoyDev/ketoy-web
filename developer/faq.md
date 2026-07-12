@@ -183,7 +183,7 @@ Three approaches:
    `CAPABILITY` dispatches with names + timing.
 2. **`ketoy analyze`**, dump the bundle's manifest, strings, and
    opcode listing.
-3. **`adb logcat`**, the runtime logs `KetoyVM`, `KetoyBundleLoader`,
+3. **`adb logcat`**, the runtime logs `Ketoy`, `KetoyBundleLoader`,
    `KetoyBC` tags.
 
 Source-level breakpoints in KBC source are not yet supported (the IDE
