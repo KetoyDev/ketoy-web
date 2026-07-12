@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0a0a0a;font-family:'IBM Plex Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#0a0a0a}
+  ::selection{background:#3ddc84;color:#062616}
+  a{color:#1f9d5b;text-decoration:none}
+  a:hover{color:#3ddc84}
+  @keyframes kt-glow{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:.9;transform:scale(1.08)}}
+  @keyframes kt-ring{0%{transform:scale(.6);opacity:.5}100%{transform:scale(1.7);opacity:0}}
+  @keyframes kt-toast{0%,42%{transform:translateY(130%);opacity:0}50%,82%{transform:translateY(0);opacity:1}90%,100%{transform:translateY(130%);opacity:0}}
+  @keyframes kt-a{0%,40%{opacity:1}47%,94%{opacity:0}100%{opacity:1}}
+  @keyframes kt-b{0%,40%{opacity:0}47%,94%{opacity:1}100%{opacity:0}}
+  @keyframes kt-wipe{0%,35%{transform:translateY(-118%)}45%{transform:translateY(0)}55%,100%{transform:translateY(118%)}}
+  @keyframes kt-patch{0%,33%{opacity:0;transform:translate(-50%,6px) scale(.9)}41%,50%{opacity:1;transform:translate(-50%,0) scale(1)}57%,100%{opacity:0;transform:translate(-50%,6px) scale(.9)}}
+  @keyframes kt-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes kt-float{0%{transform:translate(0,0);opacity:0}20%{opacity:1}100%{transform:translate(var(--dx),var(--dy));opacity:0}}
+  @keyframes kt-bar{0%{width:0%}55%{width:100%}100%{width:100%}}
+  @keyframes kt-rowin{0%,15%{opacity:0;transform:translateY(6px)}30%,100%{opacity:1;transform:translateY(0)}}
+  @keyframes kt-spin{to{transform:rotate(360deg)}}
+  @keyframes kt-dash{to{stroke-dashoffset:-40}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#0a0a0a">
+
+<!-- NAV -->
+<header style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(10,10,10,.72);border-bottom:1px solid rgba(255,255,255,.07)">
+  <nav style="max-width:1200px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;gap:28px">
+    <a href="#top" style="display:flex;align-items:center;gap:9px;color:#fff;font-family:'Space Grotesk';font-weight:600;font-size:19px;letter-spacing:-.01em">
+      <span style="width:26px;height:26px;border-radius:8px;background:#3ddc84;display:flex;align-items:center;justify-content:center;color:#062616;font-weight:700;font-size:15px;font-family:'JetBrains Mono'">K</span>
+      Ketoy
+    </a>
+    <div style="display:none;gap:22px;margin-left:8px" data-nav-links>
+    </div>
+    <div style="display:flex;align-items:center;gap:26px;margin-left:8px;font-size:14.5px;color:#b9bdc2">
+      <a href="#cli" style="color:#b9bdc2">Get started</a>
+      <a href="#compose" style="color:#b9bdc2">Features</a>
+      <a href="#security" style="color:#b9bdc2">Architecture</a>
+      <a href="#cli" style="color:#b9bdc2">Docs</a>
+      <a href="#cta" style="color:#b9bdc2">What's new</a>
+    </div>
+    <div style="flex:1"></div>
+    <a href="#cta" style="background:#3ddc84;color:#062616;font-weight:600;font-size:14.5px;padding:9px 18px;border-radius:999px;font-family:'Space Grotesk';transition:filter .2s" style-hover="filter:brightness(1.08)">Get started</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section id="top" style="position:relative;overflow:hidden;background:radial-gradient(1100px 640px at 78% 34%,rgba(61,220,132,.16),transparent 62%),radial-gradient(900px 520px at 8% 0%,rgba(61,220,132,.07),transparent 60%),#0a0a0a">
+  <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(900px 600px at 70% 40%,#000,transparent 75%)"></div>
+  <div style="position:relative;max-width:1200px;margin:0 auto;padding:82px 28px 70px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center">
+    <!-- left copy -->
+    <div>
+      <div style="display:inline-flex;align-items:center;gap:9px;padding:6px 6px 6px 12px;border:1px solid rgba(61,220,132,.32);border-radius:999px;background:rgba(61,220,132,.06);color:#c8cdd2;font-size:13px;font-family:'JetBrains Mono';margin-bottom:26px">
+        <span style="width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 10px #3ddc84"></span>
+        Kotlin OTA
+        <span style="background:#3ddc84;color:#062616;font-weight:700;padding:2px 8px;border-radius:999px;font-size:11.5px">v0.4</span>
+      </div>
+      <h1 style="margin:0;font-family:'Space Grotesk';font-weight:600;font-size:66px;line-height:1.02;letter-spacing:-.03em;color:#fff">
+        Ship <span style="color:#3ddc84">Compose UI</span><br>over the air.
+      </h1>
+      <p style="margin:24px 0 0;max-width:460px;font-size:19px;line-height:1.55;color:#a6abb1">
+        Write real Jetpack Compose. Compile it to a tiny signed bundle. Push UI changes to every device in seconds — no Play Store release, no JSON DSL.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:34px">
+        <a href="#cta" style="display:inline-flex;align-items:center;gap:9px;background:#3ddc84;color:#062616;font-weight:600;font-family:'Space Grotesk';font-size:16px;padding:14px 26px;border-radius:12px;transition:transform .18s,box-shadow .18s;box-shadow:0 8px 30px rgba(61,220,132,.28)" style-hover="transform:translateY(-2px);box-shadow:0 14px 40px rgba(61,220,132,.38)">Get started <span style="font-family:'JetBrains Mono'">→</span></a>
+        <a href="#cli" style="display:inline-flex;align-items:center;gap:9px;color:#fff;font-weight:500;font-size:16px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.16);transition:background .2s,border-color .2s" style-hover="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.32)">How it works</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:30px;font-family:'JetBrains Mono';font-size:13px;color:#6f747a">
+        <span style="color:#3ddc84">$</span> npm install -g ketoy-dev
+      </div>
+    </div>
+
+    <!-- right: phone + OTA animation -->
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;min-height:520px">
+      <div style="position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(61,220,132,.42),transparent 66%);filter:blur(6px);animation:kt-glow 5s ease-in-out infinite"></div>
+      <div style="position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(61,220,132,.4);animation:kt-ring 3.4s ease-out infinite"></div>
+      <div style="position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(61,220,132,.4);animation:kt-ring 3.4s ease-out infinite 1.7s"></div>
+      <!-- floating packets -->
+      <div style="position:absolute;left:6%;top:34%;--dx:150px;--dy:34px;width:34px;height:22px;border-radius:6px;background:rgba(61,220,132,.16);border:1px solid rgba(61,220,132,.5);display:flex;align-items:center;justify-content:center;animation:kt-float 3.2s linear infinite"><span style="font-family:'JetBrains Mono';font-size:9px;color:#3ddc84">ktx</span></div>
+      <div style="position:absolute;left:2%;top:58%;--dx:170px;--dy:-30px;width:34px;height:22px;border-radius:6px;background:rgba(61,220,132,.16);border:1px solid rgba(61,220,132,.5);display:flex;align-items:center;justify-content:center;animation:kt-float 3.2s linear infinite 1.4s"><span style="font-family:'JetBrains Mono';font-size:9px;color:#3ddc84">4KB</span></div>
+
+      <!-- phone -->
+      <div style="position:relative;width:250px;height:512px;border-radius:38px;background:linear-gradient(155deg,#1a1c22,#0e0f13);padding:11px;box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06),inset 0 0 0 2px rgba(255,255,255,.03)">
+        <div style="position:absolute;left:50%;top:15px;transform:translateX(-50%);width:74px;height:20px;background:#0a0a0a;border-radius:999px;z-index:3"></div>
+        <div style="position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#0c0e12">
+          <!-- app header -->
+          <div style="padding:34px 16px 14px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="width:22px;height:22px;border-radius:7px;background:#3ddc84;display:flex;align-items:center;justify-content:center;color:#062616;font-weight:700;font-size:12px;font-family:'JetBrains Mono'">A</span>
+              <span style="color:#fff;font-weight:600;font-size:14px;font-family:'Space Grotesk'">Aurora</span>
+            </div>
+            <div style="position:relative;width:78px;height:20px">
+              <span style="position:absolute;right:0;top:0;display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono';font-size:9.5px;color:#8b9096;border:1px solid rgba(255,255,255,.18);padding:3px 7px;border-radius:999px;white-space:nowrap;animation:kt-a 8s ease-in-out infinite"><span style="width:5px;height:5px;border-radius:50%;background:#8b9096"></span>v2.4.1</span>
+              <span style="position:absolute;right:0;top:0;display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono';font-size:9.5px;color:#3ddc84;border:1px solid rgba(61,220,132,.5);padding:3px 7px;border-radius:999px;white-space:nowrap;animation:kt-b 8s ease-in-out infinite"><span style="width:5px;height:5px;border-radius:50%;background:#3ddc84;box-shadow:0 0 6px #3ddc84"></span>v2.4.2</span>
+            </div>
+          </div>
+
+          <!-- screen body: two states cross-fade -->
+          <div style="position:absolute;left:0;right:0;top:72px;bottom:0">
+            <!-- STATE A · before (v2.4.1) -->
+            <div style="position:absolute;inset:0;padding:0 14px;display:flex;flex-direction:column;gap:9px;animation:kt-a 8s ease-in-out infinite">
+              <div style="border-radius:14px;padding:15px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07)">
+                <div style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;letter-spacing:.08em;color:#6f747a">HOME</div>
+                <div style="font-family:'Space Grotesk';font-weight:600;font-size:15px;margin-top:5px;color:#e6e8ea">Your orders</div>
+              </div>
+              <div style="border-radius:12px;background:rgba(255,255,255,.045);display:flex;align-items:center;gap:11px;padding:10px 12px">
+                <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:14px">📦</span>
+                <span style="flex:1"><span style="display:block;color:#e6e8ea;font-size:12px;font-weight:600">Order #4821</span><span style="display:block;color:#7c8188;font-size:10.5px;margin-top:2px">Delivered · Fri</span></span>
+                <span style="color:#c8cdd2;font-size:12px;font-weight:600;font-family:'JetBrains Mono'">$42.10</span>
+              </div>
+              <div style="border-radius:12px;background:rgba(255,255,255,.045);display:flex;align-items:center;gap:11px;padding:10px 12px">
+                <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:14px">🚚</span>
+                <span style="flex:1"><span style="display:block;color:#e6e8ea;font-size:12px;font-weight:600">Order #4820</span><span style="display:block;color:#7c8188;font-size:10.5px;margin-top:2px">In transit · ETA Tue</span></span>
+                <span style="color:#c8cdd2;font-size:12px;font-weight:600;font-family:'JetBrains Mono'">$18.00</span>
+              </div>
+              <div style="border-radius:12px;background:rgba(255,255,255,.045);display:flex;align-items:center;gap:11px;padding:10px 12px">
+                <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:14px">📦</span>
+                <span style="flex:1"><span style="display:block;color:#e6e8ea;font-size:12px;font-weight:600">Order #4818</span><span style="display:block;color:#7c8188;font-size:10.5px;margin-top:2px">Delivered · Mon</span></span>
+                <span style="color:#c8cdd2;font-size:12px;font-weight:600;font-family:'JetBrains Mono'">$63.75</span>
+              </div>
+            </div>
+
+            <!-- STATE B · after (v2.4.2) -->
+            <div style="position:absolute;inset:0;padding:0 14px;display:flex;flex-direction:column;gap:9px;animation:kt-b 8s ease-in-out infinite">
+              <div style="border-radius:16px;padding:15px 16px;background:linear-gradient(150deg,rgba(61,220,132,.94),rgba(31,157,91,.8));color:#062616">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="font-family:'JetBrains Mono';font-size:9px;font-weight:700;opacity:.72;letter-spacing:.08em">NEW · OTA</div>
+                  <div style="background:rgba(6,38,22,.25);font-family:'JetBrains Mono';font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px">2 in cart</div>
+                </div>
+                <div style="font-family:'Space Grotesk';font-weight:700;font-size:16px;margin-top:6px;line-height:1.2">Checkout, redesigned</div>
+                <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;background:#062616;color:#3ddc84;padding:8px 14px;border-radius:10px">
+                  <span style="font-family:'JetBrains Mono';font-size:10px;font-weight:600">Pay $147</span>
+                  <span style="font-family:'JetBrains Mono';font-size:11px">→</span>
+                </div>
+              </div>
+              <div style="border-radius:14px;background:rgba(61,220,132,.08);border:1px solid rgba(61,220,132,.2);display:flex;align-items:center;gap:11px;padding:11px 12px">
+                <span style="width:34px;height:34px;border-radius:10px;background:rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;font-size:15px">👕</span>
+                <span style="flex:1"><span style="display:block;color:#eafff3;font-size:12.5px;font-weight:600">Nimbus Tee</span><span style="display:block;color:#79c79b;font-size:10.5px;margin-top:2px">Sage · M · Qty 1</span></span>
+                <span style="color:#3ddc84;font-size:12.5px;font-weight:700;font-family:'JetBrains Mono'">$29</span>
+              </div>
+              <div style="border-radius:14px;background:rgba(61,220,132,.08);border:1px solid rgba(61,220,132,.2);display:flex;align-items:center;gap:11px;padding:11px 12px">
+                <span style="width:34px;height:34px;border-radius:10px;background:rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;font-size:15px">👟</span>
+                <span style="flex:1"><span style="display:block;color:#eafff3;font-size:12.5px;font-weight:600">Aero Runners</span><span style="display:block;color:#79c79b;font-size:10.5px;margin-top:2px">White · 10 · Qty 1</span></span>
+                <span style="color:#3ddc84;font-size:12.5px;font-weight:700;font-family:'JetBrains Mono'">$118</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- green patch wipe -->
+          <div style="position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(61,220,132,.0) 30%,rgba(61,220,132,.55) 46%,rgba(61,220,132,.92) 50%,rgba(61,220,132,.55) 54%,transparent 70%);animation:kt-wipe 8s ease-in-out infinite"></div>
+
+          <!-- patching pill -->
+          <div style="position:absolute;left:50%;top:44%;z-index:4;display:inline-flex;align-items:center;gap:8px;background:rgba(6,38,22,.92);border:1px solid rgba(61,220,132,.55);border-radius:999px;padding:8px 14px;backdrop-filter:blur(6px);animation:kt-patch 8s ease-in-out infinite">
+            <span style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(61,220,132,.35);border-top-color:#3ddc84;animation:kt-spin .8s linear infinite"></span>
+            <span style="font-family:'JetBrains Mono';font-size:10.5px;font-weight:600;color:#3ddc84">Patching UI…</span>
+          </div>
+
+          <!-- OTA toast -->
+          <div style="position:absolute;left:14px;right:14px;bottom:16px;z-index:5;background:rgba(20,22,28,.94);border:1px solid rgba(61,220,132,.4);border-radius:14px;padding:12px 14px;backdrop-filter:blur(8px);animation:kt-toast 8s ease-in-out infinite">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="width:18px;height:18px;border-radius:50%;background:#3ddc84;display:flex;align-items:center;justify-content:center;color:#062616;font-size:11px;font-weight:700">✓</span>
+              <span style="color:#fff;font-size:11.5px;font-weight:600">Updated to v2.4.2</span>
+              <span style="margin-left:auto;font-family:'JetBrains Mono';font-size:10px;color:#8b9096">1.2s</span>
+            </div>
+            <div style="margin-top:9px;height:4px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden"><div style="height:100%;border-radius:999px;background:#3ddc84;animation:kt-bar 8s ease-in-out infinite"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS STRIP -->
+  <div style="position:relative;border-top:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.012)">
+    <div style="max-width:1200px;margin:0 auto;padding:26px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+      <div data-reveal><div style="font-family:'Space Grotesk';font-weight:600;font-size:34px;color:#fff;letter-spacing:-.02em">&lt;50<span style="font-size:18px;color:#3ddc84">ms</span></div><div style="color:#7c8188;font-size:13.5px;margin-top:2px">Load, verify, and parse</div></div>
+      <div data-reveal><div style="font-family:'Space Grotesk';font-weight:600;font-size:34px;color:#fff;letter-spacing:-.02em">&lt;100<span style="font-size:18px;color:#3ddc84">ms</span></div><div style="color:#7c8188;font-size:13.5px;margin-top:2px">First frame, cold</div></div>
+      <div data-reveal><div style="font-family:'Space Grotesk';font-weight:600;font-size:34px;color:#fff;letter-spacing:-.02em">~4<span style="font-size:18px;color:#3ddc84">KB</span></div><div style="color:#7c8188;font-size:13.5px;margin-top:2px">A full checkout flow</div></div>
+      <div data-reveal><div style="font-family:'Space Grotesk';font-weight:600;font-size:34px;color:#fff;letter-spacing:-.02em">20<span style="font-size:18px;color:#3ddc84">×</span></div><div style="color:#7c8188;font-size:13.5px;margin-top:2px">Smaller than JSON SDUI</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLI + AI AGENTS -->
+<section id="cli" style="background:#f6f6f3;padding:96px 28px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="max-width:640px" data-reveal>
+      <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#1f9d5b">Integrate in minutes</div>
+      <h2 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.025em;color:#0a0a0a">One terminal.<br>Every AI agent.</h2>
+      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#55585a">The Ketoy CLI runs your whole workflow from the terminal. The Ketoy MCP hands any AI coding agent an accurate map of what Ketoy supports — before it writes a single line.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px">
+      <!-- CLI card -->
+      <div data-reveal style="background:#0c0e12;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.06);box-shadow:0 24px 60px rgba(0,0,0,.14)">
+        <div style="display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#febc2e"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:#28c840"></span>
+          <span style="margin-left:8px;font-family:'JetBrains Mono';font-size:12px;color:#7c8188">ketoy — zsh</span>
+          <span style="margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:#3ddc84;border:1px solid rgba(61,220,132,.3);padding:2px 8px;border-radius:6px">CLI</span>
+        </div>
+        <div style="padding:20px 20px 22px;font-family:'JetBrains Mono';font-size:13px;line-height:1.9;color:#c8cdd2">
+          <div><span style="color:#3ddc84">$</span> ketoy init</div>
+          <div style="color:#7c8188">&nbsp;&nbsp;<span style="color:#3ddc84">✓</span> Gradle plugin added</div>
+          <div style="color:#7c8188">&nbsp;&nbsp;<span style="color:#3ddc84">✓</span> Ed25519 key generated</div>
+          <div style="color:#7c8188">&nbsp;&nbsp;<span style="color:#3ddc84">✓</span> HomeScreen.kt created</div>
+          <div style="margin-top:10px"><span style="color:#3ddc84">$</span> ketoy push my-app main.ktx <span style="color:#febc2e">--version 7</span></div>
+          <div style="color:#7c8188">&nbsp;&nbsp;<span style="color:#3ddc84">✓</span> Uploaded. Live in <span style="color:#fff;font-weight:700">1.2s</span></div>
+          <div style="margin-top:10px"><span style="color:#3ddc84">$</span> ketoy rollback my-app<span style="display:inline-block;width:8px;height:16px;background:#3ddc84;margin-left:4px;vertical-align:-3px;animation:kt-blink 1.1s step-end infinite"></span></div>
+        </div>
+        <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:space-between">
+          <a href="#cta" style="color:#3ddc84;font-size:14px;font-weight:500">CLI docs →</a>
+          <code style="font-family:'JetBrains Mono';font-size:11.5px;color:#7c8188;background:rgba(255,255,255,.05);padding:5px 10px;border-radius:7px">npm i -g ketoy-dev</code>
+        </div>
+      </div>
+
+      <!-- MCP card -->
+      <div data-reveal style="background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(10,10,10,.08);box-shadow:0 24px 60px rgba(0,0,0,.06);display:flex;flex-direction:column">
+        <div style="padding:20px 22px 0">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="color:#3ddc84">✦</span>
+            <span style="font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f">AI agent · ketoy mcp</span>
+            <span style="margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:#1f9d5b;background:rgba(61,220,132,.12);padding:2px 8px;border-radius:6px">MCP</span>
+          </div>
+          <div style="margin-top:16px;background:#f6f6f3;border:1px solid rgba(10,10,10,.07);border-radius:12px;padding:14px 16px;font-family:'JetBrains Mono';font-size:12.5px;line-height:1.7">
+            <div style="color:#8a8d8f"><span style="color:#1f9d5b">ketoy_check_support</span>(<span style="color:#0a0a0a">"LazyVerticalGrid"</span>)</div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start"><span style="color:#1f9d5b;font-weight:700">✓</span><span style="color:#3d4043">Supported through the Foundation adapter. Every parameter wired.</span></div>
+          </div>
+        </div>
+        <!-- tool tabs -->
+        <div style="padding:16px 22px 4px;display:flex;flex-wrap:wrap;gap:7px">
+          <sc-for list="{{ mcpTools }}" as="t" hint-placeholder-count="6">
+            <span onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</span>
+          </sc-for>
+        </div>
+        <div style="padding:10px 22px 0;font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f;min-height:20px">{{ mcpDesc }}</div>
+        <div style="flex:1"></div>
+        <div style="margin:16px 22px 0;padding:11px 14px;border:1px dashed rgba(10,10,10,.16);border-radius:10px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:12px;color:#3d4043">↳ <span style="color:#1f9d5b">http://mcp.ketoy.dev/mcp</span></div>
+        <div style="padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Claude Code</span>
+            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Cursor</span>
+            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Codex</span>
+            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Any MCP client</span>
+          </div>
+          <a href="#cta" style="color:#1f9d5b;font-size:14px;font-weight:500">MCP docs →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY / UPDATE WITHOUT RELEASE -->
+<section style="background:#f6f6f3;padding:0 28px 96px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="max-width:640px" data-reveal>
+      <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#1f9d5b">Why Ketoy</div>
+      <h2 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.025em;color:#0a0a0a">Update without a release.</h2>
+      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#55585a">Add one annotation. Run one Gradle task. Every device gets the change in seconds.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px">
+      <div data-reveal style="background:#fff;border:1px solid rgba(10,10,10,.07);border-radius:18px;padding:28px;transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08)">
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:#3ddc84;font-weight:700">01</div>
+        <h3 style="margin:14px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:21px;color:#0a0a0a">Instant updates</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:#55585a">Fix a bug at 3pm. Every user has it by 3:01. The app never reinstalls.</p>
+      </div>
+      <div data-reveal style="background:#fff;border:1px solid rgba(10,10,10,.07);border-radius:18px;padding:28px;transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08)">
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:#3ddc84;font-weight:700">02</div>
+        <h3 style="margin:14px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:21px;color:#0a0a0a">Play Store safe</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:#55585a">Ketoy generates code on device, the same way ART does. It stays inside Google policy.</p>
+      </div>
+      <div data-reveal style="background:#fff;border:1px solid rgba(10,10,10,.07);border-radius:18px;padding:28px;transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.08)">
+        <div style="font-family:'JetBrains Mono';font-size:12px;color:#3ddc84;font-weight:700">03</div>
+        <h3 style="margin:14px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:21px;color:#0a0a0a">Just Kotlin</h3>
+        <p style="margin:0;font-size:15.5px;line-height:1.55;color:#55585a">It is the Jetpack Compose you already write. Nothing new to learn.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IF IT'S COMPOSE -->
+<section id="compose" style="background:#0a0a0a;padding:100px 28px;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(900px 500px at 80% 8%,rgba(61,220,132,.08),transparent 60%)"></div>
+  <div style="position:relative;max-width:1200px;margin:0 auto">
+    <div style="max-width:660px" data-reveal>
+      <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#3ddc84">What's supported</div>
+      <h2 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:48px;line-height:1.03;letter-spacing:-.03em;color:#fff">If it's Compose,<br>it's <span style="color:#3ddc84">Ketoy</span>.</h2>
+      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#a6abb1">The full Compose toolkit, not a curated subset. When Compose adds a parameter, one command picks it up. <span style="color:#6f747a">Hover any card.</span></p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px">
+      <sc-for list="{{ cards }}" as="card" hint-placeholder-count="6">
+        <div data-reveal onMouseEnter="{{ card.onEnter }}" onMouseLeave="{{ card.onLeave }}"
+             style="position:relative;background:#111318;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px;cursor:default;overflow:hidden;transition:transform .28s cubic-bezier(.2,.7,.3,1),border-color .28s,box-shadow .28s"
+             style-hover="transform:translateY(-6px);border-color:rgba(61,220,132,.55);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 0 1px rgba(61,220,132,.25)">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:600;letter-spacing:.1em;color:#3ddc84;text-transform:uppercase">{{ card.eyebrow }}</span>
+            <span style="width:34px;height:34px;border-radius:10px;background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;color:#3ddc84;font-family:'JetBrains Mono';font-weight:700;font-size:13px">{{ card.mark }}</span>
+          </div>
+          <h3 style="margin:18px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:22px;color:#fff;letter-spacing:-.01em">{{ card.title }}</h3>
+          <p style="margin:0;font-size:14.5px;line-height:1.5;color:#9aa0a6">{{ card.line }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px">
+            <sc-for list="{{ card.chips }}" as="chip" hint-placeholder-count="4">
+              <span style="font-family:'JetBrains Mono';font-size:11.5px;color:#c8cdd2;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);padding:4px 9px;border-radius:7px">{{ chip }}</span>
+            </sc-for>
+          </div>
+          <div style="{{ card.revealStyle }}">
+            <div style="border-top:1px solid rgba(61,220,132,.2);padding-top:12px;display:flex;gap:9px;align-items:flex-start">
+              <span style="color:#3ddc84;font-family:'JetBrains Mono'">↳</span>
+              <span style="font-size:13.5px;line-height:1.5;color:#3ddc84">{{ card.detail }}</span>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div data-reveal style="margin-top:32px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(255,255,255,.02)">
+      <div style="font-size:16px;color:#e6e8ea"><strong style="color:#fff;font-family:'Space Grotesk'">One annotation and one Gradle task.</strong> That is the whole difference.</div>
+      <a href="#cta" style="color:#3ddc84;font-weight:600;font-size:15px">See everything Ketoy supports →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section id="security" style="background:#0a0a0a;padding:0 28px 100px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="max-width:640px" data-reveal>
+      <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#3ddc84">Security</div>
+      <h2 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.025em;color:#fff">Secure and compliant.</h2>
+      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#a6abb1">Ketoy verifies every bundle before it runs. Here is how, in three parts.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px">
+      <div data-reveal style="background:#111318;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px">
+        <div style="width:38px;height:38px;border-radius:11px;background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;color:#3ddc84;font-size:18px">⚿</div>
+        <h3 style="margin:16px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#fff">Every bundle is signed</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.55;color:#9aa0a6">An Ed25519 signature is checked before any code runs. Your private key stays on your server.</p>
+      </div>
+      <div data-reveal style="background:#111318;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px">
+        <div style="width:38px;height:38px;border-radius:11px;background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;color:#3ddc84;font-size:18px">⛊</div>
+        <h3 style="margin:16px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#fff">The sandbox is a build error</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.55;color:#9aa0a6">The compiler rejects file access, reflection, and any unregistered API. Unsafe code never compiles.</p>
+      </div>
+      <div data-reveal style="background:#111318;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:28px">
+        <div style="width:38px;height:38px;border-radius:11px;background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.22);display:flex;align-items:center;justify-content:center;color:#3ddc84;font-size:18px">◈</div>
+        <h3 style="margin:16px 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#fff">Capabilities are the only door</h3>
+        <p style="margin:0;font-size:14.5px;line-height:1.55;color:#9aa0a6">KBC code reaches the platform through registered capabilities. Nothing else is callable.</p>
+      </div>
+    </div>
+    <div data-reveal style="margin-top:18px;background:linear-gradient(135deg,rgba(61,220,132,.08),rgba(255,255,255,.02));border:1px solid rgba(61,220,132,.2);border-radius:18px;padding:28px 30px">
+      <h3 style="margin:0 0 8px;font-family:'Space Grotesk';font-weight:600;font-size:19px;color:#fff">Is this allowed on the Play Store?</h3>
+      <p style="margin:0;font-size:15px;line-height:1.6;color:#a6abb1;max-width:900px">Yes. Ketoy generates code on device, exactly like ART does with bytecode — the same idea as Lua in a game engine. If your CDN goes down, the last signed bundle keeps running.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" style="background:#0a0a0a;padding:0 28px 90px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div data-reveal style="position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(150deg,#0f1a14,#0a0a0a);border:1px solid rgba(61,220,132,.22);padding:64px 48px">
+      <div style="position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(61,220,132,.28),transparent 65%);animation:kt-glow 6s ease-in-out infinite"></div>
+      <div style="position:relative;max-width:620px">
+        <h2 style="margin:0;font-family:'Space Grotesk';font-weight:600;font-size:52px;line-height:1.02;letter-spacing:-.03em;color:#fff">Write Kotlin.<br>Ship the screen.</h2>
+        <p style="margin:20px 0 0;font-size:18px;line-height:1.55;color:#a6abb1">Available now on Maven Central. Hilt, dev tools, and the full Material 3 catalog are included.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:32px">
+          <a href="#top" style="background:#3ddc84;color:#062616;font-weight:600;font-family:'Space Grotesk';font-size:16px;padding:14px 26px;border-radius:12px;transition:transform .18s" style-hover="transform:translateY(-2px)">Get started</a>
+          <a href="#cli" style="color:#fff;font-weight:500;font-size:16px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.18)" style-hover="background:rgba(255,255,255,.05)">Read the docs</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- contact -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:64px;align-items:start">
+      <div data-reveal>
+        <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#3ddc84">Talk to a human</div>
+        <h3 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:30px;color:#fff;letter-spacing:-.02em">We answer every email.</h3>
+        <p style="margin:14px 0 0;font-size:16px;line-height:1.6;color:#a6abb1;max-width:420px">Stuck on something, evaluating Ketoy for your team, or wondering if your weird in-house SDK is supported? Real engineers read these — usually the same day, sometimes faster than your Play Store review.</p>
+        <p style="margin:16px 0 0;font-size:14px;color:#6f747a">(We have an AI that ships code. Not one that answers email.)</p>
+      </div>
+      <div data-reveal style="background:#111318;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px">
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:30px 10px;text-align:center">
+            <div style="width:46px;height:46px;border-radius:50%;background:#3ddc84;color:#062616;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700">✓</div>
+            <div style="margin-top:14px;color:#fff;font-family:'Space Grotesk';font-weight:600;font-size:18px">Message sent</div>
+            <div style="margin-top:6px;color:#9aa0a6;font-size:14px">We'll get back to you shortly.</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <input placeholder="Name" style="background:#0a0a0a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;font-family:'IBM Plex Sans';outline:none">
+            <input placeholder="Email" style="background:#0a0a0a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;font-family:'IBM Plex Sans';outline:none">
+            <textarea placeholder="Your query" rows="4" style="background:#0a0a0a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;color:#fff;font-size:14px;font-family:'IBM Plex Sans';outline:none;resize:vertical"></textarea>
+            <button onClick="{{ send }}" style="background:#3ddc84;color:#062616;font-weight:600;font-family:'Space Grotesk';font-size:15px;padding:13px;border:none;border-radius:10px;cursor:pointer;transition:filter .2s" style-hover="filter:brightness(1.08)">Send message</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#f6f6f3;padding:64px 28px 40px">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px">
+    <div>
+      <a href="#top" style="display:flex;align-items:center;gap:9px;color:#0a0a0a;font-family:'Space Grotesk';font-weight:600;font-size:19px">
+        <span style="width:26px;height:26px;border-radius:8px;background:#3ddc84;display:flex;align-items:center;justify-content:center;color:#062616;font-weight:700;font-size:15px;font-family:'JetBrains Mono'">K</span>Ketoy
+      </a>
+      <p style="margin:16px 0 0;font-size:14px;line-height:1.6;color:#6f747a;max-width:300px">Kotlin-native server-driven UI for Android with over-the-air updates. Write Kotlin and Jetpack Compose, ship a signed bytecode bundle, render real Compose.</p>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk';font-weight:600;font-size:14px;color:#0a0a0a;margin-bottom:12px">Product</div>
+      <div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><a href="#cta">Get started</a><a href="#compose">Supported features</a><a href="#security">Architecture</a><a href="#cta">Release notes</a></div>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk';font-weight:600;font-size:14px;color:#0a0a0a;margin-bottom:12px">Docs</div>
+      <div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><a href="#cli">Documentation</a><a href="#cli">KBC spec</a><a href="#compose">Capability registry</a><a href="#cli">Bundle format</a></div>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk';font-weight:600;font-size:14px;color:#0a0a0a;margin-bottom:12px">Community</div>
+      <div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><a href="#cta">GitHub</a><a href="#cta">Discord</a><a href="#cta">Report an issue</a><a href="#cta">Contact</a></div>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(10,10,10,.1);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-family:'JetBrains Mono';font-size:12.5px;color:#8a8d8f">
+    <span>© 2026 Ketoy · dev.ketoy.vm · v0.4.13-alpha</span>
+    <span>Made for Android · Kotlin 2.0 · Compose</span>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { hovered: -1, mcp: 0, sent: false };
+
+  send() { this.setState({ sent: true }); }
+
+  renderVals() {
+    const H = this.state.hovered;
+    const CARDS = [
+      { eyebrow: 'UI', mark: 'M3', title: 'Compose & Material 3', line: 'All 35 Material 3 components. Every parameter included.', chips: ['Scaffold','LazyColumn','Button','TopAppBar','+31'], detail: 'When Compose adds a parameter, one command picks it up.' },
+      { eyebrow: 'Language', mark: 'kt', title: 'Plain Kotlin', line: 'Data classes, sealed classes, extensions, and lambdas.', chips: ['data class','sealed','when','closures'], detail: 'Real Kotlin, compiled straight to bytecode.' },
+      { eyebrow: 'Async', mark: '⟳', title: 'Coroutines & Flow', line: 'launch, async, withContext, and 9 Flow operators.', chips: ['launch','StateFlow','collectAsState','debounce'], detail: 'Structured concurrency included, exactly as you expect.' },
+      { eyebrow: 'State', mark: 'VM', title: 'ViewModel', line: 'A real Android ViewModel. Survives config changes.', chips: ['viewModelScope','SavedStateHandle','@HiltViewModel'], detail: 'Works with Hilt and dispatch() out of the box.' },
+      { eyebrow: 'I/O', mark: '↔', title: 'Networking & storage', line: 'HTTP, DataStore, Room, and navigation, built in.', chips: ['HTTP','DataStore','Room','+ your SDKs'], detail: '67 capabilities ready — plug your own SDKs in too.' },
+      { eyebrow: 'DI', mark: '@', title: 'Hilt', line: 'Drop it in. @Inject works exactly as before.', chips: ['@Inject','@HiltViewModel','@Module'], detail: 'No wiring changes. Your graph just works.' },
+    ];
+    const cards = CARDS.map((c, i) => ({
+      ...c,
+      onEnter: () => this.setState({ hovered: i }),
+      onLeave: () => this.setState({ hovered: -1 }),
+      revealStyle: {
+        overflow: 'hidden',
+        transition: 'max-height .4s cubic-bezier(.2,.7,.3,1), opacity .35s, margin-top .4s',
+        maxHeight: i === H ? '110px' : '0px',
+        opacity: i === H ? 1 : 0,
+        marginTop: i === H ? '16px' : '0px',
+      },
+    }));
+
+    const TOOLS = [
+      { label: 'ketoy_check_support', desc: 'Ask whether a component or parameter is supported before generating.' },
+      { label: 'ketoy_validate', desc: 'Type-check a bundle against the capability registry.' },
+      { label: 'ketoy_capabilities', desc: 'List every registered capability the runtime exposes.' },
+      { label: 'ketoy_viewmodel', desc: 'Scaffold a ViewModel wired to your screen state.' },
+      { label: 'ketoy_debug', desc: 'Inspect a live bundle and trace render events.' },
+      { label: 'ketoy_cli', desc: 'Run any CLI command straight from the agent.' },
+    ];
+    const M = this.state.mcp;
+    const mcpTools = TOOLS.map((t, i) => ({
+      label: t.label,
+      onClick: () => this.setState({ mcp: i }),
+      style: {
+        cursor: 'pointer',
+        fontFamily: "'JetBrains Mono'",
+        fontSize: '11.5px',
+        padding: '4px 10px',
+        borderRadius: '7px',
+        transition: 'all .18s',
+        border: i === M ? '1px solid rgba(61,220,132,.5)' : '1px solid rgba(10,10,10,.1)',
+        background: i === M ? 'rgba(61,220,132,.14)' : '#fff',
+        color: i === M ? '#1f9d5b' : '#8a8d8f',
+        fontWeight: i === M ? 600 : 400,
+      },
+    }));
+
+    return {
+      cards,
+      mcpTools,
+      mcpDesc: TOOLS[M].desc,
+      sent: this.state.sent,
+      notSent: !this.state.sent,
+      send: () => this.send(),
+    };
+  }
+
+  componentDidMount() {
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    els.forEach((el) => { el.style.opacity = '0'; el.style.transform = 'translateY(22px)'; el.style.transition = 'opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1)'; });
+    if (!('IntersectionObserver' in window)) { els.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none'; }); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    els.forEach((el) => io.observe(el));
+  }
+}
+</script>
+</body>
+</html>

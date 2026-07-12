@@ -87,7 +87,17 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .integrate-cmd .code-copy { margin-left: 0; flex-shrink: 0; }
+    .integrate-cmd .code-copy {
+      margin-left: 0;
+      flex-shrink: 0;
+      border-color: var(--border-strong);
+      color: var(--muted);
+    }
+    .integrate-cmd .code-copy:hover {
+      color: var(--ink);
+      background: var(--surface-2);
+      border-color: var(--border-strong);
+    }
     /* Agent chips: any MCP client works */
     .agent-row {
       display: flex;
@@ -579,25 +589,331 @@
   100% { box-shadow: 0 0 0 0 rgba(61,220,132,0); }
 }
 
-/* OTA motion: the cinematic build → beam → phone-update scene, scaled from its
-   native 1920×1080 to the container width. The inner canvas is transform-scaled
-   and taken out of flow; the wrapper reserves height via aspect-ratio. */
-.ota-motion {
+/* Hero device: OTA patch landing on a phone mockup, docked to the right edge
+   of the hero section. Sized off the viewport so it reads as a real device at
+   any width; the frame keeps the glow/rings/packets centered on the phone. */
+.hero-phone-stage {
+  --phone-w: clamp(220px, 19vw, 290px);
   position: relative;
-  margin-top: 40px;
-  width: 100%;
-  aspect-ratio: 1920 / 1080;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(255,255,255,0.10);
-  background: #05130d;
-  box-shadow: 0 40px 100px -40px rgba(3,30,18,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: clamp(480px, 44vw, 660px);
   z-index: 1;
 }
-.ota-motion-canvas {
+.hero-phone-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-phone-glow {
   position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(300px, 26vw, 420px); height: clamp(300px, 26vw, 420px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,220,132,.42), transparent 66%);
+  filter: blur(6px);
+  animation: hero-device-glow 5s ease-in-out infinite;
+}
+.hero-phone-ring {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: clamp(260px, 22.5vw, 360px); height: clamp(260px, 22.5vw, 360px);
+  border-radius: 50%;
+  border: 1px solid rgba(61,220,132,.4);
+  animation: hero-device-ring 3.4s ease-out infinite;
+}
+.hero-phone-ring.delay { animation-delay: 1.7s; }
+/* Packets float in the open gap to the left of the phone — positioned off
+   the stage's right edge (same anchor as the phone) so they stay clear of
+   it at every viewport instead of being tucked behind its shadow. */
+.hero-phone-packet {
+  position: absolute;
+  width: 34px; height: 22px;
+  border-radius: 6px;
+  background: rgba(61,220,132,.16);
+  border: 1px solid rgba(61,220,132,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: #3ddc84;
+  animation: hero-device-float 3.2s linear infinite;
+}
+.hero-phone-packet.p1 { right: calc(var(--phone-w) + 40px); top: 28%; --dx: 90px; --dy: 26px; }
+.hero-phone-packet.p2 { right: calc(var(--phone-w) + 90px); top: 54%; --dx: 100px; --dy: -22px; animation-delay: 1.4s; }
+
+.hero-phone {
+  position: relative;
+  width: var(--phone-w);
+  aspect-ratio: 220 / 452;
+  border-radius: 34px;
+  background: linear-gradient(155deg, #1a1c22, #0e0f13);
+  padding: 10px;
+  box-shadow: 0 40px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.06), inset 0 0 0 2px rgba(255,255,255,.03);
+}
+.hero-phone-notch {
+  position: absolute;
+  left: 50%;
+  top: 13px;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 18px;
+  background: #0a0a0a;
+  border-radius: 999px;
+  z-index: 3;
+}
+.hero-phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  overflow: hidden;
+  background: #0c0e12;
+}
+.hero-phone-head {
+  padding: 30px 14px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+.hero-phone-brand { display: flex; align-items: center; gap: 7px; }
+.hero-phone-mark {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  background: #3ddc84;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #062616;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: var(--font-mono);
+}
+.hero-phone-brand span:last-child {
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: var(--font-display);
+}
+.hero-phone-version { position: relative; width: 70px; height: 18px; }
+.hero-phone-version .v {
+  position: absolute;
+  right: 0;
   top: 0;
-  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  border-radius: 999px;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+.hero-phone-version .v.old {
+  color: #8b9096;
+  border: 1px solid rgba(255,255,255,.18);
+  animation: hero-device-a 8s ease-in-out infinite;
+}
+.hero-phone-version .v.new {
+  color: #3ddc84;
+  border: 1px solid rgba(61,220,132,.5);
+  animation: hero-device-b 8s ease-in-out infinite;
+}
+.hero-phone-version .v i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.hero-phone-version .v.new i { box-shadow: 0 0 6px #3ddc84; }
+
+.hero-phone-body { position: absolute; left: 0; right: 0; top: 64px; bottom: 0; }
+.hero-phone-state {
+  position: absolute;
+  inset: 0;
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hero-phone-state.before { animation: hero-device-a 8s ease-in-out infinite; }
+.hero-phone-state.after { animation: hero-device-b 8s ease-in-out infinite; }
+
+.hero-row {
+  border-radius: 11px;
+  background: rgba(255,255,255,.045);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+}
+.hero-row .icon {
+  width: 27px; height: 27px;
+  border-radius: 7px;
+  background: rgba(255,255,255,.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+.hero-row .meta { flex: 1; }
+.hero-row .title { display: block; color: #e6e8ea; font-size: 11px; font-weight: 600; }
+.hero-row .sub { display: block; color: #7c8188; font-size: 9.5px; margin-top: 2px; }
+.hero-row .price { color: #c8cdd2; font-size: 11px; font-weight: 600; font-family: var(--font-mono); }
+
+.hero-card-header {
+  border-radius: 13px;
+  padding: 13px 14px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.07);
+}
+.hero-card-header .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: #6f747a;
+}
+.hero-card-header .title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  margin-top: 4px;
+  color: #e6e8ea;
+}
+
+.hero-checkout-card {
+  border-radius: 15px;
+  padding: 13px 14px;
+  color: #062616;
+  background: linear-gradient(150deg, rgba(61,220,132,.94), rgba(31,157,91,.8));
+}
+.hero-checkout-card .top { display: flex; align-items: center; justify-content: space-between; }
+.hero-checkout-card .badge { font-family: var(--font-mono); font-size: 8px; font-weight: 700; opacity: .72; letter-spacing: .08em; }
+.hero-checkout-card .cart {
+  background: rgba(6,38,22,.25);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+.hero-checkout-card .headline {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 5px;
+  line-height: 1.2;
+}
+.hero-checkout-card .pay {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #062616;
+  color: #3ddc84;
+  padding: 7px 12px;
+  border-radius: 9px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.hero-row.accent { border-radius: 13px; background: rgba(61,220,132,.08); border: 1px solid rgba(61,220,132,.2); }
+.hero-row.accent .icon { border-radius: 9px; background: rgba(61,220,132,.22); width: 30px; height: 30px; }
+.hero-row.accent .title { color: #eafff3; font-size: 11.5px; }
+.hero-row.accent .sub { color: #79c79b; }
+.hero-row.accent .price { color: #3ddc84; font-weight: 700; }
+
+.hero-phone-wipe {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(61,220,132,0) 30%, rgba(61,220,132,.55) 46%, rgba(61,220,132,.92) 50%, rgba(61,220,132,.55) 54%, transparent 70%);
+  animation: hero-device-wipe 8s ease-in-out infinite;
+}
+.hero-phone-patch {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(6,38,22,.92);
+  border: 1px solid rgba(61,220,132,.55);
+  border-radius: 999px;
+  padding: 7px 12px;
+  backdrop-filter: blur(6px);
+  animation: hero-device-patch 8s ease-in-out infinite;
+}
+.hero-phone-patch .spinner {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(61,220,132,.35);
+  border-top-color: #3ddc84;
+  animation: hero-device-spin .8s linear infinite;
+}
+.hero-phone-patch span { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; color: #3ddc84; }
+
+.hero-phone-toast {
+  position: absolute;
+  left: 12px; right: 12px; bottom: 14px;
+  z-index: 5;
+  background: rgba(20,22,28,.94);
+  border: 1px solid rgba(61,220,132,.4);
+  border-radius: 13px;
+  padding: 11px 13px;
+  backdrop-filter: blur(8px);
+  animation: hero-device-toast 8s ease-in-out infinite;
+}
+.hero-phone-toast .row { display: flex; align-items: center; gap: 7px; }
+.hero-phone-toast .check {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #3ddc84;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #062616;
+  font-size: 10px;
+  font-weight: 700;
+}
+.hero-phone-toast .label { color: #fff; font-size: 10.5px; font-weight: 600; }
+.hero-phone-toast .time { margin-left: auto; font-family: var(--font-mono); font-size: 9px; color: #8b9096; }
+.hero-phone-toast .bar-track { margin-top: 8px; height: 4px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.hero-phone-toast .bar-fill { height: 100%; border-radius: 999px; background: #3ddc84; animation: hero-device-bar 8s ease-in-out infinite; }
+
+@keyframes hero-device-glow { 0%,100% { opacity: .55; transform: translate(-50%, -50%) scale(1); } 50% { opacity: .9; transform: translate(-50%, -50%) scale(1.08); } }
+@keyframes hero-device-ring { 0% { transform: translate(-50%, -50%) scale(.6); opacity: .5; } 100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; } }
+@keyframes hero-device-a { 0%,40% { opacity: 1; } 47%,94% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes hero-device-b { 0%,40% { opacity: 0; } 47%,94% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes hero-device-wipe { 0%,35% { transform: translateY(-118%); } 45% { transform: translateY(0); } 55%,100% { transform: translateY(118%); } }
+@keyframes hero-device-patch { 0%,33% { opacity: 0; transform: translate(-50%,6px) scale(.9); } 41%,50% { opacity: 1; transform: translate(-50%,0) scale(1); } 57%,100% { opacity: 0; transform: translate(-50%,6px) scale(.9); } }
+@keyframes hero-device-toast { 0%,42% { transform: translateY(130%); opacity: 0; } 50%,82% { transform: translateY(0); opacity: 1; } 90%,100% { transform: translateY(130%); opacity: 0; } }
+@keyframes hero-device-bar { 0% { width: 0%; } 55% { width: 100%; } 100% { width: 100%; } }
+@keyframes hero-device-float { 0% { transform: translate(0,0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)); opacity: 0; } }
+@keyframes hero-device-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-phone-glow, .hero-phone-ring, .hero-phone-packet,
+  .hero-phone-state.before, .hero-phone-state.after,
+  .hero-phone-wipe, .hero-phone-patch, .hero-phone-toast,
+  .hero-phone-toast .bar-fill, .hero-phone-version .v { animation: none !important; }
+  .hero-phone-state.before { opacity: 0; }
+  .hero-phone-state.after { opacity: 1; }
+  .hero-phone-wipe, .hero-phone-patch { opacity: 0; }
+  .hero-phone-toast { opacity: 1; transform: none; bottom: 14px; }
+  .hero-phone-toast .bar-fill { width: 100%; }
+  .hero-phone-version .v.old { opacity: 0; }
+  .hero-phone-version .v.new { opacity: 1; }
+}
+
+@media (max-width: 1000px) {
+  .hero-phone-stage { margin-top: 32px; min-height: 420px; justify-content: center; }
+  .hero-phone-packet { display: none; }
 }
 
 /* OTA pipeline: Kotlin -> bundle -> CDN -> devices, with a pulse travelling

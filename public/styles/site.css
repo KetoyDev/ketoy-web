@@ -510,18 +510,13 @@ p { margin: 0; color: var(--ink-2); }
   align-items: center;
   position: relative;
 }
-/* Centered hero lead: tag + headline + buttons stacked above the OTA motion. */
+/* Hero lead: tag + headline + buttons, left column beside the device animation. */
 .hero-lead {
   position: relative;
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  max-width: 540px;
 }
-.hero-lead .lede { max-width: 560px; }
-.hero-lead .hero-actions { justify-content: center; }
+.hero-lead .lede { max-width: 460px; }
+.hero-lead .hero-actions { justify-content: flex-start; }
 .hero-tag {
   display: inline-flex;
   align-items: center;

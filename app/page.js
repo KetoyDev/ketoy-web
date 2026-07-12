@@ -61,31 +61,33 @@ export default function HomePage() {
           <span className="a3"></span>
         </div>
         <div className="container">
-          <div className="hero-lead">
-            <div className="hero-tag">
-              <span className="pill">v{SDK_VERSION_SHORT}</span>
-              <span>Kotlin OTA</span>
-              <span className="live-dot" aria-hidden="true"></span>
+          <div className="hero-grid">
+            <div className="hero-lead">
+              <div className="hero-tag">
+                <span className="pill">v{SDK_VERSION_SHORT}</span>
+                <span>Kotlin OTA</span>
+                <span className="live-dot" aria-hidden="true"></span>
+              </div>
+              <h1>
+                Ship <strong>Compose UI</strong> over the air.
+              </h1>
+              <p className="lede">
+                Write real Jetpack Compose. Push updates to every device in seconds.
+              </p>
+              <div className="hero-actions">
+                <Link className="btn btn-primary" href="/get-started">
+                  Get started
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M13 5l7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link className="btn btn-ghost" href="/architecture">How it works</Link>
+              </div>
             </div>
-            <h1>
-              Ship <strong>Compose UI</strong> over the air.
-            </h1>
-            <p className="lede">
-              Write real Jetpack Compose. Push updates to every device in seconds.
-            </p>
-            <div className="hero-actions">
-              <Link className="btn btn-primary" href="/get-started">
-                Get started
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M13 5l7 7-7 7" />
-                </svg>
-              </Link>
-              <Link className="btn btn-ghost" href="/architecture">How it works</Link>
-            </div>
-          </div>
 
-          {/* Over-the-air delivery motion (design-import slot) */}
-          <OtaMotion />
+            {/* Over-the-air delivery motion: phone device animation */}
+            <OtaMotion />
+          </div>
 
           <div className="hero-stats" data-reveal>
             {heroStats.map((s, i) => (
@@ -140,15 +142,15 @@ export default function HomePage() {
                 <p>Point any MCP-compatible agent at one endpoint. It checks what Ketoy supports before writing code.</p>
               </div>
               <McpGraphic />
-              <div className="integrate-cmd">
-                <span className="prompt">↳</span>
-                <code>http://mcp.ketoy.dev/mcp</code>
-                <CopyButton text="http://mcp.ketoy.dev/mcp" />
-              </div>
               <div className="agent-row" aria-label="Works with any MCP client">
                 {['Claude Code', 'Codex', 'Cursor', 'Windsurf', 'Any MCP client'].map((a) => (
                   <span className="agent-chip" key={a}>{a}</span>
                 ))}
+              </div>
+              <div className="integrate-cmd">
+                <span className="prompt">↳</span>
+                <code>http://mcp.ketoy.dev/mcp</code>
+                <CopyButton text="http://mcp.ketoy.dev/mcp" />
               </div>
               <Link className="integrate-link" href="/docs/mcp">
                 MCP docs
@@ -256,7 +258,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA + Support trigger */}
-      <section style={{ paddingTop: 0 }}>
+      <section style={{ paddingTop: 56 }}>
         <div className="container">
           <div className="cta-banner">
             <div>
