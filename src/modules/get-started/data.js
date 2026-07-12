@@ -1,11 +1,9 @@
 export const subnavItems = [
   { id: 'requirements', label: 'Requirements' },
   { id: 'install', label: '1. Install the CLI' },
-  { id: 'init', label: '2. ketoy init' },
-  { id: 'auth', label: '3. Pick a provider' },
-  { id: 'run', label: '4. Build & run' },
-  { id: 'commands', label: 'Command reference' },
-  { id: 'safety', label: 'Safety & privacy' },
+  { id: 'init', label: '2. Set up your project' },
+  { id: 'deploy', label: '3. Ship over the air' },
+  { id: 'more', label: 'The rest of the CLI' },
 ];
 
 export const manualSubnavItems = [
@@ -18,7 +16,7 @@ export const manualSubnavItems = [
 ];
 
 export const requirements = [
-  ['Node.js', '20+'],
+  ['Node.js', '18+'],
   ['Kotlin', '2.0.21+'],
   ['Android Gradle Plugin', '8.x +'],
   ['JDK', '17'],
@@ -36,7 +34,7 @@ export const manualRequirements = [
 ];
 
 export const continueCards = [
-  { h: 'Architecture overview', p: 'The five-layer stack and why KBC bytecode - not JSON - is the wire format.', cta: 'Read the spec', href: '/architecture' },
+  { h: 'Architecture overview', p: 'The five-layer stack, and why the wire format is KBC bytecode rather than JSON.', cta: 'Read the spec', href: '/architecture' },
   { h: 'Supported features', p: 'Every Material3 adapter, every capability, every Compose token Ketoy ships with.', cta: 'See coverage', href: '/features' },
-  { h: 'Custom adapters', p: 'Add your own components beyond Material3 - the KSP processor handles the rest.', cta: 'Read the guide', href: '/docs' },
+  { h: 'Custom adapters', p: 'Add your own components beyond Material3. The KSP processor handles the rest.', cta: 'Read the guide', href: '/docs' },
 ];

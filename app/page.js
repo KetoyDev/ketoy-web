@@ -69,10 +69,10 @@ export default function HomePage() {
                 <span className="live-dot" aria-hidden="true"></span>
               </div>
               <h1>
-                Ship <strong>Compose UI</strong> over the air.
+                Ship <strong>Kotlin</strong> over the air.
               </h1>
               <p className="lede">
-                Write real Jetpack Compose. Push updates to every device in seconds.
+                Write real Kotlin and Jetpack Compose. Push updates to every device in seconds.
               </p>
               <div className="hero-actions">
                 <Link className="btn btn-primary" href="/get-started">
@@ -108,7 +108,7 @@ export default function HomePage() {
             <h2>Command line and AI agents.</h2>
             <p>
               The Ketoy CLI runs your whole workflow from the terminal. The Ketoy MCP gives
-              any AI coding agent an accurate map of what Ketoy supports — before it writes a line.
+              any AI coding agent an accurate map of what Ketoy supports, before it writes a line.
             </p>
           </div>
 

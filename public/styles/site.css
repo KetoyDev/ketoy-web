@@ -1016,12 +1016,16 @@ footer.site-footer {
 /* Justify body copy across docs, home, architecture, features and updates.
    Scoped through :where() so specificity stays at (0,0,1) — any element with
    an explicit text-align (center/start/end, set via class or inline style)
-   always wins and is left untouched. */
-:where(.docs-body, .container, .update-modal-body, .page-head) p,
+   always wins and is left untouched. Hero ledes (.page-head) are intentionally
+   left-aligned, so they are excluded here. hyphens is off so full lines never
+   break a word with a trailing "-"; long unbreakable tokens (URLs, code) fall
+   back to overflow-wrap so they still wrap instead of overflowing. */
+:where(.docs-body, .container, .update-modal-body) p,
 :where(.docs-body, .update-modal-body) li {
   text-align: justify;
   text-justify: inter-word;
-  hyphens: auto;
+  hyphens: none;
+  overflow-wrap: break-word;
 }
 .docs-body h1 { font-size: 44px; margin-bottom: 16px; }
 .docs-body h2 { font-size: 28px; margin-top: 48px; margin-bottom: 16px; }
