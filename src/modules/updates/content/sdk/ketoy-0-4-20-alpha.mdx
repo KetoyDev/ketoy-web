@@ -1,0 +1,169 @@
+import Link from 'next/link';
+
+export const meta = {
+  id: 'ketoy-0-4-20-alpha',
+  section: 'sdk',
+  title: 'Ketoy 0.4.20-alpha: back on Maven Central',
+  summary:
+    'The first Maven Central release since 0.4.13-alpha. Ships the app-scoped shared runtime plus everything from the 0.4.16-0.4.19 mavenLocal iterations.',
+  chip: 'New',
+  chipClass: 'uchip-new',
+  date: 'Jul 20, 2026',
+  tag: 'SDK · 0.4.20-alpha',
+  metaTag: 'SDK · 0.4.20-alpha',
+};
+
+This is the first **Maven Central** release since `0.4.13-alpha`. It ships
+the headline **app-scoped shared runtime** (shared ViewModels across
+screens) plus everything that landed in the `0.4.16`-`0.4.19` mavenLocal
+iterations, Material3 `AlertDialog`, `FlowRow`, Compose Pagers, and a batch
+of fixes.
+
+### Coordinates
+
+<CodeWindow file="build.gradle.kts">
+{`dependencies {
+    implementation(platform("dev.ketoy.vm:ketoy-bom:0.4.20-alpha"))
+    implementation("dev.ketoy.vm:ketoy-runtime")
+    implementation("dev.ketoy.vm:ketoy-hilt")             // optional
+    implementation("dev.ketoy.vm:ketoy-koin")             // optional (new)
+    implementation("dev.ketoy.vm:ketoy-adapters-material3")
+}`}
+</CodeWindow>
+
+Drop-in upgrade from 0.4.x, everything below is additive and backward
+compatible. No wire-format, opcode, or `@KetoyViewModel` authoring change.
+
+### At a glance
+
+<ChipRow>
+  <Chip>Shared runtime</Chip>
+  <Chip>Per-screen opt-out</Chip>
+  <Chip>Material3 AlertDialog</Chip>
+  <Chip>Real FlowRow</Chip>
+  <Chip>Compose Pagers</Chip>
+  <Chip>ketoy-koin</Chip>
+</ChipRow>
+
+| Area | What's new |
+|---|---|
+| **Shared runtime** | `KetoyRuntimeHost { ... }`, one bundle, one `KetoyVM`, ViewModels shared across screens |
+| **Per-screen opt-out** | `KetoyScreen(entryPoint, useSharedRuntime = false)` for argument-scoped screens |
+| **Dialogs** | Material3 `AlertDialog` (confirm / info) |
+| **Layout** | `FlowRow` (real `androidx.compose.foundation.layout.FlowRow`) |
+| **Paging** | `HorizontalPager` / `VerticalPager` with real snap / fling |
+| **Defaults** | `TextField` / `OutlinedTextField` / `Switch` `.enabled` default to `true` |
+| **DI** | New `ketoy-koin` module (Koin integration, alongside `ketoy-hilt`) |
+
+### App-scoped shared runtime
+
+Until now each `KetoyScreen` loaded the bundle independently, every route
+got its own `KetoyVM`, its own heap, and its own ViewModel instances. Two
+screens could not share a `@KetoyViewModel` or any state.
+
+`KetoyRuntimeHost` fixes that. Wrap your `NavHost` (or any screen group) in
+it: it loads and verifies the `.ktx` **once** into a single Activity-scoped
+`KetoyVM`, and every `KetoyScreen` inside resolves against that shared
+runtime.
+
+<CodeWindow file="App.kt">
+{`@Composable
+fun App() {
+    KetoyRuntimeHost(bundleSource = KetoyBundleSource.Asset("ketoy/main.ktx")) {
+        val nav = rememberNavController()
+        NavHost(nav, startDestination = "home") {
+            composable("home")     { KetoyScreen(entryPoint = "HomeScreen") }
+            composable("upcoming") { KetoyScreen(entryPoint = "UpcomingScreen") }
+            composable("search")   { KetoyScreen(entryPoint = "SearchScreen") }
+            composable("details/{id}") {
+                // argument-scoped, keep a fresh per-nav-entry ViewModel
+                KetoyScreen(entryPoint = "DetailsScreen", useSharedRuntime = false)
+            }
+        }
+    }
+}`}
+</CodeWindow>
+
+Now `ketoyViewModel<CatalogViewModel>()` called from Home, Upcoming, and
+Search returns **the same instance** with a single lifecycle. Data one tab
+fetches in the VM's `init` is reused by the others, Upcoming appears
+instantly because `CatalogViewModel` already loaded its slice for Home.
+
+#### Shared vs per-screen, the duo
+
+| Scope | How | When to use |
+|---|---|---|
+| **Shared** (activity-scoped) | Default under `KetoyRuntimeHost` | Cross-tab / cross-screen state, a catalog, a session, a cart |
+| **Per-screen** (per-nav-entry) | `KetoyScreen(..., useSharedRuntime = false)` | Argument-scoped screens, a details page keyed by an id |
+
+Both coexist. A shared `CatalogViewModel` for the browse tabs and a
+per-screen `DetailsViewModel` keyed by show id is the reference pattern.
+
+<InfoCard title="What you keep">
+  <p>
+    <strong>Native navigation</strong>, the real <code>NavHost</code>, back
+    stack, deep links, and transitions are untouched.{' '}
+    <strong>Real lifecycle</strong>, shared VMs live through config change and
+    are cleared with the Activity (real Android <code>ViewModelStore</code>);
+    per-screen VMs are cleared with their nav entry. <strong>One runtime</strong>,
+    a single parse, heap, and coroutine engine for the whole app instead of
+    one per screen.
+  </p>
+</InfoCard>
+
+No `KetoyRuntimeHost`? `KetoyScreen` behaves exactly as in 0.4.x (per-screen
+runtime). Adopt the host only where you want sharing, a full architecture
+decision record covers the `ComposeEngine`-decoupling refactor that makes
+one shared `KetoyVM` safe to drive many concurrent screen compositions.
+
+### Also shipping (from the 0.4.16-0.4.19 iterations)
+
+- **Material3 `AlertDialog`**, the reusable confirm / info dialog. Nullable
+  content slots (`dismissButton` / `icon` / `title` / `text`) pass through,
+  so an absent slot renders no button; `shape`, content colours, and
+  `tonalElevation` honour-default to `AlertDialogDefaults.*`. Security-sensitive
+  flows (e.g. a captcha-gated destructive action) can stay native and be
+  triggered from KBC through a host capability.
+- **`FlowRow`**, the real `androidx.compose.foundation.layout.FlowRow` (off
+  the deprecated accompanist wrapper) for wrapping chip / tag rows.
+- **Compose Pagers**, `HorizontalPager` / `VerticalPager` as real
+  KSP-generated catalog adapters, with genuine snap / fling / paging:
+
+<CodeWindow file="Catalog.kt">
+{`HorizontalPager(state = rememberPagerState(pageCount = { items.size })) { page ->
+    HeroCard(items[page])
+}`}
+</CodeWindow>
+
+  The `pageCount` lambda is extracted and re-run reactively, so the page
+  count tracks your backing data. No new opcode or wire change.
+- **Sensible input defaults**, `TextField` / `OutlinedTextField` and
+  `Switch` now default `.enabled` to `true` when omitted (previously
+  `false`, a disabled control), so a plain text field accepts input without
+  `enabled = true`.
+- **`ketoy-koin`**, a new optional Koin DI integration module, alongside the
+  existing `ketoy-hilt`.
+
+#### Fixes rolled in
+
+- **`list.size` / `map.size` / `array.size` reads** inside a KBC body no
+  longer crash (`NoSuchMethodException: getSize`). Reflection now falls back
+  to the Kotlin `.size` for `Collection` / `Map` / `Array`.
+- **`COMPOSABLE_CALL` freezes the caller's register file**, so
+  `Register`-typed params and captures inside `forEach` / `forEachIndexed`
+  bodies see per-iteration values, fixes an `IndexOutOfBounds` rendering
+  `forEach`-emitted lists.
+- **`Collection.isNotEmpty()` / `Map.isNotEmpty()`** in a KBC body resolve
+  via a reflection fallback instead of crashing.
+
+### Migrating
+
+Nothing to change in existing 0.4.x screens. To adopt cross-screen shared
+ViewModels, wrap your `NavHost` in `KetoyRuntimeHost(...)` and add
+`useSharedRuntime = false` to any argument-scoped screen.
+
+<ChipRow>
+  <Chip>Backward compatible</Chip>
+  <Chip>No wire-format change</Chip>
+  <Chip>Maven Central</Chip>
+</ChipRow>

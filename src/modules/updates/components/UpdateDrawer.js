@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import UpdateArticle from './UpdateArticle';
 
 export default function UpdateDrawer({ update, onClose }) {
   useEffect(() => {
@@ -43,20 +44,7 @@ export default function UpdateDrawer({ update, onClose }) {
           </svg>
         </button>
 
-        {update && (
-          <>
-            <header className="update-modal-head">
-              <span className={`uchip ${update.chipClass}`}>
-                <span className="uchip-dot"></span>{update.chip}
-              </span>
-              <h2 id={`update-${update.id}-title`}>{update.title}</h2>
-              <p className="update-modal-meta">
-                {update.date} · {update.tag}
-              </p>
-            </header>
-            <div className="update-modal-body">{update.body}</div>
-          </>
-        )}
+        {update && <UpdateArticle update={update} headingLevel="h2" />}
       </aside>
     </div>
   );

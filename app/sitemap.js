@@ -1,5 +1,6 @@
 import { SITE_URL } from '@/lib/seo';
 import { docsNav } from '@/modules/docs/lib/nav';
+import { updates } from '@/modules/updates/lib/updates';
 
 // Dynamic sitemap served at /sitemap.xml. Enumerates every real route so
 // search engines can discover and prioritise the full surface (marketing +
@@ -26,7 +27,14 @@ export default function sitemap() {
     .filter((href) => href && href !== '#' && href !== '/docs')
     .map((path) => ({ path, priority: 0.7, changeFrequency: 'monthly' }));
 
-  return [...top, ...docs].map(({ path, priority, changeFrequency }) => ({
+  // Every individual update, crawlable at /updates/<section>/<id>.
+  const updateDetails = updates.map((u) => ({
+    path: `/updates/${u.section}/${u.id}`,
+    priority: 0.5,
+    changeFrequency: 'monthly',
+  }));
+
+  return [...top, ...docs, ...updateDetails].map(({ path, priority, changeFrequency }) => ({
     url: `${SITE_URL}${path}`,
     lastModified: now,
     changeFrequency,

@@ -1,3 +1,4 @@
+import { meta as ketoy0420Meta, default as Ketoy0420Body } from '../content/sdk/ketoy-0-4-20-alpha.mdx';
 import { meta as ketoy0413Meta, default as Ketoy0413Body } from '../content/platform/ketoy-0-4-13-alpha.mdx';
 import { meta as ketoy040Meta, default as Ketoy040Body } from '../content/platform/ketoy-0-4-0-alpha.mdx';
 import { meta as ketoyCliMeta, default as KetoyCliBody } from '../content/platform/ketoy-cli.mdx';
@@ -8,6 +9,7 @@ import { meta as imageSupportMeta, default as ImageSupportBody } from '../conten
 
 // JSX elements (not functions) so they can be passed from Server to Client Components.
 export const updates = [
+  { ...ketoy0420Meta, body: <Ketoy0420Body /> },
   { ...ketoy0413Meta, body: <Ketoy0413Body /> },
   { ...ketoy040Meta, body: <Ketoy040Body /> },
   { ...ketoyCliMeta, body: <KetoyCliBody /> },
@@ -23,4 +25,9 @@ export function getUpdatesBySection(section) {
 
 export function getUpdateById(id) {
   return updates.find((u) => u.id === id);
+}
+
+export function getSectionUpdate(section, id) {
+  const update = getUpdateById(id);
+  return update && update.section === section ? update : null;
 }

@@ -432,6 +432,7 @@
 .update-modal-head .uchip {
   margin-bottom: 16px;
 }
+.update-modal-head h1,
 .update-modal-head h2 {
   font-family: var(--font-display);
   font-weight: 600;
@@ -515,4 +516,23 @@
   .update-modal-head { padding: 28px 22px 0; }
   .update-modal-body { padding: 18px 22px 28px; }
   .update-modal-head h2 { padding-right: 40px; }
+}
+
+/* ---- Standalone update detail page (crawlable /updates/<section>/<id>) ---- */
+.update-detail-page {
+  padding-top: 40px;
+  padding-bottom: 72px;
+  max-width: 760px;
+}
+.update-detail-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+}
+.update-detail-card .update-modal-head { padding-right: 0; }
+.update-detail-card .update-modal-head h1 { padding-right: 0; }
+
+@media (max-width: 640px) {
+  .update-detail-page { padding-top: 28px; }
 }
