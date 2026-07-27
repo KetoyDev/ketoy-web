@@ -6,7 +6,7 @@ screens DRY.
 
 Keep KBC screens DRY the same way you keep native Compose DRY: extract a
 non-entry `@KetoyComposable` helper and call it from another KBC
-composable. As of `0.4.16-alpha` these helpers accept **callback
+composable. As of `0.4.20-alpha` these helpers accept **callback
 lambdas**, **content slots**, `data class` params, lists, and enums, so a
 component can own its own layout while the caller drives its state.
 

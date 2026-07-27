@@ -76,7 +76,6 @@ export default function SupportModal({ open, onClose }) {
             <h3>Talk to a human</h3>
             <p className="modal-sub">
               Drop us a note. Real engineers read these - no Tier-1 ticket triage, no chatbots.
-              (We have an AI that ships code. Not one that answers email.)
             </p>
             {error && (
               <p className="form-error" style={{ display: 'block' }} role="status" aria-live="polite">{error}</p>

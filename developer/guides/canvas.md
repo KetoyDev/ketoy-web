@@ -4,7 +4,7 @@ Write an ordinary Compose `Canvas` with real draw commands (shapes,
 paths, gradients, transforms, and text), fully sandboxed and rendered
 natively from a KBC bundle.
 
-As of `0.4.16-alpha`, KBC ships a full server-driven drawing surface.
+As of `0.4.20-alpha`, KBC ships a full server-driven drawing surface.
 Write an ordinary Compose `Canvas { ... }` with real draw commands
 (shapes, paths, gradients, transforms, and text) and it renders natively
 on device. The whole surface is **sandboxed**: there is no

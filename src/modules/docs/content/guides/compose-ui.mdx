@@ -1,4 +1,4 @@
-`dev.ketoy.vm:ketoy-adapters-material3:0.4.16-alpha`.
+`dev.ketoy.vm:ketoy-adapters-material3:0.4.20-alpha`.
 
 For the canonical list of supported composables / constructors /
 tokens (with adapter IDs, signatures, and notes), see
@@ -71,7 +71,7 @@ compiler-plugin picks the **canonical overload** (e.g. for `Text`, the
 non-clickable overload; for `Card`, the 6-param non-clickable overload).
 
 `Canvas`, `LazyColumn`, `LazyRow`, `HorizontalDivider`, and
-`VerticalDivider` are catalogued as of `0.4.16-alpha`.
+`VerticalDivider` are catalogued as of `0.4.20-alpha`.
 
 > **What isn't catalogued yet?** `OutlinedButton`, `TextButton`, `FAB`,
 > `ExtendedFAB`, `OutlinedTextField`, `RadioButton`, `Slider`,
@@ -110,7 +110,7 @@ the construction site that eagerly snapshots the parent register file.
 ### Local state factories
 
 Beyond `mutableStateOf`, the typed factories and `rememberSaveable`
-compile as of `0.4.16-alpha`:
+compile as of `0.4.20-alpha`:
 
 ```kotlin
 var count  by remember { mutableIntStateOf(0) }
@@ -180,7 +180,7 @@ closure-conversion mechanism as composable arguments.
 
 ## Layout additions
 
-New in `0.4.16-alpha`, these bring the common Compose layout ergonomics
+New in `0.4.20-alpha`, these bring the common Compose layout ergonomics
 into KBC.
 
 ### Scroll

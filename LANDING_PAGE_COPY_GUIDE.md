@@ -81,10 +81,6 @@ These are strict. They are what separates our copy from the old draft.
 
 Model: Shorebird/Kotlin open confident and stay short. Ketoy stays tight. Add a section only when it carries a distinct product capability, and fold everything else into an existing one.
 
-**Removed on purpose:** anything longer. No "wait-cost calculator", no "ship by
-prompt / AI" section, no standalone "things you don't have to learn" section.
-Fold differentiators into a single positive line.
-
 ---
 
 ## 6. Before → after (why the rewrite works)
