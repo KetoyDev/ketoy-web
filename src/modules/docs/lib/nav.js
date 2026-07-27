@@ -18,7 +18,7 @@ export const docsNav = [
     title: 'Tooling',
     items: [
       { label: 'Ketoy CLI', href: '/docs/cli' },
-      { label: 'Ketoy MCP', href: '/docs/mcp' },
+      { label: 'Ketoy Skills', href: '/docs/skills' },
     ],
   },
   {

@@ -58,7 +58,7 @@
     }
     /* Graphics stretch so the command rows below them line up across cards. */
     .integrate-card > .cli-term,
-    .integrate-card > .mcp-panel {
+    .integrate-card > .skills-panel {
       flex: 1 1 auto;
     }
     /* Copyable install / endpoint row */
@@ -98,7 +98,7 @@
       background: var(--surface-2);
       border-color: var(--border-strong);
     }
-    /* Agent chips: any MCP client works */
+    /* Agent chips: any skills-compatible agent works */
     .agent-row {
       display: flex;
       flex-wrap: wrap;
@@ -128,7 +128,7 @@
     .integrate-link:hover svg { transform: translateX(3px); }
 
     /* shared green check used in both graphics */
-    .cli-body .ok, .mcp-reply .ok {
+    .cli-body .ok, .skills-reply .ok {
       color: #4ae389;
       font-weight: 600;
       margin-right: 8px;
@@ -185,8 +185,8 @@
     }
     @keyframes cli-blink { 50% { opacity: 0; } }
 
-    /* MCP agent panel graphic */
-    .mcp-panel {
+    /* Skills install panel graphic */
+    .skills-panel {
       background: #0a1410;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius);
@@ -196,7 +196,7 @@
       gap: 14px;
       box-shadow: 0 20px 50px -24px rgba(3,30,18,0.7);
     }
-    .mcp-head {
+    .skills-head {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -206,14 +206,14 @@
       text-transform: uppercase;
       color: rgba(233,255,244,0.5);
     }
-    .mcp-star {
+    .skills-star {
       width: 20px; height: 20px;
       border-radius: 50%;
       background: linear-gradient(135deg, #3ddc84, #1db765);
       display: inline-flex; align-items: center; justify-content: center;
       color: #06331d; font-size: 12px; font-weight: 700;
     }
-    .mcp-call {
+    .skills-call {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -225,9 +225,9 @@
       font-family: var(--font-mono);
       font-size: 13px;
     }
-    .mcp-tool { color: #93f0c0; }
-    .mcp-arg { color: rgba(233,255,244,0.6); }
-    .mcp-reply {
+    .skills-tool { color: #93f0c0; }
+    .skills-arg { color: rgba(233,255,244,0.6); }
+    .skills-reply {
       display: flex;
       align-items: flex-start;
       padding: 0 2px;
@@ -237,14 +237,14 @@
       line-height: 1.55;
       color: #dfeee7;
     }
-    .mcp-tools {
+    .skills-tools {
       display: flex;
       flex-wrap: wrap;
       gap: 7px;
       margin-top: auto; /* pin chips to the bottom when the panel is stretched */
       padding-top: 4px;
     }
-    .mcp-chip {
+    .skills-chip {
       font-family: var(--font-mono);
       font-size: 11.5px;
       padding: 4px 9px;

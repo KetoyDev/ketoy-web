@@ -1,0 +1,94 @@
+Ketoy Skills ground an AI coding agent in how Ketoy actually works. Instead of
+guessing, your agent reads the composable catalog, capabilities, ViewModels,
+host wiring, and every compiler diagnostic with its fix — and writes code that
+compiles to KBC on the first try.
+
+Skills are plain markdown, installed straight into your project by the Ketoy
+CLI. No server, no account, nothing running in the background.
+
+---
+
+## Install
+
+```bash
+ketoy skills add
+```
+
+Run it from your Android project root. It detects every AI agent configured
+in the project and installs the skill for each one.
+
+```bash
+ketoy skills add                          # every agent detected in this project
+ketoy skills add --agent=claude,codex     # specific agents
+ketoy skills add --global                 # user-level instead of project-level
+ketoy skills add --project=/path/to/App
+ketoy skills add --force                  # overwrite an existing install
+ketoy skills list
+```
+
+With no `--agent`, a project install picks up agents whose config already
+exists in the project; `--global` also considers home-level config.
+
+<Callout title="Supported agents">
+| Agent | Project | Global |
+|---|---|---|
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| Gemini CLI | `.gemini/skills/` | `~/.gemini/skills/` |
+| Antigravity | `.antigravity/skills/` | `~/.gemini/antigravity/skills/` |
+| Codex | `.codex/skills/` | `~/.codex/skills/` |
+| Cursor | `.cursor/skills/` | — |
+| Windsurf | `.windsurf/skills/` | — |
+| GitHub Copilot | `.github/skills/` | — |
+| OpenCode | `.opencode/skills/` | `~/.config/opencode/skills/` |
+</Callout>
+
+Skills follow the [open agent-skills standard](https://agentskills.io): a
+`SKILL.md` entry point with YAML frontmatter, plus `references/` files the
+agent loads on demand. If your agent speaks that standard, it works — no
+plugin, no vendor lock-in.
+
+---
+
+## What's inside
+
+```text
+ketoy/
+├── SKILL.md                            entry point — routing and hard rules
+└── references/
+    ├── setup.md                        install, DI, startup wiring
+    ├── authoring.md                    writing @KetoyComposable screens
+    ├── viewmodel-and-state.md          @KetoyViewModel, StateFlow, repositories
+    ├── capabilities.md                 @KetoyCapabilityStub, registry JSON
+    ├── catalog.md                      composables, modifiers, constructors, tokens
+    ├── resources.md                    icons, drawables, fonts, strings, theme colors
+    ├── host-integration.md             KetoyScreen, KetoyRuntimeHost, navigation
+    ├── migration.md                    porting an existing Compose screen to KBC
+    ├── build-and-ship.md               Gradle tasks, signing, OTA, release checklist
+    └── troubleshooting.md              every KetoyBC: diagnostic and its fix
+```
+
+The agent loads `SKILL.md` first for orientation, then pulls in only the
+reference files it needs for the task at hand.
+
+<Callout title="Always current">
+  The skill does not pin an SDK version. It instructs the agent to resolve
+  the current one from `https://ketoy.dev/v1/version` before writing any
+  Gradle, so a released SDK bump needs no skill change.
+</Callout>
+
+---
+
+## How your agent uses it
+
+1. **Orient.** `SKILL.md` routes the agent to the right reference file for
+   the task — authoring a screen, wiring a capability, debugging a build.
+2. **Check.** Before using a Compose component or API, the catalog says
+   whether it's supported, by what mechanism, and how to bridge it if not.
+3. **Build.** `build-and-ship.md` walks Gradle tasks, signing, and OTA
+   release steps.
+4. **Debug.** When a build fails with a `KetoyBC:` error,
+   `troubleshooting.md` maps the symptom to the fix.
+
+---
+
+Next: ship what your agent builds with the [Ketoy CLI](/docs/cli).

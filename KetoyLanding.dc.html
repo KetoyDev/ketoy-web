@@ -199,7 +199,7 @@
     <div style="max-width:640px" data-reveal>
       <div style="font-family:'JetBrains Mono';font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#1f9d5b">Integrate in minutes</div>
       <h2 style="margin:14px 0 0;font-family:'Space Grotesk';font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.025em;color:#0a0a0a">One terminal.<br>Every AI agent.</h2>
-      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#55585a">The Ketoy CLI runs your whole workflow from the terminal. The Ketoy MCP hands any AI coding agent an accurate map of what Ketoy supports — before it writes a single line.</p>
+      <p style="margin:16px 0 0;font-size:18px;line-height:1.55;color:#55585a">The Ketoy CLI runs your whole workflow from the terminal. Ketoy Skills hand any AI coding agent an accurate map of what Ketoy supports — before it writes a single line.</p>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px">
@@ -227,36 +227,36 @@
         </div>
       </div>
 
-      <!-- MCP card -->
+      <!-- Skills card -->
       <div data-reveal style="background:#fff;border-radius:20px;overflow:hidden;border:1px solid rgba(10,10,10,.08);box-shadow:0 24px 60px rgba(0,0,0,.06);display:flex;flex-direction:column">
         <div style="padding:20px 22px 0">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="color:#3ddc84">✦</span>
-            <span style="font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f">AI agent · ketoy mcp</span>
-            <span style="margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:#1f9d5b;background:rgba(61,220,132,.12);padding:2px 8px;border-radius:6px">MCP</span>
+            <span style="font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f">AI agent · ketoy skills</span>
+            <span style="margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:#1f9d5b;background:rgba(61,220,132,.12);padding:2px 8px;border-radius:6px">SKILLS</span>
           </div>
           <div style="margin-top:16px;background:#f6f6f3;border:1px solid rgba(10,10,10,.07);border-radius:12px;padding:14px 16px;font-family:'JetBrains Mono';font-size:12.5px;line-height:1.7">
-            <div style="color:#8a8d8f"><span style="color:#1f9d5b">ketoy_check_support</span>(<span style="color:#0a0a0a">"LazyVerticalGrid"</span>)</div>
-            <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start"><span style="color:#1f9d5b;font-weight:700">✓</span><span style="color:#3d4043">Supported through the Foundation adapter. Every parameter wired.</span></div>
+            <div style="color:#8a8d8f"><span style="color:#1f9d5b">$</span> <span style="color:#0a0a0a">ketoy skills add</span></div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start"><span style="color:#1f9d5b;font-weight:700">✓</span><span style="color:#3d4043">Installed to .claude/skills — catalog, capabilities, and every KetoyBC: fix.</span></div>
           </div>
         </div>
-        <!-- tool tabs -->
+        <!-- reference file tabs -->
         <div style="padding:16px 22px 4px;display:flex;flex-wrap:wrap;gap:7px">
-          <sc-for list="{{ mcpTools }}" as="t" hint-placeholder-count="6">
+          <sc-for list="{{ skillFiles }}" as="t" hint-placeholder-count="6">
             <span onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</span>
           </sc-for>
         </div>
-        <div style="padding:10px 22px 0;font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f;min-height:20px">{{ mcpDesc }}</div>
+        <div style="padding:10px 22px 0;font-family:'JetBrains Mono';font-size:12px;color:#8a8d8f;min-height:20px">{{ skillDesc }}</div>
         <div style="flex:1"></div>
-        <div style="margin:16px 22px 0;padding:11px 14px;border:1px dashed rgba(10,10,10,.16);border-radius:10px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:12px;color:#3d4043">↳ <span style="color:#1f9d5b">http://mcp.ketoy.dev/mcp</span></div>
+        <div style="margin:16px 22px 0;padding:11px 14px;border:1px dashed rgba(10,10,10,.16);border-radius:10px;display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:12px;color:#3d4043">↳ <span style="color:#1f9d5b">.claude/skills/ketoy/</span></div>
         <div style="padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Claude Code</span>
             <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Cursor</span>
             <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Codex</span>
-            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Any MCP client</span>
+            <span style="font-size:12px;color:#8a8d8f;border:1px solid rgba(10,10,10,.1);padding:3px 9px;border-radius:999px">Gemini CLI</span>
           </div>
-          <a href="#cta" style="color:#1f9d5b;font-size:14px;font-weight:500">MCP docs →</a>
+          <a href="#cta" style="color:#1f9d5b;font-size:14px;font-weight:500">Skills docs →</a>
         </div>
       </div>
     </div>
@@ -442,7 +442,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { hovered: -1, mcp: 0, sent: false };
+  state = { hovered: -1, skill: 0, sent: false };
 
   send() { this.setState({ sent: true }); }
 
@@ -469,18 +469,18 @@ class Component extends DCLogic {
       },
     }));
 
-    const TOOLS = [
-      { label: 'ketoy_check_support', desc: 'Ask whether a component or parameter is supported before generating.' },
-      { label: 'ketoy_validate', desc: 'Type-check a bundle against the capability registry.' },
-      { label: 'ketoy_capabilities', desc: 'List every registered capability the runtime exposes.' },
-      { label: 'ketoy_viewmodel', desc: 'Scaffold a ViewModel wired to your screen state.' },
-      { label: 'ketoy_debug', desc: 'Inspect a live bundle and trace render events.' },
-      { label: 'ketoy_cli', desc: 'Run any CLI command straight from the agent.' },
+    const SKILL_FILES = [
+      { label: 'catalog.md', desc: 'Every composable, constructor, and modifier that renders in Ketoy.' },
+      { label: 'capabilities.md', desc: 'Define, register, and wire capabilities — Room, DataStore, Retrofit, navigation.' },
+      { label: 'viewmodel-and-state.md', desc: 'Typed ViewModels, StateFlow, repositories, and the shared runtime.' },
+      { label: 'host-integration.md', desc: 'KetoyScreen, KetoyRuntimeHost, navigation, and config.' },
+      { label: 'troubleshooting.md', desc: 'Every KetoyBC: diagnostic and its fix.' },
+      { label: 'build-and-ship.md', desc: 'Gradle tasks, signing, OTA, and the release checklist.' },
     ];
-    const M = this.state.mcp;
-    const mcpTools = TOOLS.map((t, i) => ({
+    const M = this.state.skill;
+    const skillFiles = SKILL_FILES.map((t, i) => ({
       label: t.label,
-      onClick: () => this.setState({ mcp: i }),
+      onClick: () => this.setState({ skill: i }),
       style: {
         cursor: 'pointer',
         fontFamily: "'JetBrains Mono'",
@@ -497,8 +497,8 @@ class Component extends DCLogic {
 
     return {
       cards,
-      mcpTools,
-      mcpDesc: TOOLS[M].desc,
+      skillFiles,
+      skillDesc: SKILL_FILES[M].desc,
       sent: this.state.sent,
       notSent: !this.state.sent,
       send: () => this.send(),

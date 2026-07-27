@@ -2,7 +2,7 @@ import '../public/styles/home.css';
 import Link from 'next/link';
 import { SDK_VERSION_SHORT } from '@/constants';
 import OtaMotion from '@/modules/home/components/OtaMotion';
-import { CliGraphic, McpGraphic } from '@/modules/home/components/ToolingGraphics';
+import { CliGraphic, SkillsGraphic } from '@/modules/home/components/ToolingGraphics';
 import CopyButton from '@/components/mdx/CopyButton';
 import SupportTrigger from '@/modules/home/components/SupportTrigger';
 import ScrollReveal from '@/components/ScrollReveal';
@@ -107,7 +107,7 @@ export default function HomePage() {
             <span className="eyebrow">Integrate in minutes</span>
             <h2>Command line and AI agents.</h2>
             <p>
-              The Ketoy CLI runs your whole workflow from the terminal. The Ketoy MCP gives
+              The Ketoy CLI runs your whole workflow from the terminal. Ketoy Skills give
               any AI coding agent an accurate map of what Ketoy supports, before it writes a line.
             </p>
           </div>
@@ -138,22 +138,22 @@ export default function HomePage() {
             <div className="integrate-card">
               <div className="integrate-head">
                 <span className="integrate-kicker">AI agents</span>
-                <h3>Ketoy MCP</h3>
-                <p>Point any MCP-compatible agent at one endpoint. It checks what Ketoy supports before writing code.</p>
+                <h3>Ketoy Skills</h3>
+                <p>Install a skill pack that grounds any coding agent in how Ketoy actually works before it writes code.</p>
               </div>
-              <McpGraphic />
-              <div className="agent-row" aria-label="Works with any MCP client">
-                {['Claude Code', 'Codex', 'Cursor', 'Windsurf', 'Any MCP client'].map((a) => (
+              <SkillsGraphic />
+              <div className="agent-row" aria-label="Works with any skills-compatible agent">
+                {['Claude Code', 'Codex', 'Cursor', 'Windsurf', 'Gemini CLI'].map((a) => (
                   <span className="agent-chip" key={a}>{a}</span>
                 ))}
               </div>
               <div className="integrate-cmd">
-                <span className="prompt">↳</span>
-                <code>http://mcp.ketoy.dev/mcp</code>
-                <CopyButton text="http://mcp.ketoy.dev/mcp" />
+                <span className="prompt">$</span>
+                <code>ketoy skills add</code>
+                <CopyButton text="ketoy skills add" />
               </div>
-              <Link className="integrate-link" href="/docs/mcp">
-                MCP docs
+              <Link className="integrate-link" href="/docs/skills">
+                Skills docs
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M5 12h14M13 5l7 7-7 7" />
                 </svg>

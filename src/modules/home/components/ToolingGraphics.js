@@ -1,6 +1,6 @@
 // Static presentational graphics for the home Tooling section: a terminal for
-// the Ketoy CLI and an agent tool-call panel for the Ketoy MCP. No client JS;
-// the only motion is a CSS caret blink, disabled under prefers-reduced-motion.
+// the Ketoy CLI and an install panel for Ketoy Skills. No client JS; the only
+// motion is a CSS caret blink, disabled under prefers-reduced-motion.
 
 export function CliGraphic() {
   return (
@@ -26,29 +26,28 @@ export function CliGraphic() {
   );
 }
 
-const MCP_TOOLS = ['check_support', 'validate', 'capabilities', 'viewmodel', 'debug', 'cli'];
+const SKILL_FILES = ['catalog', 'capabilities', 'viewmodel-and-state', 'host-integration', 'troubleshooting', 'build-and-ship'];
 
-export function McpGraphic() {
+export function SkillsGraphic() {
   return (
-    <div className="mcp-panel" aria-hidden="true">
-      <div className="mcp-head">
-        <span className="mcp-star">✦</span>
-        <span>AI agent · ketoy mcp</span>
+    <div className="skills-panel" aria-hidden="true">
+      <div className="skills-head">
+        <span className="skills-star">✦</span>
+        <span>AI agent · ketoy skills</span>
       </div>
 
-      <div className="mcp-call">
-        <span className="mcp-tool">ketoy_check_support</span>
-        <span className="mcp-arg">&ldquo;LazyVerticalGrid&rdquo;</span>
+      <div className="skills-call">
+        <span className="skills-tool">ketoy skills add</span>
       </div>
 
-      <div className="mcp-reply">
+      <div className="skills-reply">
         <span className="ok">✓</span>
-        <div>Supported through the Foundation adapter. Every parameter wired.</div>
+        <div>Installed to .claude/skills — catalog, capabilities, and every KetoyBC: fix.</div>
       </div>
 
-      <div className="mcp-tools">
-        {MCP_TOOLS.map((t) => (
-          <span className="mcp-chip" key={t}>ketoy_{t}</span>
+      <div className="skills-tools">
+        {SKILL_FILES.map((t) => (
+          <span className="skills-chip" key={t}>{t}.md</span>
         ))}
       </div>
     </div>
