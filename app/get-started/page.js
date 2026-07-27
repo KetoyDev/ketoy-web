@@ -132,11 +132,11 @@ $ ketoy version`}</CodeWindow>
           <div className="cta-banner" style={{ marginTop: 80 }}>
             <div>
               <h2>Need help?</h2>
-              <p>Join the Ketoy community on Discord, or open an issue on GitHub. We respond within a day.</p>
+              <p>Join the Ketoy community on Discord, or open an issue. We respond within a day.</p>
             </div>
             <div className="right">
-              <a className="btn btn-ghost" href="#">GitHub</a>
-              <a className="btn btn-primary" href="#">Discord</a>
+              <a className="btn btn-ghost" href="/issue">Open Issue</a>
+              <a className="btn btn-primary" href="https://discord.gg/jAbcPPyksf">Discord</a>
             </div>
           </div>
 
