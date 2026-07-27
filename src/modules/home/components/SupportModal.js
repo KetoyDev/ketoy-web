@@ -1,8 +1,10 @@
 'use client';
 
+import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 
 export default function SupportModal({ open, onClose }) {
+  const [mounted, setMounted] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [query, setQuery] = useState('');
@@ -10,6 +12,10 @@ export default function SupportModal({ open, onClose }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const nameRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) {
@@ -27,6 +33,10 @@ export default function SupportModal({ open, onClose }) {
       document.removeEventListener('keydown', onKey);
     };
   }, [open, onClose]);
+
+  if (!mounted || !open) {
+    return null;
+  }
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -57,9 +67,9 @@ export default function SupportModal({ open, onClose }) {
     }
   }
 
-  return (
+  return createPortal(
     <div
-      className={`support-modal-backdrop${open ? ' open' : ''}`}
+      className="support-modal-backdrop open"
       role="dialog"
       aria-modal="true"
       onClick={(e) => { if (e.currentTarget === e.target) onClose?.(); }}
@@ -124,6 +134,7 @@ export default function SupportModal({ open, onClose }) {
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
