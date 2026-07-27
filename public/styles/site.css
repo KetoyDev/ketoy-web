@@ -896,6 +896,17 @@ footer.site-footer {
   font-size: 14.5px;
 }
 .footer-grid li a:hover { color: var(--ink); }
+.footer-grid li .footer-contact-btn {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 14.5px;
+}
+.footer-grid li .footer-contact-btn:hover { color: var(--ink); }
 .footer-meta {
   margin-top: 64px;
   padding-top: 28px;

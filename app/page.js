@@ -257,14 +257,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA + Support trigger */}
+      {/* CTA */}
       <section style={{ paddingTop: 56 }}>
         <div className="container">
           <div className="cta-banner">
             <div>
               <h2>Write Kotlin. Ship the screen.</h2>
               <p>
-                Available now on Maven Central. Hilt, dev tools, and the full Material 3 catalog are included.
+                Available now on Maven Central. Hilt, Koin, dev tools, and the full Material 3 catalog are included.
               </p>
             </div>
             <div className="right">

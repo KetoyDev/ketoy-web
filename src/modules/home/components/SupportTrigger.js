@@ -9,7 +9,7 @@ export default function SupportTrigger() {
     <>
       <div className="support-trigger-row">
         <p className="blurb">
-          <b>Stuck on something, evaluating Ketoy for your team, or wondering if your weird in-house SDK is supported?</b>
+          <b>Stuck on something, evaluating Ketoy for your team, or wondering if your in-house SDK is supported?</b>
           {' '}We answer every email. Usually within the same day. Sometimes faster than your Play Store review.
         </p>
         <button type="button" className="btn btn-primary" onClick={() => setOpen(true)}>
