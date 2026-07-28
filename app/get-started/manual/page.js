@@ -271,7 +271,6 @@ export default function ManualGetStartedPage() {
 
           <Callout title={<>Alpha status - <code>{SDK_VERSION_FULL}</code></>}>
             <p>The local-asset path is fully supported: you author screens in your <code>:app</code> module, the compiler plugin emits a signed <code>.ktx</code> into your assets, and the runtime executes it at startup.</p>
-            <p><strong>Cloud delivery</strong> - pushing a <code>.ktx</code> to a CDN so users get updates without going through the Play Store - is under active development and ships shortly. Track progress on the <a href="#">GitHub releases page</a>.</p>
           </Callout>
 
           <div id="requirements"></div>
