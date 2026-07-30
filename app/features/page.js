@@ -9,7 +9,7 @@ import {
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Supported Compose features for Kotlin OTA and SDUI',
+  title: 'Supported Compose features for Ketoy Kotlin OTA',
   description:
     'The full matrix of Jetpack Compose composables, modifiers, capabilities, and KBC opcodes supported by Ketoy, the Kotlin-native over-the-air (OTA) update and server-driven UI (SDUI) framework for Android.',
   path: '/features',

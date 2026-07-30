@@ -4,7 +4,7 @@ import JsonLd from '@/components/JsonLd';
 import { pageMetadata, breadcrumbSchema } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Documentation - Kotlin OTA & Android SDUI guides',
+  title: 'Ketoy Docs - Kotlin OTA',
   description:
     'Guides and reference for Ketoy, the Kotlin-native over-the-air (OTA) update framework for Android that also covers server-driven UI (SDUI). Compose UI, ViewModel, Canvas, capabilities, bundle signing, and more.',
   path: '/docs',

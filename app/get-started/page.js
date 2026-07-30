@@ -7,7 +7,7 @@ import { subnavItems, requirements, continueCards } from '@/modules/get-started/
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Get started - install the Kotlin OTA & SDUI SDK',
+  title: 'Get started - install the Ketoy Kotlin OTA',
   description:
     'Install Ketoy from Maven Central with Gradle and ship your first over-the-air (OTA) Kotlin and Compose update on Android. Works with Kotlin, Jetpack Compose, and Hilt.',
   path: '/get-started',
