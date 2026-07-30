@@ -71,7 +71,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
     }
-    [data-theme="dark"] .integrate-cmd { background: var(--surface-2); }
+    /* --surface reads as a darker inset against the card in both themes. */
     .integrate-cmd .prompt {
       font-family: var(--font-mono);
       font-size: 13px;
@@ -304,11 +304,6 @@
       border-radius: 6px;
       color: var(--ink-2);
     }
-    [data-theme="dark"] .support-card .chip {
-      background: var(--surface-2);
-      border-color: var(--border);
-      color: var(--ink-2);
-    }
 
     /* Play Store policy callout (security row) */
     .legal-row {
@@ -333,29 +328,90 @@
       .legal-row { grid-template-columns: 1fr; }
     }
 
-    /* ============ Support modal ============ */
-    .support-trigger-row {
-      margin-top: 56px;
-      padding-top: 40px;
-      border-top: 1px solid var(--border);
+    /* ============ Contact support card ============ */
+    /* Same card language as .integrate-card / .diff-strip: bordered surface,
+       accent icon badge, action pinned right. */
+    .support-cta {
+      margin-top: 24px;
+      padding: 28px 32px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 22px;
+    }
+    .support-cta-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent-soft);
+      color: var(--accent-ink);
+      flex-shrink: 0;
+    }
+    .support-cta-body .eyebrow {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+    }
+    .support-cta-body h3 {
+      font-size: 21px;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+    .support-cta-body p {
+      font-family: var(--font-body);
+      font-weight: 300;
+      font-size: 15.5px;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 620px;
+    }
+    .support-cta .btn { flex-shrink: 0; }
+
+    @media (max-width: 860px) {
+      .support-cta {
+        grid-template-columns: auto minmax(0, 1fr);
+        padding: 26px 24px;
+        gap: 16px 18px;
+      }
+      .support-cta .btn { grid-column: 1 / -1; justify-content: center; }
+    }
+
+    /* ============ Home FAQ ============ */
+    .home-faq {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    /* The accordion itself reuses .faq-item / .faq-q / .faq-a from site.css. */
+    .home-faq .faq-item { background: var(--card-bg); }
+    .home-faq .faq-q { padding: 18px 22px; }
+    .home-faq .faq-a {
+      padding: 4px 22px 20px;
+      font-family: var(--font-body);
+      font-weight: 300;
+    }
+    .home-faq-foot {
+      margin-top: 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
       flex-wrap: wrap;
+      gap: 14px 24px;
     }
-    .support-trigger-row .blurb {
+    .home-faq-foot p {
       font-family: var(--font-body);
       font-weight: 300;
-      font-size: 16px;
+      font-size: 15px;
       color: var(--muted);
-      max-width: 540px;
-      line-height: 1.55;
     }
-    .support-trigger-row .blurb b {
-      font-weight: 500;
-      color: var(--ink);
-    }
+
+    /* ============ Support modal ============ */
     .support-modal-backdrop {
       position: fixed;
       inset: 0;

@@ -5,7 +5,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Platform updates',
   description:
-    'Every change to the Ketoy runtime, Cloud, OTA signing pipeline and developer tooling for Kotlin server-driven UI on Android.',
+    'Every change to the Ketoy runtime, Cloud, OTA signing pipeline and developer tooling for Kotlin over-the-air updates on Android.',
   path: '/updates/platform',
 });
 

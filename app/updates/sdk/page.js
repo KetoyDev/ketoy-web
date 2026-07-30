@@ -4,7 +4,7 @@ import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
   title: 'SDK updates',
-  description: 'Every change to the Ketoy SDK for Kotlin server-driven UI, Compose components, adapters, and capabilities.',
+  description: 'Every change to the Ketoy SDK for Kotlin over-the-air updates, Compose components, adapters, and capabilities.',
   path: '/updates/sdk',
 });
 

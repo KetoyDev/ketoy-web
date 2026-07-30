@@ -5,6 +5,7 @@ import OtaMotion from '@/modules/home/components/OtaMotion';
 import { CliGraphic, SkillsGraphic } from '@/modules/home/components/ToolingGraphics';
 import CopyButton from '@/components/mdx/CopyButton';
 import SupportTrigger from '@/modules/home/components/SupportTrigger';
+import HomeFaq from '@/modules/home/components/HomeFaq';
 import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
 import { faqSchema, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_URL } from '@/lib/seo';
@@ -13,7 +14,7 @@ import {
   whatIsCards, securityCards, legalCards,
 } from '@/modules/home/data';
 
-const TITLE = 'Ketoy - Kotlin-native Server-Driven UI (SDUI) & OTA for Android';
+const TITLE = 'Ketoy - Kotlin Over-The-Air (OTA) Updates for Android';
 
 export const metadata = {
   title: { absolute: TITLE },
@@ -29,12 +30,22 @@ export const metadata = {
   twitter: { card: 'summary_large_image', title: TITLE, description: SITE_DESCRIPTION },
 };
 
-// Answers the exact questions people (and LLMs) ask. Doubles as an on-page
-// FAQ signal and a JSON-LD FAQPage for rich results / AI citation.
+// Answers the exact questions people (and LLMs) ask. Rendered on the page by
+// <HomeFaq> and emitted as a JSON-LD FAQPage - keep the two in sync, Google
+// only honours structured data whose answers are visible to the user. The
+// full set lives at /docs/faq.
 const HOME_FAQ = [
   {
     q: 'What is Ketoy?',
-    a: 'Ketoy is a Kotlin-native server-driven UI (SDUI) framework for Android. You write real Jetpack Compose in Kotlin, compile it to a tiny signed .ktx bytecode bundle, and push UI changes over-the-air (OTA) to installed apps in seconds - no Play Store release and no JSON DSL.',
+    a: 'Ketoy is a Kotlin-native over-the-air (OTA) update framework for Android. You write real Jetpack Compose, ViewModels, and business logic in Kotlin, compile it to a tiny signed .ktx bytecode bundle, and push changes over-the-air to installed apps in seconds - no Play Store release and no JSON DSL.',
+  },
+  {
+    q: 'Is Ketoy OTA or SDUI?',
+    a: 'Ketoy is an OTA framework, and SDUI is one of the things it can do. Because it ships real Kotlin and Compose over the air, a bundle can drive a whole screen from the server - that is SDUI - and it can equally ship a ViewModel, a network call, or a pricing rule that no JSON schema could express.',
+  },
+  {
+    q: 'What can Ketoy update over the air?',
+    a: 'Jetpack Compose UI, ViewModels and state, navigation, coroutines and Flow, networking, Room and DataStore access, and ordinary Kotlin such as data classes, objects, and functions. UI-only and logic-only bundles are both fine.',
   },
   {
     q: 'How is Ketoy different from JSON-based server-driven UI?',
@@ -43,10 +54,6 @@ const HOME_FAQ = [
   {
     q: 'Does Ketoy allow over-the-air (OTA) updates on Android within Play Store policy?',
     a: 'Yes. Ketoy delivers UI and logic changes over-the-air without shipping a new APK/AAB. Bundles execute in a sandbox and render native Compose, which keeps updates within Play Store policies.',
-  },
-  {
-    q: 'What does a developer have to learn to use Ketoy?',
-    a: 'Almost nothing new. If it is Jetpack Compose, it is Ketoy. One annotation plus one Gradle task turns an in-APK screen into an OTA-updatable screen. Kotlin, Coroutines, Flow, ViewModel, and Hilt all work as usual.',
   },
 ];
 
@@ -274,6 +281,19 @@ export default function HomePage() {
           </div>
 
           <SupportTrigger />
+        </div>
+      </section>
+
+      {/* FAQ - the five questions people actually search for. The full set
+          lives at /docs/faq. */}
+      <section className="surface" id="faq">
+        <div className="container">
+          <div className="section-head" data-reveal>
+            <span className="eyebrow">FAQ</span>
+            <h2>Questions, answered.</h2>
+          </div>
+
+          <HomeFaq items={HOME_FAQ} />
         </div>
       </section>
 

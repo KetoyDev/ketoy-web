@@ -13,7 +13,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Architecture - how Kotlin Compose compiles to OTA bundles',
   description:
-    'How Ketoy compiles real Jetpack Compose in Kotlin to signed Ketoy Bytecode (KBC) and renders it natively on device, the engine behind Kotlin-native server-driven UI (SDUI) and over-the-air (OTA) updates on Android.',
+    'How Ketoy compiles real Jetpack Compose in Kotlin to signed Ketoy Bytecode (KBC) and renders it natively on device, the engine behind Kotlin-native over-the-air (OTA) updates and server-driven UI (SDUI) on Android.',
   path: '/architecture',
 });
 

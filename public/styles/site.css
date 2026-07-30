@@ -1018,6 +1018,15 @@ footer.site-footer {
   color: var(--accent-ink);
 }
 .docs-body { min-width: 0; max-width: 960px; margin-right: auto; overflow-wrap: break-word; }
+/* Card- and table-shaped pages (the FAQ accordion) use the full column.
+   margin-right must be reset too: an auto margin on a grid item suppresses
+   justify-self: stretch, leaving the article shrink-to-fit. With the 960px
+   cap that never showed, but uncapped it would size to its content - a
+   collapsed accordion would narrow to its summary text and widen on open. */
+.docs-body--wide {
+  max-width: none;
+  margin-right: 0;
+}
 /* Wide children (code, tables) must scroll inside the column, never spill
    over the right-hand "On this page" rail. */
 .docs-body pre,
@@ -1153,10 +1162,16 @@ footer.site-footer {
 .faq-list {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   margin: 20px 0 32px;
+  width: 100%;
 }
 .faq-item {
+  /* Every row spans the column, open or closed - a collapsed <details> must
+     not size to its summary text. */
+  width: 100%;
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--card-bg);
@@ -1946,8 +1961,24 @@ footer.site-footer {
 [data-theme="dark"] .footer-grid li a { color: var(--muted); }
 [data-theme="dark"] .footer-grid li a:hover { color: var(--ink); }
 
-/* Hero tag callout text */
-[data-theme="dark"] .hero-tag span { color: #a0f0c8; }
+/* Cards sitting on a tinted section.
+   In dark mode --card-bg and --surface resolve to the same value, so any card
+   placed on a section.surface loses its fill and reads as a bare outline.
+   Lift those one step so the card still reads as a raised surface. Cards on
+   the default page background are unaffected. */
+[data-theme="dark"] section.surface .card,
+[data-theme="dark"] section.surface .support-card,
+[data-theme="dark"] section.surface .integrate-card,
+[data-theme="dark"] section.surface .diff-strip,
+[data-theme="dark"] section.surface .faq-item {
+  background: var(--surface-2);
+}
+
+/* Hero tag callout text. The hero background is #0a0a0a in every theme, so
+   the version pill keeps its white-on-accent treatment - it must not inherit
+   the mint tint applied to the rest of the tag. */
+[data-theme="dark"] .hero-tag > span:not(.pill) { color: #a0f0c8; }
+[data-theme="dark"] .hero-tag .pill { color: #fff; }
 
 /* ============================================================
    Unified card hover-lift

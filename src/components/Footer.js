@@ -19,7 +19,7 @@ export default function Footer() {
                 <span className="brand-name">Ketoy</span>
               </Link>
               <p className="footer-brand-blurb">
-                Kotlin-native server-driven UI (SDUI) for Android with over-the-air updates. Write Kotlin and Jetpack Compose, ship a signed bytecode bundle, render real Compose.
+                Kotlin-native over-the-air (OTA) updates for Android, server-driven UI (SDUI) included. Write Kotlin and Jetpack Compose, ship a signed bytecode bundle, render real Compose.
               </p>
             </div>
             <div>

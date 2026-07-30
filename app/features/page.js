@@ -9,9 +9,9 @@ import {
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: 'Supported Compose features for Kotlin SDUI',
+  title: 'Supported Compose features for Kotlin OTA and SDUI',
   description:
-    'The full matrix of Jetpack Compose composables, modifiers, capabilities, and KBC opcodes supported by Ketoy, the Kotlin-native server-driven UI (SDUI) framework for Android with over-the-air updates.',
+    'The full matrix of Jetpack Compose composables, modifiers, capabilities, and KBC opcodes supported by Ketoy, the Kotlin-native over-the-air (OTA) update and server-driven UI (SDUI) framework for Android.',
   path: '/features',
 });
 

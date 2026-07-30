@@ -1,6 +1,6 @@
 # Ketoy Developer Documentation
 
-**Ketoy** is a server-driven execution runtime for Android. You write plain
+**Ketoy** is an over-the-air (OTA) execution runtime for Android. You write plain
 Kotlin, including Jetpack Compose, coroutines, ViewModels, Navigation,
 Room, Hilt, with a handful of `@Ketoy*` annotations. The Ketoy compiler
 plugin lowers your code into a compact, signed bytecode bundle (`.ktx`)

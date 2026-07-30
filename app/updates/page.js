@@ -7,7 +7,7 @@ import { pageMetadata } from '@/lib/seo';
 export const metadata = pageMetadata({
   title: 'Latest updates',
   description:
-    'Release notes and changelog for Ketoy, the Kotlin-native server-driven UI (SDUI) and over-the-air (OTA) platform for Android. Platform and SDK updates.',
+    'Release notes and changelog for Ketoy, the Kotlin-native over-the-air (OTA) update and server-driven UI (SDUI) platform for Android. Platform and SDK updates.',
   path: '/updates',
 });
 

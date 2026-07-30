@@ -19,13 +19,22 @@ export default function sitemap() {
     { path: '/updates/sdk', priority: 0.5, changeFrequency: 'weekly' },
   ];
 
+  // Pages we actively want ranking beyond the default docs weight. The FAQ
+  // answers the OTA / SDUI definition queries, so it is treated as a
+  // top-level landing page rather than a leaf doc.
+  const DOCS_PRIORITY = { '/docs/faq': 0.9 };
+
   // Every docs page, pulled from the sidebar nav so the sitemap can never
   // drift from the actual routes.
   const docs = docsNav
     .flatMap((group) => group.items)
     .map((item) => item.href)
     .filter((href) => href && href !== '#' && href !== '/docs')
-    .map((path) => ({ path, priority: 0.7, changeFrequency: 'monthly' }));
+    .map((path) => ({
+      path,
+      priority: DOCS_PRIORITY[path] ?? 0.7,
+      changeFrequency: DOCS_PRIORITY[path] ? 'weekly' : 'monthly',
+    }));
 
   // Every individual update, crawlable at /updates/<section>/<id>.
   const updateDetails = updates.map((u) => ({

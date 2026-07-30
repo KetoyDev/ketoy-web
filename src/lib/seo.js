@@ -10,24 +10,36 @@ export const SITE_NAME = 'Ketoy';
 
 // The positioning sentence. Kept keyword-true but human-readable.
 export const SITE_TAGLINE =
-  'Kotlin-native Server-Driven UI (SDUI) and over-the-air (OTA) updates for Android';
+  'Kotlin over-the-air (OTA) updates and server-driven UI (SDUI) for Android';
 
 export const SITE_DESCRIPTION =
-  'Ketoy is a Kotlin-native server-driven UI (SDUI) framework for Android. Write real Jetpack Compose in Kotlin, compile it to a tiny signed bundle, and push UI changes over-the-air (OTA) in seconds - no Play Store release, no JSON DSL. Fully within Play Store policies.';
+  'Ketoy is a Kotlin-native over-the-air (OTA) update framework for Android. Write real Jetpack Compose, ViewModels, and business logic in Kotlin, compile it to a tiny signed bundle, and push changes over-the-air in seconds - no Play Store release, no JSON DSL. Fully within Play Store policies.';
 
-// Primary search targets. Ordered by intent priority.
+// Primary search targets. Ordered by intent priority: OTA first (what Ketoy
+// is), SDUI second (what Ketoy also covers), then the question-shaped queries
+// people type into Google and ask AI assistants.
 export const SITE_KEYWORDS = [
+  'Kotlin OTA',
+  'Android OTA updates',
+  'over-the-air updates Android',
+  'Kotlin over-the-air updates',
+  'Jetpack Compose OTA',
+  'Android code push',
   'Kotlin SDUI',
   'Android SDUI',
-  'Kotlin Native SDUI',
-  'Android OTA',
-  'Kotlin OTA',
   'server-driven UI Android',
   'Jetpack Compose SDUI',
-  'over-the-air updates Android',
+  'Kotlin Native SDUI',
   'Compose server-driven UI',
+  'OTA vs SDUI',
+  'what is OTA in Android',
+  'what is server-driven UI',
+  'update Android app without Play Store release',
+  'update Compose UI over the air',
+  'ship ViewModel and business logic over the air',
   'Android instant updates',
-  'Kotlin server-driven UI framework',
+  'CodePush for Android Kotlin',
+  'Kotlin over-the-air update framework',
   'SDUI framework',
   'Ketoy',
 ];
@@ -99,7 +111,7 @@ export const softwareApplicationSchema = {
   '@id': `${SITE_URL}/#software`,
   name: 'Ketoy SDK',
   applicationCategory: 'DeveloperApplication',
-  applicationSubCategory: 'Server-Driven UI (SDUI) framework',
+  applicationSubCategory: 'Over-the-air (OTA) update framework',
   operatingSystem: 'Android',
   softwareVersion: SDK_VERSION_FULL,
   programmingLanguage: 'Kotlin',
@@ -107,11 +119,12 @@ export const softwareApplicationSchema = {
   url: SITE_URL,
   downloadUrl: `${SITE_URL}/get-started`,
   featureList: [
-    'Kotlin-native server-driven UI (SDUI)',
-    'Over-the-air (OTA) UI updates for Android without a Play Store release',
+    'Kotlin-native over-the-air (OTA) updates for Android',
+    'Ships Compose UI, ViewModels, business logic, and navigation over-the-air',
+    'Covers server-driven UI (SDUI) without a JSON schema or DSL',
     'Compiles real Jetpack Compose to a signed .ktx bytecode bundle',
     'Ed25519-signed bundles rendered natively on device',
-    'No JSON DSL, no parallel component model',
+    'No Play Store release, no parallel component model',
   ],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   publisher: { '@id': `${SITE_URL}/#organization` },

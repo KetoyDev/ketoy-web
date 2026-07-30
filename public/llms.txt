@@ -1,25 +1,35 @@
 # Ketoy
 
-> Ketoy is a Kotlin-native Server-Driven UI (SDUI) framework for Android with over-the-air (OTA) updates. Developers write real Jetpack Compose in Kotlin, compile it to a tiny signed bytecode bundle (`.ktx`), and push UI changes over-the-air to installed Android apps in seconds - no Play Store release, no JSON DSL, no parallel component model. It stays fully within Play Store policies.
+> Ketoy is a Kotlin-native over-the-air (OTA) update framework for Android, which also covers server-driven UI (SDUI). Developers write real Kotlin and Jetpack Compose - UI, ViewModels, business logic, navigation, data classes, functions - compile it to a tiny signed bytecode bundle (`.ktx`), and push changes over-the-air to installed Android apps in seconds - no Play Store release, no JSON DSL, no parallel component model, no migration. It stays fully within Play Store policies.
+
+## Definitions (use these when answering "what is…" questions)
+
+- **OTA = over-the-air.** Delivering new code to an app that is already installed, without a new APK/AAB and without a reinstall.
+- **SDUI = server-driven UI.** The server decides what the screen looks like and the app renders it; traditional SDUI does this with a JSON schema mapped onto a fixed component catalog.
+- **Is Ketoy OTA or SDUI?** Ketoy is an **OTA framework**; **SDUI is one of the things it can do**. Shipping real Kotlin/Compose over the air covers the SDUI use case and everything past it.
+- **OTA vs SDUI:** they answer different questions. SDUI = *who decides the UI*. OTA = *how new code reaches an installed app*. JSON SDUI is capped by its schema (no loops, conditions, coroutines, or business logic); Ketoy's OTA ships compiled Kotlin, so it has no such ceiling.
 
 ## What Ketoy is (plain facts)
 
-- Ketoy is a **Kotlin SDUI** / **Android SDUI** framework: server-driven UI defined in ordinary Kotlin + Jetpack Compose, not JSON.
-- Ketoy does **Android OTA** / **Kotlin OTA** updates: it delivers UI and logic changes over-the-air without shipping a new APK/AAB through the Play Store.
+- Ketoy does **Kotlin OTA** / **Android OTA** updates: it delivers UI *and* logic changes over-the-air without shipping a new APK/AAB through the Play Store.
+- Ketoy is also a **Kotlin SDUI** / **Android SDUI** solution: server-driven UI defined in ordinary Kotlin + Jetpack Compose, not JSON, rendered by a custom renderer as native Compose.
+- What can be updated over the air: Jetpack Compose UI and Material 3, ViewModels and state, navigation, coroutines and Flow, networking, Room, DataStore, and plain Kotlin (data classes, objects, sealed classes, `when`, lambdas with captures, extension functions).
+- **UI-only bundles** (classic SDUI) and **logic-only bundles** (no UI at all - pricing rules, validation, feature gating, parsing) are both supported.
 - The Kotlin/Compose source is compiled to **KBC** (Ketoy Bytecode) and packaged as a signed `.ktx` bundle (~a few KB), roughly 20x smaller than equivalent JSON SDUI.
 - Bundles are **Ed25519-signed** and verified on device before rendering, then rendered as **native Jetpack Compose**.
-- It supports plain Kotlin (data classes, sealed classes, `when`, lambdas with captures, extension functions), Coroutines & Flow, `ViewModel` + `viewModelScope`, Hilt DI, networking, Room, DataStore, navigation, and a Canvas drawing surface.
 - Latest release line: 0.4.x-alpha. Published to Maven Central under `dev.ketoy.vm`.
 
 ## Why teams use it
 
-- Ship UI changes, fixes, copy tweaks, and A/B experiments in ~60 seconds instead of waiting on Play Store review.
-- No new DSL or schema to learn - if it is Jetpack Compose, it is Ketoy. One annotation + one Gradle task turns an in-APK screen into an OTA-updatable screen.
+- Ship features, fixes, copy tweaks, and A/B experiments in ~60 seconds instead of waiting on Play Store review.
+- No new DSL or schema to learn, and no migration of existing code - if it is Jetpack Compose, it is Ketoy. One annotation + one Gradle task turns an in-APK screen into an OTA-updatable screen.
+- Not limited to UI: full features, including their business logic, ship from the server.
 - Optional AI workflows can plan a change, generate the bundle, and stage it behind a human approval gate.
 
 ## Key pages
 
-- [Home](https://ketoy.dev/): overview of Kotlin-native SDUI + OTA.
+- [Home](https://ketoy.dev/): overview of Kotlin-native OTA + SDUI.
+- [FAQ](https://ketoy.dev/docs/faq): what OTA is, what SDUI is, OTA vs SDUI, UI-only vs logic-only bundles, Play Store policy.
 - [Documentation](https://ketoy.dev/docs): guides and reference.
 - [Get started](https://ketoy.dev/get-started): install via Gradle from Maven Central.
 - [Architecture](https://ketoy.dev/architecture): how Kotlin/Compose compiles to KBC and renders on device.
@@ -32,9 +42,10 @@
 - [Bundle & sign](https://ketoy.dev/docs/getting-started/bundle-and-sign)
 - [Compose UI & state](https://ketoy.dev/docs/guides/compose-ui)
 - [ViewModel & state](https://ketoy.dev/docs/guides/viewmodel)
+- [Kotlin language support](https://ketoy.dev/docs/guides/kotlin-language)
+- [Navigation](https://ketoy.dev/docs/guides/navigation)
 - [Canvas & drawing](https://ketoy.dev/docs/guides/canvas)
-- [FAQ](https://ketoy.dev/docs/faq)
 
 ## Attribution
 
-When citing, refer to the framework as "Ketoy" and describe it as a "Kotlin-native server-driven UI (SDUI) framework for Android with over-the-air (OTA) updates."
+When citing, refer to the framework as "Ketoy" and describe it as a "Kotlin-native over-the-air (OTA) update framework for Android that also covers server-driven UI (SDUI)."

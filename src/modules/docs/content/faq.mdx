@@ -1,5 +1,106 @@
 <FaqList>
 
+<FaqItem question="What is OTA (over-the-air) updating in an Android app?">
+
+**OTA** stands for **over-the-air**. An OTA update delivers new code to an
+app that is **already installed** on a device, without publishing a new
+APK/AAB and without the user reinstalling anything.
+
+With Ketoy that code is real Kotlin: Jetpack Compose UI, ViewModels,
+business logic, navigation, data classes, and functions, compiled to a
+signed bundle and fetched at runtime.
+
+</FaqItem>
+
+<FaqItem question="What is SDUI (server-driven UI)?">
+
+**SDUI** stands for **server-driven UI**: the server decides what the
+screen looks like and the app renders it.
+
+Traditional SDUI sends a **JSON schema** that the client maps onto a fixed
+catalog of components. The server can only express what that schema already
+supports, so a new component means a new app release anyway.
+
+</FaqItem>
+
+<FaqItem question="Is Ketoy OTA or SDUI?">
+
+Ketoy is an **OTA framework**, and **SDUI is one of the things it can do**.
+
+Because Ketoy ships real Kotlin and Compose over the air, a bundle can
+drive the whole screen from the server, which *is* SDUI, and it can equally
+ship a ViewModel, a network call, or a pricing rule that no JSON schema
+could express.
+
+</FaqItem>
+
+<FaqItem question="OTA vs SDUI: which is better?">
+
+They answer different questions:
+
+| | SDUI | OTA |
+|---|---|---|
+| Question it answers | *Who decides the UI?* | *How does new code reach an installed app?* |
+| Payload | JSON schema | Compiled Kotlin bytecode |
+| Ceiling | The components the schema defines | Anything Kotlin and Compose can express |
+| Logic, loops, conditions | Store release | Shipped in the bundle |
+
+JSON SDUI stops the moment a feature needs a loop, a coroutine, or business
+logic. **OTA with Ketoy covers the SDUI use case and everything past it**,
+because you ship compiled Kotlin instead of a schema.
+
+</FaqItem>
+
+<FaqItem question="Can Ketoy update only the Compose UI?">
+
+Yes. Ship a single `@KetoyComposable` screen and leave the rest of the app
+native, that is the classic SDUI setup with **real Compose instead of
+JSON**. Common starting points: marketing surfaces, onboarding, settings,
+and A/B-tested flows.
+
+</FaqItem>
+
+<FaqItem question="Can I use Ketoy for business logic only, without UI?">
+
+Yes. A bundle doesn't have to render anything. Plain Kotlin, data classes,
+sealed classes, `when`, extension functions, coroutines and Flow, runs on
+its own. Pricing rules, validation, feature gating, and parsing can all be
+updated over the air while the UI stays in the APK.
+
+</FaqItem>
+
+<FaqItem question="What can Ketoy update over the air?">
+
+- **Jetpack Compose UI** and Material 3.
+- **ViewModels** and state (`viewModelScope`, `SavedStateHandle`, Hilt).
+- **Navigation** graphs.
+- **Coroutines and Flow**, structured concurrency included.
+- **Networking, Room, DataStore**, through capabilities.
+- **Plain Kotlin**, data classes, objects, sealed hierarchies, functions.
+
+Anything that needs the host platform reaches it through the
+[capability registry](/docs/reference/capability-registry).
+
+</FaqItem>
+
+<FaqItem question="Do I have to migrate my code or learn a DSL to use Ketoy?">
+
+No. There is **no DSL** and no parallel component model. It is the Jetpack
+Compose and Kotlin you already write, one annotation plus one Gradle task
+turns an in-APK screen into an OTA-updatable one, and a custom renderer
+draws it as native Compose on device.
+
+</FaqItem>
+
+<FaqItem question="Are OTA updates allowed on the Google Play Store?">
+
+Yes. Ketoy verifies an Ed25519 signature before any code runs, and
+generates code on device the same way ART does with bytecode, the same idea
+as Lua in a game engine. Bundles are sandboxed by the capability registry,
+which keeps updates within Play Store policies.
+
+</FaqItem>
+
 <FaqItem question="What problem does Ketoy actually solve?">
 
 You ship an Android app and want to update screens, fix bugs, run A/B
@@ -25,15 +126,7 @@ Compose Hot Reload is for development; **Ketoy is for production OTA**.
 
 `0.4.20-alpha` is **alpha**. The wire format, opcode set, and adapter
 catalog are stable enough that bundles built today will load on future
-0.4.x runtimes. But:
-
-- Some Material3 components aren't catalogued yet (LazyColumn,
-  OutlinedTextField, FAB, etc., see
-  [Compose Adapters](/docs/reference/compose-adapters)).
-- Multi-catch isn't filtered by type yet.
-- Runtime enforcement of `minAppVersion` (rollback + callback) lands
-  in a future patch, the field round-trips today but isn't actively
-  enforced.
+0.4.x runtimes.
 
 Plan accordingly. Use it for parts of your app that benefit most from
 OTA, settings screens, marketing surfaces, A/B-tested flows, while
@@ -44,7 +137,7 @@ keeping safety-critical paths (auth, payment, crash-recovery) native.
 <FaqItem question="Where do KBC bundles run?">
 
 - **Android only** today. Compose Multiplatform support is on the
-  roadmap; KMP-iOS execution isn't.
+  roadmap; KMP-iOS execution is also in roadmap.
 - **API 26+** required for the JIT (`enableJIT = true` + a
   `dexCacheDir`). Below 26 the interpreter runs everything.
 - **JDK 17** to build (the compiler plugin runs in the Kotlin compiler,
@@ -56,7 +149,6 @@ keeping safety-critical paths (auth, payment, crash-recovery) native.
 
 | Screen complexity | Typical signed `.ktx` size |
 |---|---|
-| Hello-world | 1.5 KB |
 | Mid-size todo screen with ViewModel + Room | 3.5 KB |
 | Multi-screen surface | 8–20 KB |
 
@@ -250,7 +342,7 @@ Ketoy is an OTA delivery + sandbox layer for Compose on Android;
 Compose Multiplatform is a multi-platform UI toolkit.
 
 Future work might bring Ketoy bundles to iOS via Compose Multiplatform,
-but it's not in `0.3.x`.
+but it's not in `0.4.x`.
 
 </FaqItem>
 
@@ -269,9 +361,7 @@ but it's not in `0.3.x`.
   what-works catalog.
 - [Architecture](/architecture), the deeper
   internals.
-- `ketoy chat`, open an AI agent session inside the project. It has
-  read access to your codebase and can answer "why doesn't X compile?"
-  with concrete references to your source.
+- `Contact Ketoy Support`, open an Issue or Contact Ketoy Support, links are in the Bottom of this Page and in the home page bottom. 
 
 </FaqItem>
 

@@ -13,9 +13,9 @@ function renderInline(text) {
   });
 }
 
-export default function DocPage({ eyebrow, title, lede, hideToc = false, children }) {
+export default function DocPage({ eyebrow, title, lede, hideToc = false, wide = false, children }) {
   return (
-    <DocsLayout hideToc={hideToc}>
+    <DocsLayout hideToc={hideToc} wide={wide}>
       {eyebrow && <span className="eyebrow">{eyebrow}</span>}
       {title && <h1 style={{ marginTop: 8 }}>{renderInline(title)}</h1>}
       {lede && (

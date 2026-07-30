@@ -1,7 +1,7 @@
 export const heroStats = [
   { v: <>&lt; 50<small>ms</small></>, l: 'Load, verify, and parse' },
   { v: <>&lt; 100<small>ms</small></>, l: 'First frame, cold' },
-  { v: <>&gt; 100<small>KB</small></>, l: 'A full checkout flow' },
+  { v: <>&gt; 100<small>KB</small></>, l: 'A full app flow' },
   { v: <>20<small>×</small></>, l: 'Smaller than JSON SDUI' },
 ];
 
