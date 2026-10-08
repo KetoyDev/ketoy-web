@@ -1,8 +1,10 @@
+// Numbers are animated with the React Bits <CountUp>; `sr` is the full value
+// for screen readers and no-JS.
 export const heroStats = [
-  { v: <>&lt; 50<small>ms</small></>, l: 'Load, verify, and parse' },
-  { v: <>&lt; 100<small>ms</small></>, l: 'First frame, cold' },
-  { v: <>&gt; 100<small>KB</small></>, l: 'A full app flow' },
-  { v: <>20<small>×</small></>, l: 'Smaller than JSON SDUI' },
+  { prefix: '< ', to: 50, unit: 'ms', sr: '< 50 ms', l: 'Load, verify, and parse' },
+  { prefix: '< ', to: 100, unit: 'ms', sr: '< 100 ms', l: 'First frame, cold' },
+  { prefix: '> ', to: 100, unit: 'KB', sr: '> 100 KB', l: 'A full app flow' },
+  { prefix: '', to: 20, unit: '×', sr: '20×', l: 'Smaller than JSON SDUI' },
 ];
 
 export const supportCards = [

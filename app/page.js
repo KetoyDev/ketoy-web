@@ -1,18 +1,20 @@
-import '../public/styles/home.css';
+import '../public/styles/landing.css';
 import Link from 'next/link';
-import { SDK_VERSION_SHORT } from '@/constants';
-import OtaMotion from '@/modules/home/components/OtaMotion';
-import { CliGraphic, SkillsGraphic } from '@/modules/home/components/ToolingGraphics';
+import { SDK_VERSION_FULL } from '@/constants';
+import BrandIcon from '@/components/BrandIcon';
 import CopyButton from '@/components/mdx/CopyButton';
-import SupportTrigger from '@/modules/home/components/SupportTrigger';
-import HomeFaq from '@/modules/home/components/HomeFaq';
-import ScrollReveal from '@/components/ScrollReveal';
 import JsonLd from '@/components/JsonLd';
+import LandingNav from '@/modules/landing/components/LandingNav';
+import LandingFooter from '@/modules/landing/components/LandingFooter';
+import HeroStage from '@/modules/landing/components/HeroStage';
+import LayerDeck from '@/modules/landing/components/LayerDeck';
+import Motion from '@/modules/landing/components/Motion';
 import { faqSchema, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_URL } from '@/lib/seo';
 import {
-  heroStats, supportCards,
-  whatIsCards, securityCards, legalCards,
-} from '@/modules/home/data';
+  HERO, PROOF, LAYERS_TITLE, LAYERS_LEAD, STEPS_TITLE, STEPS_LEAD, STEPS,
+  SECURITY_TITLE, SECURITY_LEAD, SECURITY, VERIFY, VERIFY_FOOT,
+  TOOLS_TITLE, TOOLS_LEAD, CLI, TOOL_TILES, AGENTS, FAQ_TITLE, FAQ, CTA, INSTALL_CMD, GITHUB_URL,
+} from '@/modules/landing/data';
 
 const TITLE = 'Ketoy - Kotlin Over-The-Air (OTA) Updates for Android';
 
@@ -21,284 +23,261 @@ export const metadata = {
   description: SITE_DESCRIPTION,
   keywords: SITE_KEYWORDS,
   alternates: { canonical: '/' },
-  openGraph: {
-    type: 'website',
-    title: TITLE,
-    description: SITE_DESCRIPTION,
-    url: SITE_URL,
-  },
+  openGraph: { type: 'website', title: TITLE, description: SITE_DESCRIPTION, url: SITE_URL },
   twitter: { card: 'summary_large_image', title: TITLE, description: SITE_DESCRIPTION },
 };
 
-// Answers the exact questions people (and LLMs) ask. Rendered on the page by
-// <HomeFaq> and emitted as a JSON-LD FAQPage - keep the two in sync, Google
-// only honours structured data whose answers are visible to the user. The
-// full set lives at /docs/faq.
-const HOME_FAQ = [
-  {
-    q: 'What is Ketoy?',
-    a: 'Ketoy is a Kotlin-native over-the-air (OTA) update framework for Android. You write real Jetpack Compose, ViewModels, and business logic in Kotlin, compile it to a tiny signed .ktx bytecode bundle, and push changes over-the-air to installed apps in seconds - no Play Store release and no JSON DSL.',
-  },
-  {
-    q: 'Is Ketoy OTA or SDUI?',
-    a: 'Ketoy is an OTA framework, and SDUI is one of the things it can do. Because it ships real Kotlin and Compose over the air, a bundle can drive a whole screen from the server - that is SDUI - and it can equally ship a ViewModel, a network call, or a pricing rule that no JSON schema could express.',
-  },
-  {
-    q: 'What can Ketoy update over the air?',
-    a: 'Jetpack Compose UI, ViewModels and state, navigation, coroutines and Flow, networking, Room and DataStore access, and ordinary Kotlin such as data classes, objects, and functions. UI-only and logic-only bundles are both fine.',
-  },
-  {
-    q: 'How is Ketoy different from JSON-based server-driven UI?',
-    a: 'Instead of a JSON schema and a parallel component model, Ketoy uses ordinary Kotlin and Jetpack Compose compiled to Ketoy Bytecode (KBC). Bundles are roughly 20x smaller than equivalent JSON SDUI, Ed25519-signed, and rendered as native Compose on device.',
-  },
-  {
-    q: 'Does Ketoy allow over-the-air (OTA) updates on Android within Play Store policy?',
-    a: 'Yes. Ketoy delivers UI and logic changes over-the-air without shipping a new APK/AAB. Bundles execute in a sandbox and render native Compose, which keeps updates within Play Store policies.',
-  },
-];
+function Title({ as: Tag = 'h2', lines, id, className = '' }) {
+  return (
+    <Tag id={id} className={`kt-title ${className}`} data-blur>
+      {lines.map((l, i) => (
+        <span key={l}>{l}{i < lines.length - 1 ? ' ' : ''}</span>
+      ))}
+    </Tag>
+  );
+}
+
+function Cmd({ text }) {
+  return (
+    <div className="kt-cmd">
+      <code><span aria-hidden="true">$ </span>{text}</code>
+      <CopyButton text={text} />
+    </div>
+  );
+}
+
+function Check() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
 
 export default function HomePage() {
   return (
-    <>
+    <div className="kt">
+      <Motion />
+
       {/* Hero */}
-      <section className="hero">
-        <div className="hero-aurora" aria-hidden="true">
-          <span className="a1"></span>
-          <span className="a2"></span>
-          <span className="a3"></span>
-        </div>
-        <div className="container">
-          <div className="hero-grid">
-            <div className="hero-lead">
-              <div className="hero-tag">
-                <span className="pill">v{SDK_VERSION_SHORT}</span>
-                <span>Kotlin OTA</span>
-                <span className="live-dot" aria-hidden="true"></span>
-              </div>
-              <h1>
-                Ship <strong>Kotlin</strong> over the air.
-              </h1>
-              <p className="lede">
-                Write real Kotlin and Jetpack Compose. Push updates to every device in seconds.
-              </p>
-              <div className="hero-actions">
-                <Link className="btn btn-primary" href="/get-started">
-                  Get started
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M13 5l7 7-7 7" />
-                  </svg>
-                </Link>
-                <Link className="btn btn-ghost" href="/architecture">How it works</Link>
-              </div>
-            </div>
+      <section className="kt-hero" data-hero="root" aria-labelledby="kt-h1">
+        <div className="kt-panel kt-hero-panel">
+          <div className="kt-bloom" data-hero="bloom" aria-hidden="true" />
 
-            {/* Over-the-air delivery motion: phone device animation */}
-            <OtaMotion />
-          </div>
+          <LandingNav />
 
-          <div className="hero-stats" data-reveal>
-            {heroStats.map((s, i) => (
-              <div className="hero-stat" key={i}>
-                <div className="v">{s.v}</div>
-                <div className="l">{s.l}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Integrate: command line + AI agents */}
-      <section className="surface">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow">Integrate in minutes</span>
-            <h2>Command line and AI agents.</h2>
-            <p>
-              The Ketoy CLI runs your whole workflow from the terminal. Ketoy Skills give
-              any AI coding agent an accurate map of what Ketoy supports, before it writes a line.
-            </p>
-          </div>
-
-          <div className="integrate-grid" data-reveal>
-            {/* Command line */}
-            <div className="integrate-card">
-              <div className="integrate-head">
-                <span className="integrate-kicker">Command line</span>
-                <h3>Ketoy CLI</h3>
-                <p>Set up a project, push to the cloud, and roll back — all from the terminal.</p>
-              </div>
-              <CliGraphic />
-              <div className="integrate-cmd">
-                <span className="prompt">$</span>
-                <code>npm install -g ketoy-dev</code>
-                <CopyButton text="npm install -g ketoy-dev" />
-              </div>
-              <Link className="integrate-link" href="/docs/cli">
-                CLI docs
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M13 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-
-            {/* AI agents */}
-            <div className="integrate-card">
-              <div className="integrate-head">
-                <span className="integrate-kicker">AI agents</span>
-                <h3>Ketoy Skills</h3>
-                <p>Install a skill pack that grounds any coding agent in how Ketoy actually works before it writes code.</p>
-              </div>
-              <SkillsGraphic />
-              <div className="agent-row" aria-label="Works with any skills-compatible agent">
-                {['Claude Code', 'Codex', 'Cursor', 'Windsurf', 'Gemini CLI'].map((a) => (
-                  <span className="agent-chip" key={a}>{a}</span>
-                ))}
-              </div>
-              <div className="integrate-cmd">
-                <span className="prompt">$</span>
-                <code>ketoy skills add</code>
-                <CopyButton text="ketoy skills add" />
-              </div>
-              <Link className="integrate-link" href="/docs/skills">
-                Skills docs
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M13 5l7 7-7 7" />
-                </svg>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Ketoy */}
-      <section className="surface">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow">Why Ketoy</span>
-            <h2>Update without a release.</h2>
-            <p>
-              Add one annotation. Run one Gradle task. Every device gets the change in seconds.
-            </p>
-          </div>
-
-          <div className="cards-grid">
-            {whatIsCards.map((c) => (
-              <div className="card" key={c.num}>
-                <div className="num">{c.num}</div>
-                <div className="icon" aria-hidden="true">{c.icon}</div>
-                <h3>{c.h}</h3>
-                <p>{c.p}</p>
-                <a className="link" href={c.href}>{c.cta}</a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* What's supported */}
-      <section className="surface">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow">What’s supported</span>
-            <h2>If it’s Compose, it’s Ketoy.</h2>
-            <p>
-              Ketoy supports the full Compose toolkit, not a curated subset. When Compose adds a parameter, one command picks it up.
-            </p>
-          </div>
-
-          <div className="support-grid">
-            {supportCards.map((c) => (
-              <div className="support-card" key={c.h}>
-                <span className="support-tag">{c.tag}</span>
-                <h3>{c.h}</h3>
-                <p style={{ fontSize: 14.5, color: 'var(--muted)', lineHeight: 1.55 }}>{c.p}</p>
-                <div className="chips">
-                  {c.chips.map((ch) => (<span className="chip" key={ch}>{ch}</span>))}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Positive one-line takeaway */}
-          <div className="diff-strip" data-reveal>
-            <p className="diff-line">
-              <b style={{ fontWeight: 600, color: 'var(--ink)' }}>One annotation and one Gradle task.</b> That is the whole difference.
-            </p>
-            <Link className="link" href="/features" style={{ fontFamily: 'var(--font-ui)', fontWeight: 600, fontSize: 15, color: 'var(--accent-ink)', whiteSpace: 'nowrap' }}>
-              See everything Ketoy supports
+          <div className="kt-hero-copy" data-hero="copy">
+            <Link className="kt-pill" href="/updates" data-hero="fade">
+              <i className="kt-pill-dot" aria-hidden="true" />
+              <span className="kt-pill-long">{HERO.pill} · </span>v{SDK_VERSION_FULL}
             </Link>
+            <h1 id="kt-h1" className="kt-h1">
+              {HERO.lines.map((l) => (
+                <span className="kt-line" key={l}>
+                  <span className="kt-line-in" data-hero="line">{l}</span>
+                </span>
+              ))}
+            </h1>
+            <p className="kt-lead kt-lead--hero" data-hero="fade">{HERO.lead}</p>
+            <div className="kt-ctas" data-hero="fade">
+              <Link className="kt-btn kt-btn--light" href={HERO.primary.href}>
+                {HERO.primary.label}
+                <span className="kt-btn-ic"><Arrow /></span>
+              </Link>
+              <a className="kt-btn kt-btn--ghost" href={HERO.secondary.href}>
+                <BrandIcon name="github" size={18} />
+                {HERO.secondary.label}
+              </a>
+            </div>
           </div>
+
+          <HeroStage />
+        </div>
+        <div data-nav-sentinel aria-hidden="true" />
+
+        <ul className="kt-proof" aria-label="Ketoy performance">
+          {PROOF.map((p) => (
+            <li key={p.label} data-rv>
+              <b>{p.value}</b>
+              <span>{p.label}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Layers: pinned deck */}
+      <section className="kt-layers" id="layers" aria-labelledby="kt-layers-title">
+        <div className="kt-layers-head">
+          <Title id="kt-layers-title" lines={LAYERS_TITLE} className="kt-title--onviolet" />
+          <p className="kt-lead kt-lead--onviolet" data-rv>{LAYERS_LEAD}</p>
+        </div>
+        <LayerDeck />
+      </section>
+
+      {/* How it works */}
+      <section className="kt-how" id="how" aria-labelledby="kt-how-title">
+        <div className="kt-how-head">
+          <Title id="kt-how-title" lines={STEPS_TITLE} />
+          <p className="kt-lead" data-rv>{STEPS_LEAD}</p>
+        </div>
+        <div className="kt-pipe" data-pipe="root">
+          <div className="kt-pipe-rail" aria-hidden="true">
+            <span className="kt-pipe-fill" data-pipe="fill" />
+          </div>
+          <ol className="kt-steps">
+            {STEPS.map((s) => (
+              <li className="kt-step" key={s.n} data-pipe="step" data-rv>
+                <span className="kt-step-node" aria-hidden="true"><Check /></span>
+                <span className="kt-step-n kt-mono">{s.n}</span>
+                <h3>{s.h}</h3>
+                <p>{s.p}</p>
+                <pre className="kt-step-code">{s.code.join('\n')}</pre>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
       {/* Security */}
-      <section className="ink" id="security">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow" style={{ color: '#4AE389' }}>Security</span>
-            <h2>Secure and compliant.</h2>
-            <p>
-              Ketoy verifies every bundle before it runs. Here is how, in three parts.
-            </p>
-          </div>
-
-          <div className="cards-grid">
-            {securityCards.map((c) => (
-              <div className="card dark" key={c.h}>
-                <div className="icon">{c.icon}</div>
-                <h3>{c.h}</h3>
-                <p>{c.p}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="legal-row legal-row--single">
-            {legalCards.map((c) => (
-              <div className="card dark" key={c.quote}>
-                <div className="icon">{c.icon}</div>
-                <div className="legal-quote">{c.quote}</div>
-                <p>{c.p}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section style={{ paddingTop: 56 }}>
-        <div className="container">
-          <div className="cta-banner">
-            <div>
-              <h2>Write Kotlin. Ship the screen.</h2>
-              <p>
-                Available now on Maven Central. Hilt, Koin, dev tools, and the full Material 3 catalog are included.
-              </p>
+      <section className="kt-security" id="security" aria-labelledby="kt-sec-title">
+        <div className="kt-panel kt-sec-panel">
+          <div className="kt-sec-grid">
+            <div className="kt-sec-copy">
+              <Title id="kt-sec-title" lines={SECURITY_TITLE} className="kt-title--ondark" />
+              <p className="kt-lead kt-lead--ondark" data-rv>{SECURITY_LEAD}</p>
+              <ul className="kt-facts">
+                {SECURITY.map((f, i) => (
+                  <li key={f.h} data-rv>
+                    <span className="kt-mono kt-fact-n">0{i + 1}</span>
+                    <div>
+                      <h3>{f.h}</h3>
+                      <p>{f.p}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="right">
-              <Link className="btn btn-ghost" href="/docs" prefetch={false}>Read the docs</Link>
-              <Link className="btn btn-primary" href="/get-started">Get started</Link>
+            <div className="kt-verify-wrap" data-rv>
+              <div className="kt-verify-head">
+                <span className="kt-mono">on device</span>
+                <span className="kt-mono">main.ktx · v12</span>
+              </div>
+              <ol className="kt-verify" aria-label="What happens before a bundle runs">
+                {VERIFY.map((s, i) => (
+                  <li key={s.h} data-verify className="is-done">
+                    <span className="kt-verify-node" aria-hidden="true">
+                      <span className="kt-verify-num">{i + 1}</span>
+                      <Check />
+                    </span>
+                    <span className="kt-verify-text">
+                      <b>{s.h}</b>
+                      <span>{s.p}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p className="kt-verify-foot">{VERIFY_FOOT}</p>
             </div>
           </div>
-
-          <SupportTrigger />
         </div>
       </section>
 
-      {/* FAQ - the five questions people actually search for. The full set
-          lives at /docs/faq. */}
-      <section className="surface" id="faq">
-        <div className="container">
-          <div className="section-head" data-reveal>
-            <span className="eyebrow">FAQ</span>
-            <h2>Questions, answered.</h2>
+      {/* Tooling */}
+      <section className="kt-tools" id="tools" aria-labelledby="kt-tools-title">
+        <div className="kt-tools-head">
+          <Title id="kt-tools-title" lines={TOOLS_TITLE} />
+          <p className="kt-lead" data-rv>{TOOLS_LEAD}</p>
+        </div>
+        <div className="kt-tools-grid">
+          <div className="kt-term kt-term--tools" data-rv>
+            <div className="kt-term-bar">
+              <span className="kt-term-dots" aria-hidden="true"><i /><i /><i /></span>
+              <span>ketoy</span>
+            </div>
+            <div className="kt-term-body">
+              {CLI.map((l) => (
+                <div className="kt-term-row" key={l.cmd} data-type>
+                  <p className="kt-term-cmd"><span className="kt-term-prompt">$</span> {l.cmd}</p>
+                  <p className="kt-term-out"><i className="kt-ok" />{l.out}</p>
+                </div>
+              ))}
+            </div>
           </div>
-
-          <HomeFaq items={HOME_FAQ} />
+          <div className="kt-tools-side">
+            <article className="kt-tile" data-rv>
+              <span className="kt-eyebrow">{TOOL_TILES[0].eyebrow}</span>
+              <h3>{TOOL_TILES[0].h}</h3>
+              <p>{TOOL_TILES[0].p}</p>
+              <Cmd text={TOOL_TILES[0].cmd} />
+              <Link className="kt-link" href={TOOL_TILES[0].link.href} prefetch={false}>{TOOL_TILES[0].link.label} <Arrow /></Link>
+            </article>
+            <article className="kt-tile" data-rv>
+              <span className="kt-eyebrow">{TOOL_TILES[1].eyebrow}</span>
+              <h3>{TOOL_TILES[1].h}</h3>
+              <p>{TOOL_TILES[1].p}</p>
+              <ul className="kt-agents" aria-label="Supported agents">
+                {AGENTS.map((a) => (
+                  <li key={a.name}>
+                    {a.icon ? <BrandIcon name={a.icon} size={16} /> : <span className="kt-agent-blank" aria-hidden="true">{a.name[0]}</span>}
+                    {a.name}
+                  </li>
+                ))}
+              </ul>
+              <Cmd text={TOOL_TILES[1].cmd} />
+            </article>
+          </div>
         </div>
       </section>
 
-      <ScrollReveal />
-      <JsonLd data={faqSchema(HOME_FAQ)} />
-    </>
+      {/* FAQ */}
+      <section className="kt-faq" id="faq" aria-labelledby="kt-faq-title">
+        <div className="kt-faq-side">
+          <Title id="kt-faq-title" lines={FAQ_TITLE} />
+          <Link className="kt-link" href="/docs/faq" prefetch={false} data-rv>More in the docs <Arrow /></Link>
+        </div>
+        <div className="kt-faq-list" data-rv>
+          {FAQ.map(({ q, a }, i) => (
+            <details key={q} open={i === 0}>
+              <summary>
+                <span>{q}</span>
+                <i className="kt-faq-plus" aria-hidden="true" />
+              </summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+        <JsonLd data={faqSchema(FAQ)} />
+      </section>
+
+      {/* Final CTA */}
+      <section className="kt-cta" aria-labelledby="kt-cta-title">
+        <div className="kt-panel kt-cta-panel">
+          <div className="kt-bloom kt-bloom--cta" aria-hidden="true" />
+          <Title id="kt-cta-title" lines={CTA.lines} className="kt-title--ondark kt-title--xl" />
+          <p className="kt-lead kt-lead--ondark" data-rv>{CTA.lead}</p>
+          <div className="kt-cta-row" data-rv>
+            <Cmd text={INSTALL_CMD} />
+            <Link className="kt-btn kt-btn--light" href="/get-started">
+              {CTA.primary}
+              <span className="kt-btn-ic"><Arrow /></span>
+            </Link>
+            <a className="kt-btn kt-btn--ghost" href={GITHUB_URL}>
+              <BrandIcon name="github" size={18} />
+              GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <LandingFooter />
+    </div>
   );
 }

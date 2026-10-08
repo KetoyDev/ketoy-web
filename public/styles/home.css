@@ -580,52 +580,6 @@
   to   { opacity: 1; transform: none; }
 }
 
-/* Animated aurora behind the hero. Three blurred colour blobs drifting on
-   independent loops over the black hero band. */
-.hero-aurora {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.hero-aurora span {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.55;
-  mix-blend-mode: screen;
-}
-.hero-aurora .a1 {
-  width: 640px; height: 640px;
-  top: -220px; right: -120px;
-  background: radial-gradient(closest-side, rgba(61,220,132,.55), transparent 70%);
-  animation: aurora-1 18s ease-in-out infinite;
-}
-.hero-aurora .a2 {
-  width: 520px; height: 520px;
-  top: 40px; left: -160px;
-  background: radial-gradient(closest-side, rgba(66,133,244,.42), transparent 70%);
-  animation: aurora-2 22s ease-in-out infinite;
-}
-.hero-aurora .a3 {
-  width: 460px; height: 460px;
-  bottom: -220px; left: 38%;
-  background: radial-gradient(closest-side, rgba(147,240,192,.30), transparent 70%);
-  animation: aurora-3 26s ease-in-out infinite;
-}
-@keyframes aurora-1 {
-  0%,100% { transform: translate(0,0) scale(1); }
-  50%     { transform: translate(-60px,40px) scale(1.12); }
-}
-@keyframes aurora-2 {
-  0%,100% { transform: translate(0,0) scale(1); }
-  50%     { transform: translate(70px,-30px) scale(1.08); }
-}
-@keyframes aurora-3 {
-  0%,100% { transform: translate(0,0) scale(1); opacity: .30; }
-  50%     { transform: translate(-40px,-50px) scale(1.15); opacity: .5; }
-}
 /* Keep hero content above the aurora. */
 .hero .container { position: relative; z-index: 1; }
 
@@ -1032,10 +986,135 @@
 /* Respect users who prefer reduced motion: no drift, no pulses, no reveal
    transition; everything is shown in its final state. */
 @media (prefers-reduced-motion: reduce) {
-  .hero-aurora span,
   .hero-tag .pill::after,
   .hero-tag .live-dot,
   .ota-wire .ota-pulse { animation: none !important; }
   [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
   [data-reveal].in > * { animation: none !important; }
+}
+
+/* ============================================================
+   Android / Material 3 layer (home)
+   ============================================================ */
+
+/* React Bits <Aurora> behind the hero */
+.hero-aurora-gl {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+}
+.hero-aurora-gl .aurora-container canvas { display: block; width: 100% !important; height: 100% !important; }
+/* The light-mode shader is opaque white-based: multiply it onto the page. */
+.hero-aurora-gl.is-light { mix-blend-mode: multiply; opacity: 0.7; }
+
+/* Stack logo strip (React Bits <LogoLoop>) */
+.stack-loop {
+  padding: 8px 0 24px;
+  color: var(--muted);
+}
+.stack-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: color 200ms ease;
+}
+.stack-logo:hover { color: var(--ink); }
+.stack-logo svg { flex-shrink: 0; }
+
+/* Cards: M3 filled containers */
+.support-card,
+.integrate-card,
+.diff-strip,
+.support-cta {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+.support-card { padding: 28px; }
+.integrate-card { padding: 28px; }
+.support-card .support-tag {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 12px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.support-card .chip {
+  font-size: 11.5px;
+  padding: 5px 10px;
+  background: var(--surface-3);
+  border: 0;
+  border-radius: 8px;
+}
+.integrate-cmd {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 8px 8px 18px;
+}
+.integrate-cmd .code-copy { border-radius: 999px; width: 32px; height: 32px; }
+.integrate-kicker { font-family: var(--font-ui); font-weight: 700; }
+.agent-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+  border-radius: 10px;
+  transition: background 160ms ease, color 160ms ease;
+}
+.agent-chip:hover { background: var(--accent-soft); color: var(--accent-ink); }
+.integrate-head p,
+.support-cta-body p,
+.diff-line,
+.home-faq .faq-a,
+.home-faq-foot p { font-weight: 400; }
+
+.support-cta-icon,
+.support-modal .success .check {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.support-cta-body .eyebrow { display: inline-flex; margin-bottom: 10px; }
+
+.home-faq .faq-item { background: var(--surface-2); }
+.home-faq .faq-item[open] { background: var(--surface-3); }
+
+/* Support modal -> M3 dialog */
+.support-modal-backdrop { background: rgba(5,10,7,0.6); }
+.support-modal {
+  background: var(--surface-3);
+  border-radius: 28px;
+  box-shadow: var(--elev-3);
+}
+.support-modal textarea { border-radius: 16px; }
+
+.legal-row .card.dark .legal-quote { font-variation-settings: "ROND" 100; }
+
+@media (max-width: 1000px) {
+  .hero-aurora-gl { opacity: 0.6; }
+}
+
+/* Grid items default to min-width:auto, so the nowrap terminal lines would
+   push the integrate cards past a phone viewport. */
+.integrate-grid > *,
+.support-grid > *,
+.cards-grid > * { min-width: 0; }
+@media (max-width: 1000px) {
+  .integrate-grid { grid-template-columns: minmax(0, 1fr); }
 }

@@ -1,0 +1,105 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import KetoyLogo from '@/components/KetoyLogo';
+import BrandIcon from '@/components/BrandIcon';
+import { NAV, GITHUB_URL } from '../data';
+
+function NavLink({ item, onClick }) {
+  const external = item.href.startsWith('http');
+  if (external) {
+    return <a href={item.href} onClick={onClick}>{item.label}</a>;
+  }
+  return (
+    <Link href={item.href} onClick={onClick} {...(item.prefetch === false ? { prefetch: false } : {})}>
+      {item.label}
+    </Link>
+  );
+}
+
+/**
+ * Two navs share one source of links: the one printed inside the hero panel,
+ * and a compact floating bar that appears once the hero has scrolled away.
+ */
+export default function LandingNav() {
+  const [open, setOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const sentinel = document.querySelector('[data-nav-sentinel]');
+    if (!sentinel) return undefined;
+    const io = new IntersectionObserver(([e]) => setCompact(!e.isIntersecting), { rootMargin: '-80px 0px 0px 0px' });
+    io.observe(sentinel);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  const close = () => setOpen(false);
+
+  return (
+    <>
+      <header className="kt-nav" data-hero="nav">
+        <Link className="kt-brand" href="/" aria-label="Ketoy home">
+          <KetoyLogo size={26} />
+          <span>Ketoy</span>
+        </Link>
+        <nav className="kt-nav-links" aria-label="Primary">
+          {NAV.map((item) => <NavLink key={item.href} item={item} />)}
+        </nav>
+        <div className="kt-nav-right">
+          <a className="kt-nav-gh" href={GITHUB_URL} aria-label="Ketoy on GitHub">
+            <BrandIcon name="github" size={18} />
+          </a>
+          <Link className="kt-btn kt-btn--light kt-btn--sm" href="/get-started">Get started</Link>
+          <button
+            type="button"
+            className={`kt-burger${open ? ' is-open' : ''}`}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span /><span />
+          </button>
+        </div>
+      </header>
+
+      <div className={`kt-nav-float${compact && !open ? ' is-on' : ''}`} aria-hidden={!compact}>
+        <Link className="kt-brand" href="/" tabIndex={compact ? 0 : -1}>
+          <KetoyLogo size={22} />
+          <span>Ketoy</span>
+        </Link>
+        <nav aria-label="Primary, compact">
+          {NAV.slice(0, 4).map((item) => <NavLink key={item.href} item={item} />)}
+        </nav>
+        <Link className="kt-btn kt-btn--dark kt-btn--sm" href="/get-started" tabIndex={compact ? 0 : -1}>
+          Get started
+        </Link>
+      </div>
+
+      <div className={`kt-menu${open ? ' is-open' : ''}`} aria-hidden={!open}>
+        <nav aria-label="Menu">
+          {NAV.map((item, i) => (
+            <span key={item.href} className="kt-menu-item" style={{ '--i': i }}>
+              <NavLink item={item} onClick={close} />
+            </span>
+          ))}
+          <span className="kt-menu-item" style={{ '--i': NAV.length }}>
+            <a href={GITHUB_URL} onClick={close}>GitHub</a>
+          </span>
+        </nav>
+        <Link className="kt-btn kt-btn--light" href="/get-started" onClick={close}>Get started</Link>
+      </div>
+    </>
+  );
+}

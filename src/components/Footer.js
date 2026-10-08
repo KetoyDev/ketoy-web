@@ -2,11 +2,18 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { SDK_VERSION_FULL } from '@/constants';
 import SupportModal from '@/modules/home/components/SupportModal';
+import KetoyLogo from '@/components/KetoyLogo';
+import BrandIcon from '@/components/BrandIcon';
 
 export default function Footer() {
   const [supportOpen, setSupportOpen] = useState(false);
+  const pathname = usePathname();
+
+  // The landing page ships its own footer.
+  if (pathname === '/') return null;
 
   return (
     <>
@@ -15,7 +22,7 @@ export default function Footer() {
           <div className="footer-grid">
             <div>
               <Link className="brand" href="/">
-                <img className="brand-mark" src="/assets/ketoy-logo.svg" alt="" />
+                <KetoyLogo className="brand-mark" size={30} />
                 <span className="brand-name">Ketoy</span>
               </Link>
               <p className="footer-brand-blurb">
@@ -43,8 +50,8 @@ export default function Footer() {
             <div>
               <h4>Resources</h4>
               <ul>
-                <li><a href="https://central.sonatype.com/namespace/dev.ketoy.vm">Maven Central</a></li>
-                <li><a href="https://github.com/KetoyDev/demos">Sample apps</a></li>
+                <li><a href="https://central.sonatype.com/namespace/dev.ketoy.vm"><BrandIcon name="maven" size={15} />Maven Central</a></li>
+                <li><a href="https://github.com/KetoyDev/demos"><BrandIcon name="android" size={15} />Sample apps</a></li>
                 <li><a href="#">Migration guide</a></li>
                 <li><a href="/docs/faq">FAQ</a></li>
               </ul>
@@ -52,8 +59,8 @@ export default function Footer() {
             <div>
               <h4>Community</h4>
               <ul>
-                <li><a href="https://github.com/KetoyDev">GitHub</a></li>
-                <li><a href="https://discord.gg/jAbcPPyksf">Discord</a></li>
+                <li><a href="https://github.com/KetoyDev"><BrandIcon name="github" size={15} />GitHub</a></li>
+                <li><a href="https://discord.gg/jAbcPPyksf"><BrandIcon name="discord" size={15} />Discord</a></li>
                 <li><Link href="/issue">Report an issue</Link></li>
                 <li>
                   <button
@@ -77,7 +84,15 @@ export default function Footer() {
               </code>{' '}
               · v{SDK_VERSION_FULL}
             </span>
-            <span>Made for Android · Kotlin 2.0 · Compose</span>
+            <span className="footer-made">
+              Made for
+              <BrandIcon name="android" size={15} title="Android" />
+              Android ·
+              <BrandIcon name="kotlin" size={13} title="Kotlin" />
+              Kotlin 2.0 ·
+              <BrandIcon name="compose" size={15} title="Jetpack Compose" />
+              Compose
+            </span>
           </div>
         </div>
       </footer>

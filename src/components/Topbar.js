@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ThemeToggle from './ThemeToggle';
+import KetoyLogo from './KetoyLogo';
 import Search from './Search';
 
 const NAV = [
@@ -44,11 +45,14 @@ export default function Topbar() {
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
 
+  // The landing page ships its own navigation.
+  if (pathname === '/') return null;
+
   return (
     <header className="topbar">
       <div className="topbar-inner">
         <Link className="brand" href="/">
-          <img className="brand-mark" src="/assets/ketoy-logo.svg" alt="" />
+          <KetoyLogo className="brand-mark" size={30} />
           <span className="brand-name">Ketoy</span>
         </Link>
         <nav className="nav">
