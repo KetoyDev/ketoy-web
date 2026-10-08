@@ -394,8 +394,11 @@ html:has(.kt) body { background: #efecf8; }
   font-size: clamp(16px, 1.25vw, 19px);
 }
 .kt-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
-.kt-install { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 6px; }
-.kt-install-label { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); }
+.kt-ctas--hero { flex-wrap: nowrap; align-items: center; margin-top: 6px; }
+.kt-ctas--hero .kt-btn--sm, .kt-nav-right .kt-btn--sm { height: 48px; padding: 0 8px 0 20px; font-size: 14.5px; gap: 10px; white-space: nowrap; }
+.kt-ctas--hero .kt-btn-ic, .kt-nav-right .kt-btn-ic { width: 32px; height: 32px; }
+.kt-nav-right .kt-btn--sm { height: 44px; }
+.kt-nav-right .kt-btn-ic { width: 28px; height: 28px; }
 .kt-install-bar {
   position: relative;
   display: inline-flex;
@@ -404,18 +407,18 @@ html:has(.kt) body { background: #efecf8; }
   height: 48px;
   padding: 0 8px 0 18px;
   border-radius: 999px;
-  border: 1px solid var(--line-dark-2);
-  background: rgba(255, 255, 255, 0.05);
-  color: #f4f1ff;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #15121d;
   font-family: var(--mono);
   font-size: 14px;
   cursor: pointer;
   overflow: hidden;
   transition: background-color 0.3s, border-color 0.3s, transform 0.6s var(--ease), box-shadow 0.3s;
 }
-.kt-install-bar:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 20px 50px -24px rgba(124, 92, 255, 0.7); }
+.kt-install-bar:hover { background: #f4f1ff; border-color: #f4f1ff; box-shadow: 0 20px 50px -24px rgba(124, 92, 255, 0.7); }
 .kt-install-bar:active { transform: scale(0.985); }
-.kt-install-prompt { color: var(--violet-soft); }
+.kt-install-prompt { color: #6d4cf5; }
 .kt-install-bar code { font-family: inherit; white-space: nowrap; }
 .kt-install-action {
   position: relative;
@@ -424,8 +427,8 @@ html:has(.kt) body { background: #efecf8; }
   width: 32px;
   height: 32px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.85);
+  background: #efeafe;
+  color: #15121d;
   transition: background-color 0.3s, color 0.3s;
 }
 .kt-install-action svg { grid-area: 1 / 1; transition: opacity 0.25s, transform 0.5s var(--ease); }
@@ -439,8 +442,8 @@ html:has(.kt) body { background: #efecf8; }
   display: grid;
   place-items: center;
   padding-right: 40px;
-  background: rgba(13, 11, 19, 0.92);
-  color: var(--ok);
+  background: #fff;
+  color: #0b7a3e;
   font-size: 13px;
   letter-spacing: 0.02em;
   opacity: 0;
@@ -453,7 +456,7 @@ html:has(.kt) body { background: #efecf8; }
 .kt-stage {
   position: relative;
   height: clamp(300px, 44vh, 480px);
-  margin-top: clamp(24px, 4vh, 48px);
+  margin-top: clamp(80px, 13vh, 160px);
   display: flex;
   justify-content: center;
 }
@@ -1104,8 +1107,9 @@ html:has(.kt) body { background: #efecf8; }
   .kt-line::after { content: ' '; }
   .kt-pill-long { display: none; }
   .kt-ctas { width: 100%; }
-  .kt-ctas .kt-btn { flex: 1; justify-content: center; }
-  .kt-btn--light .kt-btn-ic { margin-left: auto; }
+  .kt-ctas--hero { flex-wrap: wrap; }
+  .kt-ctas--hero .kt-install-bar { flex: 1 1 100%; justify-content: space-between; }
+  .kt-ctas--hero .kt-btn { flex: 1 1 100%; justify-content: center; }
   .kt-stage { height: clamp(260px, 40vh, 360px); }
   .kt-phone { width: 250px; height: 540px; padding: 9px; border-radius: 40px; }
   .kt-phone-screen { border-radius: 32px; }

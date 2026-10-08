@@ -155,17 +155,13 @@ export default function HomePage() {
               ))}
             </h1>
             <p className="kt-lead kt-lead--hero" data-hero="fade">{HERO.lead}</p>
-            <div className="kt-ctas" data-hero="fade">
-              <Link className="kt-btn kt-btn--light" href={HERO.primary.href}>
-                {HERO.primary.label}
+            <div className="kt-ctas kt-ctas--hero" data-hero="fade">
+              <InstallCommand command={INSTALL_CMD} />
+              <a className="kt-btn kt-btn--light kt-btn--sm" href="#skills">
+                Skills
                 <span className="kt-btn-ic"><Arrow /></span>
-              </Link>
-              <a className="kt-btn kt-btn--ghost" href={HERO.secondary.href}>
-                <BrandIcon name="github" size={18} />
-                {HERO.secondary.label}
               </a>
             </div>
-            <InstallCommand command={INSTALL_CMD} />
           </div>
 
           <HeroStage />
@@ -301,7 +297,7 @@ export default function HomePage() {
               <Cmd text={TOOL_TILES[0].cmd} />
               <Link className="kt-link" href={TOOL_TILES[0].link.href} prefetch={false}>{TOOL_TILES[0].link.label} <Arrow /></Link>
             </article>
-            <article className="kt-tile" data-rv>
+            <article className="kt-tile" id="skills" data-scroll-offset="120" data-rv>
               <span className="kt-eyebrow">{TOOL_TILES[1].eyebrow}</span>
               <h3>{TOOL_TILES[1].h}</h3>
               <p>{TOOL_TILES[1].p}</p>

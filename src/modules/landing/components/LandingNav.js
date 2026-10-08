@@ -8,6 +8,14 @@ import BrandIcon from '@/components/BrandIcon';
 import { SDK_VERSION_FULL } from '@/constants';
 import { NAV, GITHUB_URL } from '../data';
 
+function Arrow() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  );
+}
+
 function NavLink({ item, onClick }) {
   const external = item.href.startsWith('http');
   if (external) {
@@ -92,7 +100,10 @@ export default function LandingNav() {
           <a className="kt-nav-gh" href={GITHUB_URL} aria-label="Ketoy on GitHub">
             <BrandIcon name="github" size={18} />
           </a>
-          <Link className="kt-btn kt-btn--light kt-btn--sm" href="/get-started">Get started</Link>
+          <Link className="kt-btn kt-btn--light kt-btn--sm" href="/get-started">
+            Get started
+            <span className="kt-btn-ic"><Arrow /></span>
+          </Link>
           <button
             type="button"
             className={`kt-burger${open ? ' is-open' : ''}`}

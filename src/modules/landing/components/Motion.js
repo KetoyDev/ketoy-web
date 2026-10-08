@@ -28,7 +28,7 @@ export default function Motion() {
       const target = document.querySelector(a.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { offset: -24, duration: 1.2 });
+      lenis.scrollTo(target, { offset: -(Number(target.dataset.scrollOffset) || 24), duration: 1.2 });
     };
     document.addEventListener('click', onAnchor);
 

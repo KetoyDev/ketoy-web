@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
  * The hero's install line. One click copies the command; the bar answers
  * with a short "Copied" state so the user never wonders if it worked.
  */
-export default function InstallCommand({ command, label = 'Install the CLI' }) {
+export default function InstallCommand({ command }) {
   const [copied, setCopied] = useState(false);
   const timer = useRef(0);
 
@@ -24,8 +24,7 @@ export default function InstallCommand({ command, label = 'Install the CLI' }) {
   };
 
   return (
-    <div className="kt-install" data-hero="fade">
-      <span className="kt-install-label">{label}</span>
+    <>
       <button
         type="button"
         className={`kt-install-bar${copied ? ' is-copied' : ''}`}
@@ -47,6 +46,6 @@ export default function InstallCommand({ command, label = 'Install the CLI' }) {
           {copied ? 'Copied to clipboard' : ''}
         </span>
       </button>
-    </div>
+    </>
   );
 }
