@@ -54,8 +54,8 @@ function HeroIllustration() {
       </g>
       <g transform="translate(110, 130) rotate(2)">
         <rect width="280" height="160" rx="20" fill="var(--card-bg)" stroke="var(--border)" strokeWidth="1.5" />
-        <rect x="22" y="24" width="80" height="18" rx="9" fill="#eef8f0" stroke="#cfe6cf" strokeWidth="1" />
-        <circle cx="32" cy="33" r="3" fill="#2bb673" />
+        <rect x="22" y="24" width="80" height="18" rx="9" fill="var(--accent-soft)" />
+        <circle cx="32" cy="33" r="3" fill="var(--accent)" />
         <rect x="22" y="56" width="220" height="14" rx="3" fill="var(--ink-2)" opacity="0.9" />
         <rect x="22" y="78" width="140" height="14" rx="3" fill="var(--ink-2)" opacity="0.9" />
         <rect x="22" y="112" width="100" height="9" rx="3" fill="var(--muted-2)" opacity="0.7" />

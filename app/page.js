@@ -5,7 +5,6 @@ import BrandIcon from '@/components/BrandIcon';
 import CopyButton from '@/components/mdx/CopyButton';
 import JsonLd from '@/components/JsonLd';
 import LandingNav from '@/modules/landing/components/LandingNav';
-import LandingFooter from '@/modules/landing/components/LandingFooter';
 import HeroStage from '@/modules/landing/components/HeroStage';
 import LayerDeck from '@/modules/landing/components/LayerDeck';
 import Motion from '@/modules/landing/components/Motion';
@@ -277,7 +276,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <LandingFooter />
     </div>
   );
 }

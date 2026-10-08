@@ -51,7 +51,6 @@ html:has(.kt) body { background: #efecf8; }
 :where(.kt) a:hover { color: inherit; }
 .kt h1, .kt h2, .kt h3, .kt h4 { font-family: var(--sans); font-weight: 600; letter-spacing: -0.02em; color: inherit; }
 .kt p { color: inherit; }
-.kt .kt-mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
 
 /* ---------- Panels, titles, buttons ---------- */
 .kt-panel {
@@ -131,51 +130,6 @@ html:has(.kt) body { background: #efecf8; }
   color: var(--violet-deep);
 }
 
-.kt-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  height: 52px;
-  padding: 0 8px 0 24px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 15.5px;
-  letter-spacing: -0.005em;
-  white-space: nowrap;
-  transition: transform 0.6s var(--ease), background-color 0.3s, color 0.3s, border-color 0.3s;
-  will-change: transform;
-}
-.kt-btn:active { transform: scale(0.98); }
-.kt-btn--light { background: var(--white); color: var(--ink); }
-.kt-btn--light:hover { background: #f4f1ff; color: var(--ink); }
-.kt-btn--dark { background: var(--ink); color: var(--white); padding: 0 22px; }
-.kt-btn--dark:hover { background: #2a2538; color: var(--white); }
-.kt-btn--ghost { padding: 0 22px; color: var(--white); border: 1px solid var(--line-dark-2); background: rgba(255, 255, 255, 0.04); }
-.kt-btn--ghost:hover { background: rgba(255, 255, 255, 0.1); color: var(--white); }
-.kt-btn--sm { height: 40px; font-size: 14px; padding: 0 18px; }
-.kt-btn-ic {
-  display: inline-grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: var(--ink);
-  color: var(--white);
-  transition: transform 0.6s var(--ease);
-}
-.kt-btn:hover .kt-btn-ic { transform: translateX(3px); }
-.kt-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: var(--ink);
-  border-bottom: 1px solid var(--line-2);
-  padding-bottom: 2px;
-  transition: gap 0.4s var(--ease), border-color 0.3s;
-}
-.kt-link:hover { gap: 12px; border-color: var(--ink); color: var(--ink); }
-
 .kt-cmd {
   display: inline-flex;
   align-items: center;
@@ -205,25 +159,14 @@ html:has(.kt) body { background: #efecf8; }
   height: 84px;
   padding: 0 clamp(20px, 3vw, 40px);
 }
-.kt-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: -0.02em;
-  color: var(--white);
-  --logo-ink: #ffffff;
-}
-.kt-brand--ink { color: var(--ink); --logo-ink: #15121d; }
+.kt-nav .kt-brand { color: var(--white); --logo-ink: #ffffff; }
 .kt-nav-links { display: flex; gap: 4px; }
 .kt-nav-links a, .kt-nav-float nav a {
-  font-family: var(--mono);
-  font-size: 12.5px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--sans);
+  font-size: 14.5px;
+  font-weight: 500;
   padding: 8px 12px;
-  border-radius: 999px;
+  border-radius: 10px;
   color: rgba(255, 255, 255, 0.78);
   transition: color 0.3s, background-color 0.3s;
 }
@@ -287,7 +230,7 @@ html:has(.kt) body { background: #efecf8; }
 .kt-nav-float.is-on { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
 .kt-nav-float .kt-brand { color: var(--ink); font-size: 17px; --logo-ink: #15121d; }
 .kt-nav-float nav { display: flex; gap: 2px; }
-.kt-nav-float nav a { color: var(--ink-2); font-size: 12px; }
+.kt-nav-float nav a { color: var(--ink-2); font-size: 14px; }
 .kt-nav-float nav a:hover { color: var(--ink); background: rgba(21, 18, 29, 0.06); }
 
 .kt-menu {
@@ -876,23 +819,6 @@ html:has(.kt) body { background: #efecf8; }
 .kt-cta-row { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; margin-top: 12px; }
 .kt-cta-row .kt-cmd { height: 52px; border-radius: 999px; padding: 0 8px 0 20px; background: rgba(255, 255, 255, 0.06); }
 
-/* ---------- Footer ---------- */
-.kt-footer { padding: clamp(64px, 9vh, 110px) var(--gutter) 36px; }
-.kt-footer-top { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 40px; padding-bottom: 48px; border-bottom: 1px solid var(--line-2); }
-.kt-footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
-.kt-footer-brand p { color: var(--ink-2); max-width: 36ch; font-size: 15px; }
-.kt-footer-social { display: flex; gap: 8px; }
-.kt-footer-social a { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--ink); transition: background-color 0.3s; }
-.kt-footer-social a:hover { background: var(--white); }
-.kt-footer-col h4 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 16px; font-weight: 500; }
-.kt-footer-col ul { display: flex; flex-direction: column; gap: 10px; }
-.kt-footer-col a { font-size: 15px; color: var(--ink-2); transition: color 0.3s; }
-.kt-footer-col a:hover { color: var(--ink); }
-.kt-footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding-top: 24px; font-size: 13.5px; color: var(--ink-3); }
-.kt-footer-bottom .kt-mono { text-transform: none; letter-spacing: 0; }
-.kt-footer-made { display: inline-flex; align-items: center; gap: 6px; }
-.kt-footer-made svg { margin-left: 8px; }
-
 /* ---------- Responsive ---------- */
 @media (max-width: 1180px) {
   .kt-term--hero { width: 340px; left: calc(50% - 150px - 20px); }
@@ -917,7 +843,6 @@ html:has(.kt) body { background: #efecf8; }
   .kt-how-head, .kt-tools-head { grid-template-columns: 1fr; align-items: start; }
   .kt-how-head .kt-lead, .kt-tools-head .kt-lead { justify-self: start; }
   .kt-faq-side { position: static; }
-  .kt-footer-top { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 959px) {
   /* The deck becomes a plain vertical stack; Motion.js matches this query. */
@@ -961,8 +886,6 @@ html:has(.kt) body { background: #efecf8; }
   .kt-step p { min-height: 0; }
   .kt-how, .kt-tools, .kt-faq, .kt-security, .kt-cta { padding-top: 88px; }
   .kt-facts li { grid-template-columns: 36px 1fr; }
-  .kt-footer-top { grid-template-columns: 1fr; gap: 32px; }
-  .kt-footer-bottom { flex-direction: column; align-items: flex-start; }
   .kt-cta-row { flex-direction: column; align-items: stretch; }
   .kt-cta-row .kt-cmd { justify-content: space-between; }
   .kt-cta-row .kt-btn { justify-content: center; }

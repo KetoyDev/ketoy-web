@@ -59,7 +59,8 @@ Ketoy borrows all seven moves and adds its own constraints.
 > e.g. "Releases take days." / "Ketoy takes seconds."
 
 **Hero description (two or three sentences)**
-> [Product] helps [audience] [verb] [real nouns] without [the chore]. The open source alternative to [one known thing].
+> [Product] helps [audience] [verb] [real nouns] without [the chore]. The [Kotlin] alternative to [one known thing].
+> Ketoy is not fully open source, so never claim "open source" in copy. Linking GitHub is fine.
 
 **Section heading (two phrases, comma between)**
 > [Mechanism phrase], [Outcome phrase].
@@ -90,7 +91,7 @@ Ketoy borrows all seven moves and adds its own constraints.
 | Element | Before | After |
 |---|---|---|
 | Hero H1 | Ship Kotlin to every phone in seconds. | Releases take days. Ketoy takes seconds. |
-| Hero description | Ketoy compiles real Jetpack Compose, ViewModels and business logic into a small signed bundle and delivers it to installed apps over the air. No Play Store release. No JSON DSL. | Ketoy helps Android teams ship Jetpack Compose, ViewModels and Kotlin logic to installed apps without a Play Store release. The open source alternative to JSON server driven UI. |
+| Hero description | Ketoy compiles real Jetpack Compose, ViewModels and business logic into a small signed bundle and delivers it to installed apps over the air. No Play Store release. No JSON DSL. | Ketoy helps Android teams ship Jetpack Compose, ViewModels and Kotlin logic to installed apps without a Play Store release. The Kotlin alternative to JSON server driven UI. |
 | Primary CTA | Start shipping | Get started |
 | Layers heading | Everything a release carries, without the release. | One annotation, everything over the air. |
 | Card | Every Material 3 component. Every parameter. | Real Compose, not a lookalike. |

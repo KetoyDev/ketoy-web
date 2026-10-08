@@ -7,18 +7,18 @@ export const DISCORD_URL = 'https://discord.gg/jAbcPPyksf';
 export const INSTALL_CMD = 'npm install -g ketoy-dev';
 
 export const NAV = [
-  { href: '#layers', label: 'Product' },
-  { href: '#how', label: 'How it works' },
-  { href: '#security', label: 'Security' },
+  { href: '/get-started', label: 'Get started' },
+  { href: '/features', label: 'Features' },
+  { href: '/architecture', label: 'Architecture' },
   { href: '/docs', label: 'Docs', prefetch: false },
-  { href: '/updates', label: 'Changelog' },
+  { href: '/updates', label: "What's new", match: /^\/updates/ },
 ];
 
 export const HERO = {
   pill: 'Ketoy SDK is in alpha',
   lines: ['Releases take days.', 'Ketoy takes seconds.'],
   lead:
-    'Ketoy helps Android teams ship Jetpack Compose, ViewModels and Kotlin logic to installed apps without a Play Store release. The open source alternative to JSON server driven UI.',
+    'Ketoy helps Android teams ship Jetpack Compose, ViewModels and Kotlin logic to installed apps without a Play Store release. The Kotlin alternative to JSON server driven UI.',
   primary: { label: 'Get started', href: '/get-started' },
   secondary: { label: 'Star on GitHub', href: GITHUB_URL },
 };
@@ -191,7 +191,7 @@ export const CTA = {
 };
 
 export const FOOTER_BLURB =
-  'Kotlin over the air updates for Android. Open source, built by Android engineers, for Android engineers.';
+  'Kotlin over the air updates for Android. Built by Android engineers, for Android engineers.';
 
 export const FOOTER = [
   {

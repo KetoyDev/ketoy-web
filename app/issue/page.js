@@ -61,7 +61,7 @@ export default function IssuePage() {
             Something went wrong?{' '}
             <em style={{
               fontStyle: 'normal',
-              background: 'linear-gradient(135deg,#3DDC84 0%,#4285F4 100%)',
+              background: 'linear-gradient(135deg,#ffffff 0%,#c9b8ff 100%)',
               WebkitBackgroundClip: 'text',
               backgroundClip: 'text',
               color: 'transparent',

@@ -1,102 +1,51 @@
-"use client";
-
-import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { SDK_VERSION_FULL } from '@/constants';
-import SupportModal from '@/modules/home/components/SupportModal';
 import KetoyLogo from '@/components/KetoyLogo';
 import BrandIcon from '@/components/BrandIcon';
+import ContactLink from '@/components/ContactLink';
+import { SDK_VERSION_FULL } from '@/constants';
+import { FOOTER, FOOTER_BLURB, GITHUB_URL, DISCORD_URL } from '@/modules/landing/data';
 
+function FooterLink({ link }) {
+  if (link.href.startsWith('http')) return <a href={link.href}>{link.label}</a>;
+  const prefetch = link.href.startsWith('/docs') ? { prefetch: false } : {};
+  return <Link href={link.href} {...prefetch}>{link.label}</Link>;
+}
+
+// One footer for every route, landing included. Styles live in theme.css.
 export default function Footer() {
-  const [supportOpen, setSupportOpen] = useState(false);
-  const pathname = usePathname();
-
-  // The landing page ships its own footer.
-  if (pathname === '/') return null;
-
   return (
-    <>
-      <footer className="site-footer">
-        <div className="container">
-          <div className="footer-grid">
-            <div>
-              <Link className="brand" href="/">
-                <KetoyLogo className="brand-mark" size={30} />
-                <span className="brand-name">Ketoy</span>
-              </Link>
-              <p className="footer-brand-blurb">
-                Kotlin-native over-the-air (OTA) updates for Android, server-driven UI (SDUI) included. Write Kotlin and Jetpack Compose, ship a signed bytecode bundle, render real Compose.
-              </p>
-            </div>
-            <div>
-              <h4>Product</h4>
-              <ul>
-                <li><Link href="/get-started">Get started</Link></li>
-                <li><Link href="/features">Supported features</Link></li>
-                <li><Link href="/architecture">Architecture</Link></li>
-                <li><Link href="/updates">Release notes</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4>Docs</h4>
-              <ul>
-                <li><Link href="/docs" prefetch={false}>Documentation</Link></li>
-                <li><Link href="/docs/reference/kbc-opcodes" prefetch={false}>KBC spec</Link></li>
-                <li><Link href="/docs/reference/capability-registry" prefetch={false}>Capability registry</Link></li>
-                <li><Link href="/docs/reference/ktx-bundle-format" prefetch={false}>Bundle format</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4>Resources</h4>
-              <ul>
-                <li><a href="https://central.sonatype.com/namespace/dev.ketoy.vm"><BrandIcon name="maven" size={15} />Maven Central</a></li>
-                <li><a href="https://github.com/KetoyDev/demos"><BrandIcon name="android" size={15} />Sample apps</a></li>
-                <li><a href="#">Migration guide</a></li>
-                <li><a href="/docs/faq">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4>Community</h4>
-              <ul>
-                <li><a href="https://github.com/KetoyDev"><BrandIcon name="github" size={15} />GitHub</a></li>
-                <li><a href="https://discord.gg/jAbcPPyksf"><BrandIcon name="discord" size={15} />Discord</a></li>
-                <li><Link href="/issue">Report an issue</Link></li>
-                <li>
-                  <button
-                    type="button"
-                    className="footer-contact-btn"
-                    onClick={() => setSupportOpen(true)}
-                    aria-haspopup="dialog"
-                    aria-expanded={supportOpen}
-                  >
-                    Contact
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="footer-meta">
-            <span>
-              © 2026 Ketoy.{' '}
-              <code style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>
-                dev.ketoy.vm
-              </code>{' '}
-              · v{SDK_VERSION_FULL}
-            </span>
-            <span className="footer-made">
-              Made for
-              <BrandIcon name="android" size={15} title="Android" />
-              Android ·
-              <BrandIcon name="kotlin" size={13} title="Kotlin" />
-              Kotlin 2.0 ·
-              <BrandIcon name="compose" size={15} title="Jetpack Compose" />
-              Compose
-            </span>
+    <footer className="kt-footer">
+      <div className="kt-footer-top">
+        <div className="kt-footer-brand">
+          <Link className="kt-brand kt-brand--ink" href="/">
+            <KetoyLogo size={28} />
+            <span>Ketoy</span>
+          </Link>
+          <p>{FOOTER_BLURB}</p>
+          <div className="kt-footer-social">
+            <a href={GITHUB_URL} aria-label="GitHub"><BrandIcon name="github" size={18} /></a>
+            <a href={DISCORD_URL} aria-label="Discord"><BrandIcon name="discord" size={18} /></a>
           </div>
         </div>
-      </footer>
-      <SupportModal open={supportOpen} onClose={() => setSupportOpen(false)} />
-    </>
+        {FOOTER.map((col) => (
+          <div className="kt-footer-col" key={col.h}>
+            <h4>{col.h}</h4>
+            <ul>
+              {col.links.map((l) => <li key={l.label}><FooterLink link={l} /></li>)}
+              {col.h === 'Community' && <li><ContactLink /></li>}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <div className="kt-footer-bottom">
+        <span>© 2026 Ketoy</span>
+        <span className="kt-mono">dev.ketoy.vm · {SDK_VERSION_FULL}</span>
+        <span className="kt-footer-made">
+          <BrandIcon name="kotlin" size={13} /> Kotlin
+          <BrandIcon name="compose" size={14} /> Compose
+          <BrandIcon name="android" size={14} /> Android
+        </span>
+      </div>
+    </footer>
   );
 }

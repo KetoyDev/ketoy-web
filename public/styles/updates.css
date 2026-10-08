@@ -1,6 +1,6 @@
 /* ============================================================
    Ketoy — updates page styles
-   Blue (#4285F4) = platform / cloud  |  Green (#3DDC84) = SDK / Compose
+   Violet = platform / cloud  |  Lilac = SDK / Compose
    ============================================================ */
 
 /* ---- Pulsing dot (hero eyebrow) ---- */
@@ -81,28 +81,28 @@
   width: 52px;
   height: 52px;
   border-radius: 14px;
-  background: rgba(66, 133, 244, 0.10);
-  border: 1px solid rgba(66, 133, 244, 0.22);
-  color: #4285F4;
+  background: var(--accent-soft);
+  border: 1px solid transparent;
+  color: var(--accent-ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 .updates-col-icon.alt {
-  background: var(--accent-soft);
-  border-color: rgba(61, 220, 132, 0.30);
-  color: var(--accent-ink);
+  background: rgba(61, 220, 132, 0.14);
+  border-color: transparent;
+  color: #1d7a48;
 }
 [data-theme="dark"] .updates-col-icon {
-  background: rgba(66, 133, 244, 0.12);
-  border-color: rgba(66, 133, 244, 0.28);
-  color: #7aadff;
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent-ink);
 }
 [data-theme="dark"] .updates-col-icon.alt {
-  background: var(--accent-soft);
-  border-color: rgba(61, 220, 132, 0.28);
-  color: var(--accent-ink);
+  background: rgba(61, 220, 132, 0.14);
+  border-color: transparent;
+  color: #7ff0b0;
 }
 
 /* ---- View-all link ---- */
@@ -133,13 +133,14 @@
 .update-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   padding: 28px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   text-align: left;
   cursor: pointer;
+  box-shadow: var(--elev-1);
   transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
   -webkit-appearance: none;
   appearance: none;
@@ -209,43 +210,39 @@
 
 /* Stable — green */
 .uchip-stable {
+  background: rgba(61, 220, 132, 0.14);
+  color: #1d7a48;
+  border: 1px solid transparent;
+}
+.uchip-stable .uchip-dot { background: var(--ok); }
+
+/* Beta — violet */
+.uchip-beta {
   background: var(--accent-soft);
   color: var(--accent-ink);
-  border: 1px solid rgba(61, 220, 132, 0.30);
+  border: 1px solid transparent;
 }
-.uchip-stable .uchip-dot { background: var(--accent); }
-
-/* Beta — blue */
-.uchip-beta {
-  background: rgba(66, 133, 244, 0.10);
-  color: #1a5fcc;
-  border: 1px solid rgba(66, 133, 244, 0.25);
-}
-.uchip-beta .uchip-dot { background: #4285F4; }
+.uchip-beta .uchip-dot { background: var(--accent); }
 
 /* Coming soon — amber */
 .uchip-coming {
-  background: rgba(212, 167, 60, 0.10);
+  background: rgba(212, 167, 60, 0.14);
   color: #8a6010;
-  border: 1px solid rgba(212, 167, 60, 0.28);
+  border: 1px solid transparent;
 }
 .uchip-coming .uchip-dot { background: #d4a73c; }
 
-/* New — blue accent */
+/* New — violet */
 .uchip-new {
-  background: rgba(66, 133, 244, 0.10);
-  color: #1a5fcc;
-  border: 1px solid rgba(66, 133, 244, 0.22);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border: 1px solid transparent;
 }
-.uchip-new .uchip-dot { background: #4285F4; }
+.uchip-new .uchip-dot { background: var(--accent); }
 
 /* Dark-mode chip overrides */
-[data-theme="dark"] .uchip-stable { background: var(--accent-soft); color: var(--accent-ink); border-color: rgba(61,220,132,0.25); }
-[data-theme="dark"] .uchip-beta   { background: rgba(66,133,244,0.14); color: #7aadff; border-color: rgba(66,133,244,0.30); }
-[data-theme="dark"] .uchip-beta .uchip-dot { background: #5a9af8; }
-[data-theme="dark"] .uchip-coming { background: rgba(212,167,60,0.12); color: #e0bc6a; border-color: rgba(212,167,60,0.28); }
-[data-theme="dark"] .uchip-new    { background: rgba(66,133,244,0.14); color: #7aadff; border-color: rgba(66,133,244,0.28); }
-[data-theme="dark"] .uchip-new .uchip-dot { background: #5a9af8; }
+[data-theme="dark"] .uchip-stable { background: rgba(61,220,132,0.14); color: #7ff0b0; }
+[data-theme="dark"] .uchip-coming { background: rgba(212,167,60,0.14); color: #e0bc6a; }
 
 /* ============================================================
    Updates list pages (updates-platform.html / updates-sdk.html)
@@ -394,7 +391,7 @@
   max-height: min(86vh, 820px);
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 22px;
+  border-radius: 28px;
   box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;

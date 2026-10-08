@@ -1,6 +1,7 @@
 import '../public/styles/site.css';
+import '../public/styles/theme.css';
 import '../public/styles/shiki.css';
-import { Google_Sans_Code, Urbanist, Geist, JetBrains_Mono, Figtree } from 'next/font/google';
+import { JetBrains_Mono, Figtree } from 'next/font/google';
 import Topbar from '@/components/Topbar';
 import Footer from '@/components/Footer';
 import JsonLd from '@/components/JsonLd';
@@ -9,40 +10,15 @@ import {
   graph, organizationSchema, websiteSchema, softwareApplicationSchema,
 } from '@/lib/seo';
 
-// Material / Android type system. Google Sans Code is self-hosted via
-// next/font; Google Sans Flex (display + UI + body) is pulled from Google
-// Fonts in the document head because next/font does not ship it yet.
-const gsCode = Google_Sans_Code({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-gscode',
-  display: 'swap',
-});
-
-// Landing type (DESIGN.md): Urbanist is the Ketoy wordmark face, Geist carries
-// body and UI, JetBrains Mono is the Kotlin ecosystem's own code face.
-const urbanist = Urbanist({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-urbanist',
-  display: 'swap',
-});
-const geist = Geist({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-geist',
-  display: 'swap',
-});
+// Site type: Figtree for display, UI and body; JetBrains Mono for labels,
+// commands and code. (Geist Mono was dropped because Turbopack fails to
+// resolve it from Google's dynamic font endpoint.)
 const jbMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
   variable: '--font-jbmono',
   display: 'swap',
 });
-
-// Landing page type: Figtree for display and body. Labels, commands and code
-// use JetBrains Mono (loaded above). Geist Mono was dropped because Turbopack
-// fails to resolve it from Google's dynamic font endpoint.
 const figtree = Figtree({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
@@ -107,19 +83,11 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${gsCode.variable} ${urbanist.variable} ${geist.variable} ${jbMono.variable} ${figtree.variable}`}
+      className={`${jbMono.variable} ${figtree.variable}`}
       suppressHydrationWarning
     >
       <head>
-        {/* Google Sans Flex - the Android / Material 3 Expressive typeface.
-            Variable axes: optical size, weight and roundness. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght,ROND@6..144,300..800,0..100&display=swap"
-        />
-        <meta name="theme-color" content="#05141f" />
+        <meta name="theme-color" content="#0d0b13" />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <JsonLd data={graph([organizationSchema, websiteSchema, softwareApplicationSchema])} />
       </head>

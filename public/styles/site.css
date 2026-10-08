@@ -1,135 +1,135 @@
 /* ============================================================
    Ketoy  -  site styles
-   Android / Material 3 theme. Seed: Android green #3DDC84,
-   tertiary: Google blue #4285F4.
-   Type: Google Sans Flex (display, UI, body), Google Sans Code (code)
-   Dark is the default (data-theme="dark" on <html>); light is opt-in.
+   Tokens follow the landing page: lavender canvas, ink text, violet
+   accent, inset near-black panels. Type: Figtree (display, UI, body)
+   and JetBrains Mono (code, labels), both via next/font.
+   Light is the default; data-theme="dark" on <html> opts in.
+   Component re-skins live in theme.css, which loads after this file.
    ============================================================ */
 
-/* Google Sans Flex is loaded through a preconnected <link> in the document
-   head; Google Sans Code is self-hosted via next/font (--font-gscode). */
-
-/* ============== Light scheme (M3 light, green seed) ============== */
+/* ============== Light scheme (Ketoy lavender canvas) ============== */
 :root {
-  /* Surfaces - M3 surface-container ladder */
-  --bg: #f5fbf4;               /* surface */
-  --surface: #eff5ee;          /* surface-container-low */
-  --surface-2: #e9efe8;        /* surface-container */
-  --surface-3: #e3eae2;        /* surface-container-high */
-  --surface-4: #dde4dc;        /* surface-container-highest */
-  --ink: #171d19;              /* on-surface */
-  --ink-2: #2b322d;
-  --muted: #525c55;            /* on-surface-variant */
-  --muted-2: #737d75;
-  --border: #d9e2d9;           /* outline-variant */
-  --border-strong: #bfc9c0;
-  --outline: #707971;
+  /* Surfaces */
+  --bg: #efecf8;
+  --surface: #f6f4fc;
+  --surface-2: #ffffff;
+  --surface-3: #ebe7f7;
+  --surface-4: #e2dcf4;
+  --ink: #15121d;
+  --ink-2: #3f3950;
+  --muted: #5e5873;
+  --muted-2: #8a8399;
+  --border: rgba(21, 18, 29, 0.09);
+  --border-strong: rgba(21, 18, 29, 0.16);
+  --outline: #a39db6;
 
-  --card-bg: #ffffff;          /* surface-container-lowest */
-  --topbar-bg: rgba(255,255,255,0.78);
-  --subnav-bg: rgba(255,255,255,0.82);
+  --card-bg: #ffffff;
+  --topbar-bg: rgba(255,255,255,0.72);
+  --subnav-bg: rgba(255,255,255,0.78);
 
-  /* Primary (Android green) */
-  --accent: #3DDC84;
-  --accent-ink: #006d3a;       /* primary (tone 40) - text on light */
-  --accent-soft: #d2f5dd;      /* tinted fill */
-  --accent-soft-2: #e8f8ec;
-  --primary: #006d3a;
+  /* Accent (violet) */
+  --accent: #7c5cff;
+  --accent-ink: #5b45d6;
+  --accent-soft: #e9e3ff;
+  --accent-soft-2: #f1edff;
+  --primary: #15121d;
   --on-primary: #ffffff;
-  --primary-container: #9df6bc;
-  --on-primary-container: #00210e;
+  --primary-container: #e9e3ff;
+  --on-primary-container: #3e2fa8;
 
-  /* Tertiary (Google blue) */
-  --tertiary: #1b6ef3;
-  --tertiary-soft: #dbe6ff;
-  --on-tertiary-container: #001a42;
+  /* Secondary accent (lilac) */
+  --tertiary: #7c5cff;
+  --tertiary-soft: #e9e3ff;
+  --on-tertiary-container: #2d2180;
 
-  /* Always-dark "ink" surfaces (security band, code) */
-  --ink-section: #111a15;
-  --ink-card: #18221c;
-  --ink-border: #253129;
+  /* Always-dark "ink" surfaces (panels, code) */
+  --ink-section: #0d0b13;
+  --ink-card: #16121f;
+  --ink-border: rgba(255,255,255,0.1);
 
-  --logo-ink: #0b3a4f;
+  --logo-ink: #15121d;
+  --ok: #3ddc84;
 
-  /* Elevation (M3 levels 1-3) */
-  --elev-1: 0 1px 2px rgba(0,0,0,0.08), 0 1px 3px 1px rgba(0,0,0,0.05);
-  --elev-2: 0 1px 2px rgba(0,0,0,0.10), 0 4px 10px 2px rgba(0,0,0,0.06);
-  --elev-3: 0 4px 8px 3px rgba(0,0,0,0.06), 0 12px 32px -6px rgba(0,0,0,0.14);
-  --state-hover: rgba(23,29,25,0.06);
+  /* Elevation: soft, diffused */
+  --elev-1: 0 1px 2px rgba(21,18,29,0.04), 0 10px 30px -18px rgba(21,18,29,0.18);
+  --elev-2: 0 1px 2px rgba(21,18,29,0.04), 0 24px 60px -24px rgba(21,18,29,0.25);
+  --elev-3: 0 2px 4px rgba(21,18,29,0.05), 0 40px 90px -30px rgba(21,18,29,0.35);
+  --state-hover: rgba(21,18,29,0.06);
 
-  --code-bg: #0f1511;
-  --code-fg: #e1e6e0;
-  --code-mute: #8a968d;
-  --code-key: #c792ea;
-  --code-str: #c3e88d;
-  --code-num: #f78c6c;
-  --code-fn:  #82aaff;
-  --code-typ: #ffcb6b;
-  --code-com: #5c6a61;
+  --code-bg: #0d0b13;
+  --code-fg: #e8e3ff;
+  --code-mute: #8a8399;
+  --code-key: #c9a0ff;
+  --code-str: #9be7b8;
+  --code-num: #ffb38a;
+  --code-fn:  #8fd0ff;
+  --code-typ: #ffd37a;
+  --code-com: #6c6682;
 
-  --font-display: 'Google Sans Flex', 'Google Sans', Roboto, system-ui, sans-serif;
-  --font-body: 'Google Sans Flex', 'Google Sans', Roboto, system-ui, sans-serif;
-  --font-ui: 'Google Sans Flex', 'Google Sans', Roboto, system-ui, sans-serif;
-  --font-mono: var(--font-gscode), 'Google Sans Code', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --font-display: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, 'SF Mono', Menlo, monospace;
 
-  /* M3 shape scale */
-  --radius-sm: 8px;    /* small */
-  --radius:    16px;   /* medium-large */
-  --radius-lg: 24px;   /* large */
-  --radius-xl: 32px;   /* extra-large */
+  /* Shape scale */
+  --radius-sm: 10px;
+  --radius:    16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-panel: 30px;
 
-  --ease-emph: cubic-bezier(0.2, 0, 0, 1);          /* M3 emphasized */
-  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1); /* expressive overshoot */
+  --ease-emph: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --nav-h: 60px;
-  --nav-gap: 12px;
+  --nav-h: 56px;
+  --nav-gap: 14px;
   --nav-offset: calc(var(--nav-h) + var(--nav-gap) * 2);
 
   --maxw: 1240px;
 }
 
-/* ============== Dark scheme (default) ============== */
+/* ============== Dark scheme (opt-in) ============== */
 [data-theme="dark"] {
-  --bg: #0f1511;
-  --surface: #151c17;
-  --surface-2: #1b231e;
-  --surface-3: #232b26;
-  --surface-4: #2d3530;
-  --ink: #e1e6e0;
-  --ink-2: #c5ccc6;
-  --muted: #95a198;
-  --muted-2: #6c7870;
-  --border: #242d27;
-  --border-strong: #34403a;
-  --outline: #89938b;
+  --bg: #0d0b13;
+  --surface: #16121f;
+  --surface-2: #1c1727;
+  --surface-3: #251f33;
+  --surface-4: #2f273f;
+  --ink: #f3f0ff;
+  --ink-2: #d7d1ea;
+  --muted: #a49cbd;
+  --muted-2: #7a7390;
+  --border: rgba(255,255,255,0.09);
+  --border-strong: rgba(255,255,255,0.16);
+  --outline: #6f6887;
 
-  --card-bg: #151c17;
-  --topbar-bg: rgba(27,35,30,0.72);
-  --subnav-bg: rgba(27,35,30,0.78);
+  --card-bg: #16121f;
+  --topbar-bg: rgba(22,18,31,0.72);
+  --subnav-bg: rgba(22,18,31,0.78);
 
-  --accent: #3DDC84;
-  --accent-ink: #6ff0a7;
-  --accent-soft: rgba(61,220,132,0.14);
-  --accent-soft-2: rgba(61,220,132,0.07);
-  --primary: #3DDC84;
-  --on-primary: #00391b;
-  --primary-container: #0d4f2c;
-  --on-primary-container: #a3f7c1;
+  --accent: #a894ff;
+  --accent-ink: #c6b8ff;
+  --accent-soft: rgba(124,92,255,0.18);
+  --accent-soft-2: rgba(124,92,255,0.1);
+  --primary: #f3f0ff;
+  --on-primary: #15121d;
+  --primary-container: rgba(124,92,255,0.22);
+  --on-primary-container: #dcd3ff;
 
-  --tertiary: #8ab4f8;
-  --tertiary-soft: rgba(66,133,244,0.16);
-  --on-tertiary-container: #d8e5ff;
+  --tertiary: #a894ff;
+  --tertiary-soft: rgba(124,92,255,0.16);
+  --on-tertiary-container: #e4ddff;
 
-  --ink-section: #0a0f0c;
-  --ink-card: #131a15;
-  --ink-border: #212b24;
+  --ink-section: #090710;
+  --ink-card: #130f1b;
+  --ink-border: rgba(255,255,255,0.1);
 
-  --logo-ink: #e8eef2;
+  --logo-ink: #f3f0ff;
 
-  --elev-1: 0 1px 2px rgba(0,0,0,0.5), 0 1px 3px 1px rgba(0,0,0,0.25);
-  --elev-2: 0 1px 2px rgba(0,0,0,0.5), 0 4px 12px 3px rgba(0,0,0,0.3);
-  --elev-3: 0 4px 8px 3px rgba(0,0,0,0.3), 0 16px 40px -8px rgba(0,0,0,0.6);
-  --state-hover: rgba(225,230,224,0.06);
+  --elev-1: 0 1px 2px rgba(0,0,0,0.5), 0 10px 30px -18px rgba(0,0,0,0.6);
+  --elev-2: 0 1px 2px rgba(0,0,0,0.5), 0 24px 60px -24px rgba(0,0,0,0.7);
+  --elev-3: 0 4px 8px rgba(0,0,0,0.4), 0 40px 90px -30px rgba(0,0,0,0.8);
+  --state-hover: rgba(243,240,255,0.06);
 }
 
 html {
@@ -168,7 +168,6 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
   margin: 0;
   text-wrap: balance;
-  font-variation-settings: "ROND" 60;
 }
 
 h1 { font-size: clamp(44px, 6.2vw, 84px); line-height: 1.02; letter-spacing: -0.035em; }
@@ -675,7 +674,6 @@ p { margin: 0; color: var(--ink-2); }
   line-height: 1.02;
   letter-spacing: -0.035em;
   font-weight: 650;
-  font-variation-settings: "ROND" 100;
   text-wrap: balance;
 }
 .hero h1 strong {
@@ -742,7 +740,6 @@ p { margin: 0; color: var(--ink-2); }
   letter-spacing: -0.03em;
   color: var(--ink);
   font-variant-numeric: tabular-nums;
-  font-variation-settings: "ROND" 100;
 }
 .hero-stat .v small {
   font-size: 18px;
@@ -1122,7 +1119,6 @@ footer.site-footer {
 .page-head h1 {
   margin-top: 16px;
   font-size: clamp(40px, 4.5vw, 64px);
-  font-variation-settings: "ROND" 100;
 }
 .page-head p.lede {
   margin-top: 20px;
