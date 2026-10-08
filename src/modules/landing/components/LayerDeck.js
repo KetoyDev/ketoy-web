@@ -86,18 +86,43 @@ function VisualCaps() {
   );
 }
 
+const ROUTES = [
+  { name: 'Welcome', path: '/welcome', kind: 'welcome' },
+  { name: 'Plan', path: '/plan', kind: 'plan' },
+  { name: 'Payment', path: '/payment', kind: 'payment' },
+  { name: 'Done', path: '/done', kind: 'done' },
+];
+
+function MiniScreen({ kind }) {
+  if (kind === 'welcome') return (<><i className="ms-avatar" /><i className="ms-line w60" /><i className="ms-line w40" /><i className="ms-btn" /></>);
+  if (kind === 'plan') return (<><i className="ms-line w50" /><i className="ms-row" /><i className="ms-row is-on" /><i className="ms-row" /></>);
+  if (kind === 'payment') return (<><i className="ms-line w50" /><i className="ms-card" /><i className="ms-line w70" /><i className="ms-btn" /></>);
+  return (<><i className="ms-check" /><i className="ms-line w60 c" /><i className="ms-line w40 c" /></>);
+}
+
 function VisualFlow() {
   return (
     <div className="kt-vis kt-vis--flow" aria-label="A navigation flow shipped as one bundle">
-      {['Welcome', 'Plan', 'Payment', 'Done'].map((s, i) => (
-        <div className="kt-flow-node" key={s} style={{ '--i': i }}>
-          <span className="kt-flow-screen">
-            <i /><i /><i />
-          </span>
-          <b>{s}</b>
-          <small>/{s.toLowerCase()}</small>
-        </div>
-      ))}
+      <div className="kt-flow-head">
+        <span className="kt-mono">NavGraph</span>
+        <span className="kt-mono"><i className="kt-ok kt-ok--pulse" />main.ktx · v12</span>
+      </div>
+      <div className="kt-flow-track">
+        <span className="kt-flow-rail" aria-hidden="true"><i /></span>
+        {ROUTES.map((r, i) => (
+          <div className="kt-flow-node" key={r.path} style={{ '--i': i }}>
+            <span className="kt-flow-screen"><MiniScreen kind={r.kind} /></span>
+            <b>{r.name}</b>
+            <small>{r.path}</small>
+          </div>
+        ))}
+      </div>
+      <div className="kt-flow-stack" aria-hidden="true">
+        <span className="kt-mono">back stack</span>
+        <span className="kt-flow-chips">
+          {ROUTES.map((r, i) => <i key={r.path} style={{ '--i': i }}>{r.path}</i>)}
+        </span>
+      </div>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import '../public/styles/landing.css';
 import Link from 'next/link';
-import { SDK_VERSION_FULL } from '@/constants';
 import BrandIcon from '@/components/BrandIcon';
 import CopyButton from '@/components/mdx/CopyButton';
 import JsonLd from '@/components/JsonLd';
@@ -8,6 +7,8 @@ import LandingNav from '@/modules/landing/components/LandingNav';
 import HeroStage from '@/modules/landing/components/HeroStage';
 import LayerDeck from '@/modules/landing/components/LayerDeck';
 import Motion from '@/modules/landing/components/Motion';
+import InstallCommand from '@/modules/landing/components/InstallCommand';
+import KetoyLogo from '@/components/KetoyLogo';
 import { faqSchema, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_URL } from '@/lib/seo';
 import {
   HERO, PROOF, LAYERS_TITLE, LAYERS_LEAD, STEPS_TITLE, STEPS_LEAD, STEPS,
@@ -61,6 +62,78 @@ function Arrow() {
   );
 }
 
+// One designed visual per step. Animations key off the .is-on class that
+// Motion.js toggles as the rail fills.
+function StepVisual({ index, step }) {
+  if (index === 0) {
+    return (
+      <div className="kt-sv kt-sv--write" aria-hidden="true">
+        <div className="kt-sv-bar"><span /><span /><span /><em>OfferScreen.kt</em></div>
+        <pre className="kt-sv-code">
+          {step.code.map((line, i) => (
+            <span key={i} className={`kt-sv-line${i === 0 ? ' is-hl' : ''}`}>
+              <i>{i + 1}</i>{line}
+            </span>
+          ))}
+          <span className="kt-sv-caret" />
+        </pre>
+      </div>
+    );
+  }
+  if (index === 1) {
+    return (
+      <div className="kt-sv kt-sv--bundle" aria-hidden="true">
+        <div className="kt-sv-bar"><span /><span /><span /><em>ketoyBundle</em></div>
+        <div className="kt-sv-bundle-body">
+          <div className="kt-sv-artifact">
+            <span className="kt-sv-artifact-ic">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3 4 7v10l8 4 8-4V7l-8-4z" /><path d="M4 7l8 4 8-4M12 11v10" />
+              </svg>
+            </span>
+            <b>main.ktx</b>
+            <small>Ketoy Bytecode</small>
+          </div>
+          <div className="kt-sv-bars">
+            <div className="kt-sv-barrow"><span>JSON SDUI</span><i className="kt-sv-barfill kt-sv-barfill--json" /></div>
+            <div className="kt-sv-barrow"><span>.ktx</span><i className="kt-sv-barfill kt-sv-barfill--ktx" /><em>20× smaller</em></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (index === 2) {
+    return (
+      <div className="kt-sv kt-sv--push" aria-hidden="true">
+        <div className="kt-sv-bar"><span /><span /><span /><em>terminal</em></div>
+        <div className="kt-sv-push-body">
+          <p className="kt-sv-cmd"><span>$</span> {step.code[0].replace(/^\$ /, '')}</p>
+          <div className="kt-sv-progress"><i /></div>
+          <p className="kt-sv-out"><i className="kt-ok" />{step.code[1]}</p>
+          <p className="kt-sv-out kt-sv-out--live"><i className="kt-ok kt-ok--pulse" />{step.code[2]}</p>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="kt-sv kt-sv--verify" aria-hidden="true">
+      <div className="kt-sv-bar"><span /><span /><span /><em>on device</em></div>
+      <ul className="kt-sv-checks">
+        {step.code.map((row) => {
+          const [k, ...rest] = row.split(/\s{2,}/);
+          return (
+            <li key={k}>
+              <span className="kt-sv-check-ic"><Check /></span>
+              <span>{k}</span>
+              <b>{rest.join(' ')}</b>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <div className="kt">
@@ -74,10 +147,6 @@ export default function HomePage() {
           <LandingNav />
 
           <div className="kt-hero-copy" data-hero="copy">
-            <Link className="kt-pill" href="/updates" data-hero="fade">
-              <i className="kt-pill-dot" aria-hidden="true" />
-              <span className="kt-pill-long">{HERO.pill} · </span>v{SDK_VERSION_FULL}
-            </Link>
             <h1 id="kt-h1" className="kt-h1">
               {HERO.lines.map((l) => (
                 <span className="kt-line" key={l}>
@@ -96,6 +165,7 @@ export default function HomePage() {
                 {HERO.secondary.label}
               </a>
             </div>
+            <InstallCommand command={INSTALL_CMD} />
           </div>
 
           <HeroStage />
@@ -132,13 +202,17 @@ export default function HomePage() {
             <span className="kt-pipe-fill" data-pipe="fill" />
           </div>
           <ol className="kt-steps">
-            {STEPS.map((s) => (
-              <li className="kt-step" key={s.n} data-pipe="step" data-rv>
+            {STEPS.map((st, i) => (
+              <li className="kt-step" key={st.n} data-pipe="step" data-rv>
                 <span className="kt-step-node" aria-hidden="true"><Check /></span>
-                <span className="kt-step-n kt-mono">{s.n}</span>
-                <h3>{s.h}</h3>
-                <p>{s.p}</p>
-                <pre className="kt-step-code">{s.code.join('\n')}</pre>
+                <div className="kt-step-card">
+                  <StepVisual index={i} step={st} />
+                  <div className="kt-step-copy">
+                    <span className="kt-step-n kt-mono">{st.n}</span>
+                    <h3>{st.h}</h3>
+                    <p>{st.p}</p>
+                  </div>
+                </div>
               </li>
             ))}
           </ol>
@@ -208,7 +282,12 @@ export default function HomePage() {
                   <p className="kt-term-out"><i className="kt-ok" />{l.out}</p>
                 </div>
               ))}
+              <div className="kt-term-row kt-term-row--cursor" data-type>
+                <p className="kt-term-cmd"><span className="kt-term-prompt">$</span> <span className="kt-term-caret" /></p>
+              </div>
             </div>
+            <div className="kt-term-glow" aria-hidden="true" />
+            <KetoyLogo className="kt-term-mark" size={320} />
           </div>
           <div className="kt-tools-side">
             <article className="kt-tile" data-rv>

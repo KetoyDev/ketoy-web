@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import KetoyLogo from '@/components/KetoyLogo';
 import BrandIcon from '@/components/BrandIcon';
+import { SDK_VERSION_FULL } from '@/constants';
 import { NAV, GITHUB_URL } from '../data';
 
 function NavLink({ item, onClick }) {
@@ -50,10 +51,13 @@ export default function LandingNav() {
   return (
     <>
       <header className="kt-nav" data-hero="nav">
-        <Link className="kt-brand" href="/" aria-label="Ketoy home">
-          <KetoyLogo size={26} />
-          <span>Ketoy</span>
-        </Link>
+        <div className="kt-brand-row">
+          <Link className="kt-brand" href="/" aria-label="Ketoy home">
+            <KetoyLogo size={26} />
+            <span>Ketoy</span>
+          </Link>
+          <Link className="kt-version" href="/updates" title="Release notes">v{SDK_VERSION_FULL}</Link>
+        </div>
         <nav className="kt-nav-links" aria-label="Primary">
           {NAV.map((item) => <NavLink key={item.href} item={item} />)}
         </nav>
