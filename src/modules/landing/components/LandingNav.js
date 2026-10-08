@@ -39,7 +39,7 @@ export default function LandingNav() {
       const x = window.innerWidth / 2;
       const y = 40;
       const hit = document.elementsFromPoint(x, y).find((el) => !el.closest('.kt-nav-float'));
-      const onDark = !!(hit && hit.closest('.kt-panel, .kt-term, .kt-vis--flow, .kt-vis--code, .kt-sv'));
+      const onDark = !!(hit && hit.closest('.kt-panel, .kt-layers, .kt-term, .kt-vis--flow, .kt-vis--code, .kt-sv'));
       setDark((d) => (d === onDark ? d : onDark));
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(probe); };

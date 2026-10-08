@@ -632,7 +632,7 @@ html:has(.kt) body { background: #efecf8; }
 .kt-proof-section {
   /* A fixed band between the two panels. The row is centred inside it, so
      the space above and below the numbers is always equal. */
-  min-height: clamp(260px, 34vh, 360px);
+  min-height: clamp(360px, 46vh, 480px);
   display: flex;
   align-items: center;
   padding: 0 var(--gutter);
@@ -654,6 +654,7 @@ html:has(.kt) body { background: #efecf8; }
   padding: 12px 20px;
   border-left: 1px solid var(--line-2);
 }
+.kt-proof li:first-child { border-left: 0; }
 .kt-proof b {
   display: block;
   font-size: clamp(30px, 3vw, 44px);
