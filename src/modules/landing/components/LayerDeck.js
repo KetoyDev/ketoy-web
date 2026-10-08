@@ -86,18 +86,31 @@ function VisualCaps() {
   );
 }
 
-const ROUTES = [
-  { name: 'Welcome', path: '/welcome', kind: 'welcome' },
-  { name: 'Plan', path: '/plan', kind: 'plan' },
-  { name: 'Payment', path: '/payment', kind: 'payment' },
-  { name: 'Done', path: '/done', kind: 'done' },
-];
+const STACK = ['/welcome', '/home', '/plan', '/payment'];
 
-function MiniScreen({ kind }) {
-  if (kind === 'welcome') return (<><i className="ms-avatar" /><i className="ms-line w60" /><i className="ms-line w40" /><i className="ms-btn" /></>);
-  if (kind === 'plan') return (<><i className="ms-line w50" /><i className="ms-row" /><i className="ms-row is-on" /><i className="ms-row" /></>);
-  if (kind === 'payment') return (<><i className="ms-line w50" /><i className="ms-card" /><i className="ms-line w70" /><i className="ms-btn" /></>);
-  return (<><i className="ms-check" /><i className="ms-line w60 c" /><i className="ms-line w40 c" /></>);
+// A static nav graph in the spirit of a hand-drawn navigation diagram:
+// two top-level screens, a boxed checkout flow, dashed edges with arrowheads.
+function Screen({ x, y, kind, name, route }) {
+  const bars = {
+    welcome: [<circle key="a" cx={x + 16} cy={y + 18} r={6} fill="#a894ff" />, <rect key="b" x={x + 10} y={y + 32} width={32} height={4} rx={2} fill="rgba(255,255,255,0.35)" />, <rect key="c" x={x + 10} y={y + 41} width={22} height={4} rx={2} fill="rgba(255,255,255,0.22)" />, <rect key="d" x={x + 10} y={y + 64} width={44} height={9} rx={4.5} fill="#fff" />],
+    home: [<rect key="a" x={x + 10} y={y + 12} width={44} height={6} rx={3} fill="rgba(255,255,255,0.35)" />, <rect key="b" x={x + 10} y={y + 24} width={44} height={18} rx={4} fill="rgba(124,92,255,0.45)" />, <rect key="c" x={x + 10} y={y + 48} width={44} height={12} rx={4} fill="rgba(255,255,255,0.12)" />, <rect key="d" x={x + 2} y={y + 70} width={60} height={12} rx={0} fill="rgba(255,255,255,0.1)" />, <circle key="e" cx={x + 16} cy={y + 76} r={2.5} fill="#fff" />, <circle key="f" cx={x + 32} cy={y + 76} r={2.5} fill="rgba(255,255,255,0.4)" />, <circle key="g" cx={x + 48} cy={y + 76} r={2.5} fill="rgba(255,255,255,0.4)" />],
+    plan: [<rect key="a" x={x + 10} y={y + 12} width={30} height={5} rx={2.5} fill="rgba(255,255,255,0.35)" />, <rect key="b" x={x + 10} y={y + 24} width={44} height={11} rx={4} fill="rgba(255,255,255,0.1)" />, <rect key="c" x={x + 10} y={y + 39} width={44} height={11} rx={4} fill="rgba(124,92,255,0.55)" stroke="#a894ff" />, <rect key="d" x={x + 10} y={y + 54} width={44} height={11} rx={4} fill="rgba(255,255,255,0.1)" />],
+    payment: [<rect key="a" x={x + 10} y={y + 12} width={30} height={5} rx={2.5} fill="rgba(255,255,255,0.35)" />, <rect key="b" x={x + 10} y={y + 24} width={44} height={20} rx={5} fill="url(#kt-card-grad)" />, <rect key="c" x={x + 10} y={y + 50} width={34} height={4} rx={2} fill="rgba(255,255,255,0.25)" />, <rect key="d" x={x + 10} y={y + 64} width={44} height={9} rx={4.5} fill="#fff" />],
+    done: [<circle key="a" cx={x + 32} cy={y + 30} r={11} fill="#3ddc84" />, <path key="b" d={`M${x + 26} ${y + 30} l4 4 8 -8`} stroke="#0b2a18" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />, <rect key="c" x={x + 18} y={y + 50} width={28} height={4} rx={2} fill="rgba(255,255,255,0.35)" />, <rect key="d" x={x + 22} y={y + 59} width={20} height={4} rx={2} fill="rgba(255,255,255,0.2)" />],
+  }[kind];
+  return (
+    <g>
+      <rect x={x} y={y} width={64} height={84} rx={10} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.16)" />
+      <rect x={x + 24} y={y + 4} width={16} height={2.5} rx={1.25} fill="rgba(255,255,255,0.35)" />
+      {bars}
+      <text x={x + 32} y={y + 104} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="600" fontFamily="var(--sans)">{name}</text>
+      <text x={x + 32} y={y + 118} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="9.5" fontFamily="var(--mono)">{route}</text>
+    </g>
+  );
+}
+
+function Edge({ d }) {
+  return <path d={d} fill="none" stroke="rgba(214,204,255,0.75)" strokeWidth="1.6" strokeDasharray="4 4" strokeLinecap="round" markerEnd="url(#kt-arrow)" />;
 }
 
 function VisualFlow() {
@@ -105,22 +118,38 @@ function VisualFlow() {
     <div className="kt-vis kt-vis--flow" aria-label="A navigation flow shipped as one bundle">
       <div className="kt-flow-head">
         <span className="kt-mono">NavGraph</span>
-        <span className="kt-mono"><i className="kt-ok kt-ok--pulse" />main.ktx · v12</span>
+        <span className="kt-mono"><i className="kt-ok" />main.ktx · v12</span>
       </div>
-      <div className="kt-flow-track">
-        <span className="kt-flow-rail" aria-hidden="true"><i /></span>
-        {ROUTES.map((r, i) => (
-          <div className="kt-flow-node" key={r.path} style={{ '--i': i }}>
-            <span className="kt-flow-screen"><MiniScreen kind={r.kind} /></span>
-            <b>{r.name}</b>
-            <small>{r.path}</small>
-          </div>
-        ))}
-      </div>
+      <svg className="kt-flow-svg" viewBox="0 0 620 200" aria-hidden="true">
+        <defs>
+          <marker id="kt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#d6ccff" />
+          </marker>
+          <linearGradient id="kt-card-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#6b5be6" /><stop offset="1" stopColor="#a894ff" />
+          </linearGradient>
+        </defs>
+        {/* checkout flow group */}
+        <rect x="262" y="16" width="346" height="150" rx="14" fill="rgba(124,92,255,0.07)" stroke="#a894ff" strokeOpacity="0.55" strokeDasharray="5 5" />
+        <text x="278" y="33" fill="#c6b8ff" fontSize="9.5" fontFamily="var(--mono)" letterSpacing="1">CHECKOUT FLOW</text>
+
+        <Screen x={20} y={44} kind="welcome" name="Welcome" route="/welcome" />
+        <Screen x={140} y={44} kind="home" name="Home" route="/home" />
+        <Screen x={290} y={44} kind="plan" name="Plan" route="/plan" />
+        <Screen x={400} y={44} kind="payment" name="Payment" route="/payment" />
+        <Screen x={510} y={44} kind="done" name="Done" route="/done" />
+
+        <Edge d="M86 86 H136" />
+        <Edge d="M206 86 H286" />
+        <Edge d="M356 86 H396" />
+        <Edge d="M466 86 H506" />
+        {/* return to home after done */}
+        <Edge d="M542 130 V186 H172 V134" />
+      </svg>
       <div className="kt-flow-stack" aria-hidden="true">
         <span className="kt-mono">back stack</span>
         <span className="kt-flow-chips">
-          {ROUTES.map((r, i) => <i key={r.path} style={{ '--i': i }}>{r.path}</i>)}
+          {STACK.map((r, i) => <i key={r} className={i === STACK.length - 1 ? 'is-top' : undefined}>{r}</i>)}
         </span>
       </div>
     </div>

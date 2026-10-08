@@ -230,8 +230,8 @@ p { margin: 0; color: var(--ink-2); }
   gap: 20px;
   border-radius: 999px;
   background: var(--topbar-bg);
-  backdrop-filter: saturate(180%) blur(18px);
   -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
   border: 1px solid var(--border);
   box-shadow: var(--elev-2);
   transition: background 280ms var(--ease-emph), border-color 280ms var(--ease-emph), box-shadow 280ms var(--ease-emph);
@@ -311,8 +311,8 @@ p { margin: 0; color: var(--ink-2); }
   position: fixed;
   inset: 0;
   background: rgba(5, 10, 7, 0.5);
-  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   z-index: 48;
   pointer-events: auto;
   animation: fadeInBd 180ms ease;
@@ -526,8 +526,8 @@ p { margin: 0; color: var(--ink-2); }
   scrollbar-width: none;
   border-radius: 999px;
   background: var(--subnav-bg);
-  backdrop-filter: saturate(180%) blur(18px);
   -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
   border: 1px solid var(--border);
   box-shadow: var(--elev-1);
 }
@@ -727,8 +727,8 @@ p { margin: 0; color: var(--ink-2); }
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--surface-2) 72%, transparent);
   border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   transition: transform 300ms var(--ease-spring), border-color 200ms ease;
 }
 .hero-stat:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }

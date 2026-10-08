@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import KetoyLogo from '@/components/KetoyLogo';
 import BrandIcon from '@/components/BrandIcon';
 import { SDK_VERSION_FULL } from '@/constants';
@@ -26,6 +27,9 @@ function NavLink({ item, onClick }) {
 export default function LandingNav() {
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const sentinel = document.querySelector('[data-nav-sentinel]');
@@ -78,6 +82,8 @@ export default function LandingNav() {
         </div>
       </header>
 
+      {mounted && createPortal(
+        <>
       <div className={`kt-nav-float${compact && !open ? ' is-on' : ''}`} aria-hidden={!compact}>
         <Link className="kt-brand" href="/" tabIndex={compact ? 0 : -1}>
           <KetoyLogo size={22} />
@@ -104,6 +110,9 @@ export default function LandingNav() {
         </nav>
         <Link className="kt-btn kt-btn--light" href="/get-started" onClick={close}>Get started</Link>
       </div>
+        </>,
+        document.body,
+      )}
     </>
   );
 }
