@@ -27,7 +27,26 @@ function NavLink({ item, onClick }) {
 export default function LandingNav() {
   const [open, setOpen] = useState(false);
   const [compact, setCompact] = useState(false);
+  const [dark, setDark] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // Tint the glass by what sits behind it: smoky over the dark panels,
+  // clear over the canvas and the violet deck.
+  useEffect(() => {
+    let raf = 0;
+    const probe = () => {
+      raf = 0;
+      const x = window.innerWidth / 2;
+      const y = 40;
+      const hit = document.elementsFromPoint(x, y).find((el) => !el.closest('.kt-nav-float'));
+      const onDark = !!(hit && hit.closest('.kt-panel, .kt-term, .kt-vis--flow, .kt-vis--code, .kt-sv'));
+      setDark((d) => (d === onDark ? d : onDark));
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(probe); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    probe();
+    return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+  }, []);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -84,7 +103,7 @@ export default function LandingNav() {
 
       {mounted && createPortal(
         <>
-      <div className={`kt-nav-float${compact && !open ? ' is-on' : ''}`} aria-hidden={!compact}>
+      <div className={`kt-nav-float${compact && !open ? ' is-on' : ''}${dark ? ' is-dark' : ''}`} aria-hidden={!compact}>
         <Link className="kt-brand" href="/" tabIndex={compact ? 0 : -1}>
           <KetoyLogo size={22} />
           <span>Ketoy</span>

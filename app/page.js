@@ -172,7 +172,11 @@ export default function HomePage() {
         </div>
         <div data-nav-sentinel aria-hidden="true" />
 
-        <ul className="kt-proof" aria-label="Ketoy performance">
+      </section>
+
+      {/* Proof: its own section, content centred in a fixed-height band */}
+      <section className="kt-proof-section" aria-label="Ketoy performance">
+        <ul className="kt-proof">
           {PROOF.map((p) => (
             <li key={p.label} data-rv>
               <b>{p.value}</b>

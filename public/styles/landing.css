@@ -47,6 +47,9 @@ html:has(.kt) body { background: #efecf8; }
 .kt *, .kt *::before, .kt *::after { box-sizing: border-box; }
 .kt h1, .kt h2, .kt h3, .kt h4, .kt p, .kt ul, .kt ol, .kt pre { margin: 0; }
 .kt ul, .kt ol { padding: 0; list-style: none; }
+/* site.css gives every <section> 96px of vertical padding; the landing's
+   sections own their own spacing, so reset it at equal specificity. */
+:where(.kt) section { padding: 0; }
 :where(.kt) a { color: inherit; text-decoration: none; }
 :where(.kt) a:hover { color: inherit; }
 .kt h1, .kt h2, .kt h3, .kt h4 { font-family: var(--sans); font-weight: 600; letter-spacing: -0.02em; color: inherit; }
@@ -227,45 +230,73 @@ html:has(.kt) body { background: #efecf8; }
   gap: 18px;
   padding: 8px 8px 8px 18px;
   border-radius: 999px;
-  /* Liquid glass: a translucent body, a strong blur with saturation so
-     colour bleeds through, a specular highlight along the top edge and a
-     soft inner rim. */
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.28) 55%, rgba(255, 255, 255, 0.4)),
-    rgba(239, 236, 248, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  /* Liquid glass. The body is almost clear so the blurred, over-saturated
+     backdrop IS the material; depth comes from a bright refractive rim,
+     a lens highlight and a soft drop shadow. */
+  background: rgba(255, 255, 255, 0.12);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.85),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 0 0 1px rgba(21, 18, 29, 0.03),
-    0 1px 1px rgba(21, 18, 29, 0.05),
-    0 24px 60px -24px rgba(21, 18, 29, 0.45);
-  -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(1.05);
-  backdrop-filter: blur(28px) saturate(1.9) brightness(1.05);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 12px 24px -12px rgba(255, 255, 255, 0.7),
+    inset 0 -10px 20px -14px rgba(255, 255, 255, 0.45),
+    0 1px 1px rgba(21, 18, 29, 0.08),
+    0 18px 50px -16px rgba(21, 18, 29, 0.45);
+  -webkit-backdrop-filter: blur(22px) saturate(2.2) brightness(1.08);
+  backdrop-filter: blur(22px) saturate(2.2) brightness(1.08);
   transform: translate(-50%, -140%);
   opacity: 0;
-  transition: transform 0.7s var(--ease), opacity 0.5s;
+  transition: transform 0.7s var(--ease), opacity 0.5s, background-color 0.4s, color 0.4s;
   pointer-events: none;
   overflow: hidden;
+  isolation: isolate;
 }
 .kt-nav-float::before {
-  /* moving specular sheen */
+  /* lens highlight: a bright cap across the top third */
   content: "";
   position: absolute;
-  inset: -40% -20%;
-  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.35) 48%, rgba(255, 255, 255, 0.05) 52%, transparent 65%);
-  transform: translateX(-60%);
-  animation: kt-sheen 7s ease-in-out infinite;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 90% at 50% -40%, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.12) 55%, transparent 70%);
   pointer-events: none;
+  z-index: -1;
+}
+.kt-nav-float::after {
+  /* travelling specular sheen */
+  content: "";
+  position: absolute;
+  inset: -40% -30%;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.55) 48%, rgba(255, 255, 255, 0.1) 53%, transparent 62%);
+  transform: translateX(-70%);
+  animation: kt-sheen 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 @keyframes kt-sheen {
-  0%, 55% { transform: translateX(-60%); }
-  85%, 100% { transform: translateX(60%); }
+  0%, 60% { transform: translateX(-70%); }
+  90%, 100% { transform: translateX(70%); }
 }
-.kt-nav-float > * { position: relative; }
+/* Over dark panels the glass goes smoky and the type flips to white. */
+.kt-nav-float.is-dark {
+  background: rgba(40, 34, 60, 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 12px 24px -12px rgba(255, 255, 255, 0.25),
+    0 18px 50px -16px rgba(0, 0, 0, 0.6);
+}
+.kt-nav-float.is-dark::before { background: radial-gradient(120% 90% at 50% -40%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05) 55%, transparent 70%); }
+.kt-nav-float.is-dark .kt-brand { color: var(--white); --logo-ink: #ffffff; }
+.kt-nav-float.is-dark nav a { color: rgba(255, 255, 255, 0.82); }
+.kt-nav-float.is-dark nav a:hover { color: var(--white); background: rgba(255, 255, 255, 0.12); }
+.kt-nav-float.is-dark .kt-btn--dark { background: var(--white); color: #15121d; }
+.kt-nav-float.is-dark .kt-btn--dark:hover { background: #f4f1ff; color: #15121d; }
 .kt-nav-float.is-on { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
 .kt-nav-float .kt-brand { color: var(--ink); font-size: 17px; --logo-ink: #15121d; }
 .kt-nav-float nav { display: flex; gap: 2px; }
+.kt-nav-float nav a { white-space: nowrap; }
 .kt-nav-float nav a { color: var(--ink-2); font-size: 14px; }
 .kt-nav-float nav a:hover { color: var(--ink); background: rgba(21, 18, 29, 0.06); }
 
@@ -598,12 +629,21 @@ html:has(.kt) body { background: #efecf8; }
 [data-nav-sentinel] { position: absolute; top: 60vh; left: 0; width: 1px; height: 1px; }
 .kt-hero { position: relative; }
 
+.kt-proof-section {
+  /* A fixed band between the two panels. The row is centred inside it, so
+     the space above and below the numbers is always equal. */
+  min-height: clamp(260px, 34vh, 360px);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--gutter);
+}
 .kt-proof {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
-  margin: 0 var(--inset);
-  padding: clamp(64px, 9vh, 112px) calc(var(--gutter) - var(--inset));
+  margin: 0;
+  padding: 0;
 }
 .kt-proof li {
   display: flex;
@@ -1074,7 +1114,8 @@ html:has(.kt) body { background: #efecf8; }
   .kt-vis--caps { grid-template-columns: 1fr; justify-items: center; gap: 16px; padding: 22px; }
   .kt-caps-core { width: 84px; height: 84px; border-radius: 20px; }
   .kt-caps-grid { grid-template-columns: repeat(3, 1fr); width: 100%; }
-  .kt-proof { grid-template-columns: 1fr 1fr; padding-top: 48px; padding-bottom: 48px; }
+  .kt-proof { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+  .kt-proof-section { min-height: 0; padding: 56px var(--gutter); }
   .kt-proof li { padding-right: 12px; }
   .kt-proof span { font-size: 13.5px; }
   .kt-layers { padding-top: 56px; }

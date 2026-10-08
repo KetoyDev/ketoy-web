@@ -120,7 +120,7 @@ function VisualFlow() {
         <span className="kt-mono">NavGraph</span>
         <span className="kt-mono"><i className="kt-ok" />main.ktx · v12</span>
       </div>
-      <svg className="kt-flow-svg" viewBox="0 0 620 200" aria-hidden="true">
+      <svg className="kt-flow-svg" viewBox="0 0 632 212" aria-hidden="true">
         <defs>
           <marker id="kt-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" fill="#d6ccff" />
@@ -130,7 +130,7 @@ function VisualFlow() {
           </linearGradient>
         </defs>
         {/* checkout flow group */}
-        <rect x="262" y="16" width="346" height="150" rx="14" fill="rgba(124,92,255,0.07)" stroke="#a894ff" strokeOpacity="0.55" strokeDasharray="5 5" />
+        <rect x="262" y="16" width="338" height="156" rx="14" fill="rgba(124,92,255,0.07)" stroke="#a894ff" strokeOpacity="0.55" strokeDasharray="5 5" />
         <text x="278" y="33" fill="#c6b8ff" fontSize="9.5" fontFamily="var(--mono)" letterSpacing="1">CHECKOUT FLOW</text>
 
         <Screen x={20} y={44} kind="welcome" name="Welcome" route="/welcome" />
@@ -143,8 +143,9 @@ function VisualFlow() {
         <Edge d="M206 86 H286" />
         <Edge d="M356 86 H396" />
         <Edge d="M466 86 H506" />
-        {/* return to home after done */}
-        <Edge d="M542 130 V186 H172 V134" />
+        {/* return to home after done: out the right edge, around the
+            bottom, in below the forward edge */}
+        <Edge d="M578 86 H614 V196 H118 V112 H136" />
       </svg>
       <div className="kt-flow-stack" aria-hidden="true">
         <span className="kt-mono">back stack</span>
