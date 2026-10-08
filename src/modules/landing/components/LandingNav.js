@@ -34,8 +34,12 @@ export default function LandingNav() {
   // clear over the canvas and the violet deck.
   useEffect(() => {
     let raf = 0;
+    let lastRun = 0;
     const probe = () => {
       raf = 0;
+      const now = performance.now();
+      if (now - lastRun < 120) { raf = requestAnimationFrame(probe); return; }
+      lastRun = now;
       const x = window.innerWidth / 2;
       const y = 40;
       const hit = document.elementsFromPoint(x, y).find((el) => !el.closest('.kt-nav-float'));

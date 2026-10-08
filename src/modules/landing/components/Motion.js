@@ -15,7 +15,7 @@ export default function Motion() {
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    const lenis = new Lenis({ lerp: 0.11, smoothWheel: true });
+    const lenis = new Lenis({ lerp: 0.09, smoothWheel: true, wheelMultiplier: 1 });
     const raf = (t) => lenis.raf(t * 1000);
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(raf);
@@ -125,7 +125,6 @@ function heroScroll() {
   gsap.to('[data-hero="phone"]', { y: -180, ease: 'none', scrollTrigger: st });
   gsap.to('[data-hero="term"]', { y: -120, ease: 'none', scrollTrigger: st });
   gsap.to('[data-hero="bundle"]', { y: -140, ease: 'none', scrollTrigger: st });
-  gsap.to('[data-hero="bloom"]', { scale: 1.25, ease: 'none', transformOrigin: '50% 100%', scrollTrigger: st });
 }
 
 /* Section headings: words come into focus from a blur, one after another. */
@@ -133,7 +132,7 @@ function blurHeadings(splits) {
   qa('[data-blur]').forEach((el) => {
     const split = new SplitText(el, { type: 'words', wordsClass: 'kt-w' });
     splits.push(split);
-    gsap.set(split.words, { opacity: 0, filter: 'blur(14px)', y: 16 });
+    gsap.set(split.words, { opacity: 0, filter: 'blur(8px)', y: 14 });
     gsap.to(split.words, {
       opacity: 1,
       filter: 'blur(0px)',
@@ -167,8 +166,8 @@ function deckPinned() {
   const tabs = qa('[data-deck="tab"]');
   if (!track || cards.length < 2) return undefined;
 
-  gsap.set(cards.slice(1), { yPercent: 70, opacity: 0, filter: 'blur(10px)' });
-  gsap.set(cards[0], { yPercent: 0, opacity: 1, filter: 'blur(0px)' });
+  gsap.set(cards.slice(1), { yPercent: 70, opacity: 0 });
+  gsap.set(cards[0], { yPercent: 0, opacity: 1 });
 
   // One unit of timeline per card change. The outgoing card clears before
   // the next one arrives, so two cards never read on top of each other.
@@ -176,8 +175,8 @@ function deckPinned() {
   cards.forEach((card, i) => {
     if (i === 0) return;
     const prev = cards[i - 1];
-    tl.to(prev, { yPercent: -8, scale: 0.95, opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, i - 1 + 0.1)
-      .to(card, { yPercent: 0, opacity: 1, filter: 'blur(0px)', duration: 0.45, ease: 'power3.out' }, i - 1 + 0.45);
+    tl.to(prev, { yPercent: -8, scale: 0.95, opacity: 0, duration: 0.3, ease: 'power2.in' }, i - 1 + 0.1)
+      .to(card, { yPercent: 0, opacity: 1, duration: 0.45, ease: 'power3.out' }, i - 1 + 0.45);
   });
   tl.to({}, { duration: 0.6 });
 

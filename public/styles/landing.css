@@ -41,7 +41,10 @@
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
-html:has(.kt) { background: #efecf8; scroll-padding-top: 0; }
+/* Lenis drives the scroll position every frame. The browser's own smooth
+   scrolling must be off or it animates each of those writes and the page
+   lags the wheel. */
+html:has(.kt), html.lenis, html.lenis body { background: #efecf8; scroll-padding-top: 0; scroll-behavior: auto !important; }
 html:has(.kt) body { background: #efecf8; }
 
 .kt *, .kt *::before, .kt *::after { box-sizing: border-box; }
@@ -110,7 +113,7 @@ html:has(.kt) body { background: #efecf8; }
   color: var(--ink);
 }
 .kt-title span { display: inline; }
-.kt-title .kt-w { display: inline-block; will-change: transform, opacity, filter; }
+.kt-title .kt-w { display: inline-block; }
 .kt-title--ondark { color: var(--white); }
 .kt-title--onviolet { color: var(--white); }
 .kt-title--xl { font-size: clamp(44px, 7vw, 108px); letter-spacing: -0.04em; }
@@ -729,7 +732,7 @@ html:has(.kt) body { background: #efecf8; }
   background: #f7f5ff;
   color: var(--ink);
   box-shadow: 0 40px 90px -40px rgba(20, 10, 60, 0.6);
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
 }
 .kt-card-copy { display: flex; flex-direction: column; justify-content: center; gap: 16px; }
 .kt-card-copy h3 { font-size: clamp(26px, 2.6vw, 38px); line-height: 1.08; letter-spacing: -0.03em; }
