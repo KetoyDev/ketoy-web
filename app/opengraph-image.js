@@ -36,15 +36,16 @@ export default function OgImage() {
           }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
-              background: '#3DDC84',
-              display: 'flex',
-            }}
-          />
+          <svg width="52" height="52" viewBox="-256 -256 512 512">
+            {Array.from({ length: 18 }, (_, i) => (
+              <path
+                key={i}
+                d="M-80 -240H-30V-146.97A150 150 0 0 0 -80 -126.89Z"
+                fill="#ffffff"
+                transform={`rotate(${-40 + i * 20})`}
+              />
+            ))}
+          </svg>
           <div style={{ color: '#ffffff', fontSize: 40, fontWeight: 700 }}>Ketoy</div>
         </div>
 

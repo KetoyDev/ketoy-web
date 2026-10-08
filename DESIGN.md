@@ -71,17 +71,15 @@ same cool blue-grey hue (about 205°) as the navy, so greys never drift warm.
 - **Mark:** 18 shutter rays around an open ring. Each ray is the path
   `M-80 -240H-30V-146.97A150 150 0 0 0 -80 -126.89Z` in a `-256 -256 512 512`
   viewBox, rotated in 20° steps:
-  - **Android Green #3DDC84** at -40° to 80° (7 rays)
-  - **Google Blue #4285F4** at 100° to 200° (6 rays)
-  - **Logo Ink** at 220° to 300° (5 rays): #0B3A4F on light surfaces and
-    #E8EEF2 on navy surfaces
+  - All 18 rays share one colour, **Logo Ink**: #FFFFFF on dark surfaces and
+    #15121D (Ink Navy) on light surfaces. There is no multi-colour variant.
 - **Wordmark:** "Ketoy" in Urbanist 700, set to the right of the mark with a
   10px gap. Ink Navy on light and Frost Text on navy.
 - Header size is a 30px mark with 21px wordmark text.
 - Never redraw, recolour, outline, add a glow to, or swap the mark for a
   generic icon.
-- Android Green and Google Blue appear **only inside the mark**. They are never
-  used for UI.
+- The mark is always a single colour. Android Green and Google Blue are not
+  part of the logo.
 
 ### Rules
 - Never use pure black (#000000). The darkest value is Ink Navy #05141F.

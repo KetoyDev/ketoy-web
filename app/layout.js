@@ -53,7 +53,7 @@ export const metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   category: 'technology',
-  icons: { icon: '/assets/ketoy-icon.svg' },
+  icons: { icon: '/assets/ketoy-icon.svg?v=3' },
   robots: {
     index: true,
     follow: true,
